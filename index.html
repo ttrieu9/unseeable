@@ -99,30 +99,17 @@
 
 				var loader = new THREE.FBXLoader( manager );
 				loader.load( 'Preschool Example Scene.fbx', function( object ) {
+					//add shadow casting and receiving for all of the child objects loaded
+					for(var i in object.children){
+						object.children[i].castShadow = true;
+						object.children[i].receiveShadow = true;
+					}
 					object.castShadow = true;
 					object.receiveShadow = true;
 					scene.add( object );
 
 
 				}, onProgress, onError );
-
-				//Create a sphere that cast shadows (but does not receive them)
-				var sphereGeometry = new THREE.SphereBufferGeometry( 1, 32, 32 );
-				var sphereMaterial = new THREE.MeshStandardMaterial( { color: 0xff0000 } );
-				var sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
-				sphere.position.set(0, 5, 0);
-				sphere.castShadow = true; //default is false
-				sphere.receiveShadow = false; //default
-				scene.add( sphere );
-
-				//Create a plane that receives shadows (but does not cast them)
-				var planeGeometry = new THREE.PlaneBufferGeometry( 20, 20, 32, 32 );
-				var planeMaterial = new THREE.MeshStandardMaterial( { color: 0x00ff00 } )
-				var plane = new THREE.Mesh( planeGeometry, planeMaterial );
-				plane.rotation.x = -Math.PI / 2;
-				plane.position.set(0,1,0);
-				plane.receiveShadow = true;
-				//scene.add( plane );
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.shadowMap.enabled = true;
