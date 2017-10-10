@@ -27,15 +27,14 @@
 	</head>
 
 	<body>
-		<div id="info">
-		<a href="http://threejs.org" target="_blank" rel="noopener">three.js</a> - FBXLoader test
-		</div>
 
     <script src="three.min.js"></script>
     <script src="inflate.min.js"></script>
 
-    <script src="OrbitControls.js"></script>
+		<script src="OrbitControls.js"></script>
     
+		<script src="NURBSCurve.js"></script>
+		<script src="NURBSUtils.js"></script>
 		<script src="FBXLoader.js"></script>
 
 		<script src="Detector.js"></script>
@@ -58,6 +57,9 @@
 
 				container = document.createElement( 'div' );
 				document.body.appendChild( container );
+				document.addEventListener("keydown", onDocumentKeyDown, false);
+
+				
 
 				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
 
@@ -98,7 +100,7 @@
 				};
 
 				var loader = new THREE.FBXLoader( manager );
-				loader.load( 'Preschool Example Scene.fbx', function( object ) {
+				loader.load( 'PreschoolGrayBox.fbx', function( object ) {
 					//add shadow casting and receiving for all of the child objects loaded
 					for(var i in object.children){
 						object.children[i].castShadow = true;
@@ -111,7 +113,28 @@
 
 				}, onProgress, onError );
 
-				renderer = new THREE.WebGLRenderer();
+				var rendered = false;
+				function onDocumentKeyDown(event) {
+					var keyCode = event.which;
+					if (!rendered && keyCode == 32) {
+						rendered = true;
+						loader.load( 'Mort_retry.fbx', function( object ) {
+
+							object.position.set(0, 3, 0);
+							object.mixer = new THREE.AnimationMixer( object );
+							mixers.push( object.mixer );
+
+							var action = object.mixer.clipAction( object.animations[ 0 ] );
+							action.play();
+
+							scene.add( object );
+
+
+						}, onProgress, onError );
+					}
+				}
+
+				renderer = new THREE.WebGLRenderer({ antialias: true });
 				renderer.shadowMap.enabled = true;
 				renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 				renderer.setPixelRatio( window.devicePixelRatio );
@@ -126,14 +149,44 @@
 
 				window.addEventListener( 'resize', onWindowResize, false );
 
-				light = new THREE.PointLight(0xd6d498, 1, 1000);
-				light.position.set(0, 10, 0);
+				light = new THREE.PointLight(0xd6d498, 1, 50, 1);
+				light.position.set(-4, 10, -1);
 				light.castShadow = true;
+				light.shadowMapWidth = 1024;
+				light.shadowMapHeight = 1024;
 				scene.add(light);
 
+				light = new THREE.PointLight(0xd6d498, 1, 50, 1);
+				light.position.set(4, 10, -1);
+				light.castShadow = true;
+				light.shadowMapWidth = 1024;
+				light.shadowMapHeight = 1024;
+				scene.add(light);
+
+				light = new THREE.AmbientLight( 0x656565 ); // soft white light
+				scene.add( light );
+				
+				var spotLight = new THREE.SpotLight( 0x222222 );
+				spotLight.position.set( 100, 1000, 100 );
+
+				spotLight.castShadow = true;
+
+				spotLight.shadow.mapSize.width = 1024;
+				spotLight.shadow.mapSize.height = 1024;
+
+				spotLight.shadow.camera.near = 500;
+				spotLight.shadow.camera.far = 4000;
+				spotLight.shadow.camera.fov = 30;
+
+				scene.add( spotLight );
+
+				light = new THREE.AmbientLight(0xd6d498, .1);
+				// /scene.add(light);
+
 				light = new THREE.DirectionalLight(0xffffff, 1.0);
-				light.position.set(0, 10, 0);
-				//scene.add(light);
+				light.position.set(0, 10, -50);
+				light.rotation.x = Math.PI / 2;
+				scene.add(light);
 
 				animate();
 
