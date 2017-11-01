@@ -36,6 +36,7 @@
 		<script src="NURBSCurve.js"></script>
 		<script src="NURBSUtils.js"></script>
 		<script src="FBXLoader.js"></script>
+		<script src="ColladaLoader2.js"></script>
 
 		<script src="Detector.js"></script>
 		<script src="stats.min.js"></script>
@@ -100,7 +101,7 @@
 				};
 
 				var loader = new THREE.FBXLoader( manager );
-				loader.load( 'PreschoolGrayBox.fbx', function( object ) {
+				loader.load( 'PreschoolGrayBox2.fbx', function( object ) {
 					//add shadow casting and receiving for all of the child objects loaded
 					for(var i in object.children){
 						object.children[i].castShadow = true;
