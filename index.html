@@ -119,9 +119,10 @@
 					var keyCode = event.which;
 					if (!rendered && keyCode == 32) {
 						rendered = true;
-						loader.load( 'Mort_retry.fbx', function( object ) {
+						loader.load( 'Idle.fbx', function( object ) {
 
-							object.position.set(0, 3, 0);
+							object.position.set(0, 2.3, -3);
+							// object.scale.set(.1, .1, .1);
 							object.mixer = new THREE.AnimationMixer( object );
 							mixers.push( object.mixer );
 
