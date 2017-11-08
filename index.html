@@ -62,7 +62,7 @@
 
 				
 
-				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, .1, 2000 );
 
 				scene = new THREE.Scene();
 
@@ -145,7 +145,7 @@
 
 				controls = new THREE.PointerLockControls( camera );
 				controls.enabled = true;
-				controls.getObject().position.set(-.5, 2.8, 4);
+				controls.getObject().position.set(-.5, 2.5, 4);
 				scene.add( controls.getObject() );
 
 				var element = document.body;
