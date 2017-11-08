@@ -32,6 +32,7 @@
     <script src="inflate.min.js"></script>
 
 		<script src="OrbitControls.js"></script>
+		<script src="PointerLockControls.js"></script>
     
 		<script src="NURBSCurve.js"></script>
 		<script src="NURBSUtils.js"></script>
@@ -58,7 +59,6 @@
 
 				container = document.createElement( 'div' );
 				document.body.appendChild( container );
-				document.addEventListener("keydown", onDocumentKeyDown, false);
 
 				
 
@@ -113,28 +113,22 @@
 
 
 				}, onProgress, onError );
+				
+				loader.load( 'Idle.fbx', function( object ) {
 
-				var rendered = false;
-				function onDocumentKeyDown(event) {
-					var keyCode = event.which;
-					if (!rendered && keyCode == 32) {
-						rendered = true;
-						loader.load( 'Idle.fbx', function( object ) {
+					object.position.set(4, -.05, -1);
+					var scale = 2.2;
+					object.scale.set(scale, scale, scale);
+					object.mixer = new THREE.AnimationMixer( object );
+					mixers.push( object.mixer );
 
-							object.position.set(0, 2.3, -3);
-							// object.scale.set(.1, .1, .1);
-							object.mixer = new THREE.AnimationMixer( object );
-							mixers.push( object.mixer );
+					var action = object.mixer.clipAction( object.animations[ 0 ] );
+					action.play();
 
-							var action = object.mixer.clipAction( object.animations[ 0 ] );
-							action.play();
-
-							scene.add( object );
+					scene.add( object );
 
 
-						}, onProgress, onError );
-					}
-				}
+				}, onProgress, onError );
 
 				renderer = new THREE.WebGLRenderer({ antialias: true });
 				renderer.shadowMap.enabled = true;
@@ -144,10 +138,24 @@
 				container.appendChild( renderer.domElement );
 
 				// controls, camera
-				controls = new THREE.OrbitControls( camera, renderer.domElement );
-				controls.target.set( 0, 5, 0 );
-				camera.position.set( 2, 10, 28 );
-				controls.update();
+				// controls = new THREE.OrbitControls( camera, renderer.domElement );
+				// controls.target.set( 0, 5, 0 );
+				// camera.position.set( 2, 10, 28 );
+				// controls.update();
+
+				controls = new THREE.PointerLockControls( camera );
+				controls.enabled = true;
+				controls.getObject().position.set(-.5, 2.8, 4);
+				scene.add( controls.getObject() );
+
+				var element = document.body;
+				
+				element.addEventListener( 'click', function ( event ) {
+					// Ask the browser to lock the pointer
+					element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+					element.requestPointerLock();
+					console.log("click");
+				}, false );
 
 				window.addEventListener( 'resize', onWindowResize, false );
 
