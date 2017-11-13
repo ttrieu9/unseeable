@@ -106,6 +106,7 @@
 					for(var i in object.children){
 						object.children[i].castShadow = true;
 						object.children[i].receiveShadow = true;
+						console.log(object.children[i]);
 					}
 					object.castShadow = true;
 					object.receiveShadow = true;
@@ -143,19 +144,11 @@
 				// camera.position.set( 2, 10, 28 );
 				// controls.update();
 
-				controls = new THREE.PointerLockControls( camera );
-				controls.enabled = true;
-				controls.getObject().position.set(-.5, 2.5, 4);
-				scene.add( controls.getObject() );
+				//hardcoded camera position and where it looks
+				camera.position.set(-.5, 2.5, 4);
+				camera.lookAt(new THREE.Vector3( 0, 1.5, 3.5 ));
 
 				var element = document.body;
-				
-				element.addEventListener( 'click', function ( event ) {
-					// Ask the browser to lock the pointer
-					element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-					element.requestPointerLock();
-					console.log("click");
-				}, false );
 
 				window.addEventListener( 'resize', onWindowResize, false );
 
