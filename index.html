@@ -144,11 +144,20 @@
 				// camera.position.set( 2, 10, 28 );
 				// controls.update();
 
+				// controls = new THREE.PointerLockControls(camera);
+				// controls.enabled = true;
+				// controls.getObject().position.set(-.5, 2.5, 4);
+				// scene.add(controls.getObject());
 				//hardcoded camera position and where it looks
-				camera.position.set(-.5, 2.5, 4);
-				camera.lookAt(new THREE.Vector3( 0, 1.5, 3.5 ));
+				camera.position.set(-.5, 2.5, 4.3);
+				camera.lookAt(new THREE.Vector3(.8, .6, 3));
 
 				var element = document.body;
+
+				element.addEventListener('click', function(event){
+					// console.log(controls.getObject());
+					console.log(camera);
+				}, false);
 
 				window.addEventListener( 'resize', onWindowResize, false );
 
