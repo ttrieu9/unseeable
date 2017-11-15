@@ -41,6 +41,7 @@
 
 		<script src="Detector.js"></script>
 		<script src="stats.min.js"></script>
+		<script src="ColorblindFilter.js"></script>
 
 		<script>
 
@@ -201,8 +202,9 @@
 				scene.add(light);
 
 				animate();
-
 			}
+
+			window.onload = changeColorVision();
 
 			function onWindowResize() {
 
@@ -240,8 +242,6 @@
 				renderer.render( scene, camera );
 
 			}
-
 		</script>
-
 	</body>
 </html>
