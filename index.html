@@ -118,10 +118,30 @@
 
 				}, onProgress, onError );
 				
+				//add the teacher
 				loader.load( 'Idle.fbx', function( object ) {
 
 					object.position.set(4, -.05, -1);
 					var scale = 2.2;
+					object.scale.set(scale, scale, scale);
+					object.mixer = new THREE.AnimationMixer( object );
+					mixers.push( object.mixer );
+
+					var action = object.mixer.clipAction( object.animations[ 0 ] );
+					action.play();
+
+					scene.add( object );
+
+
+				}, onProgress, onError );
+
+				//add all of the children
+				//kid sitting at a table
+				loader.load( 'Sitting.fbx', function( object ) {
+
+					object.position.set(5.8, .3, .2);
+					object.rotation.y = Math.PI*3 / 4;;
+					var scale = 3;
 					object.scale.set(scale, scale, scale);
 					object.mixer = new THREE.AnimationMixer( object );
 					mixers.push( object.mixer );
