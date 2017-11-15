@@ -53,10 +53,38 @@
 
 			var mixers = [];
 
+			var raycaster;
+			var mouse = new THREE.Vector2();
+			var currentObject;
+
 			init();
 
-			function init() {
+			function onMouseMove() {
+				event.preventDefault();
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y =  - ( event.clientY / window.innerHeight ) * 2 + 1;
+			}
 
+			function getCrayon() {
+				raycaster.setFromCamera(mouse, camera);
+
+				var intersects = raycaster.intersectObjects(scene.children[6].children);
+
+				if(intersects.length > 0) {
+					if (intersects[0].object.name.includes('Crayon')) {
+						if(currentObject && currentObject.visible === false) {
+							currentObject.visible = true;
+						}
+						currentObject = intersects[0].object;
+
+						currentObject.visible = false;
+						console.log(currentObject)
+					}
+				}
+			}
+
+			function init() {
+				raycaster = new THREE.Raycaster()
 				container = document.createElement( 'div' );
 				document.body.appendChild( container );
 
@@ -154,11 +182,6 @@
 
 				var element = document.body;
 
-				element.addEventListener('click', function(event){
-					// console.log(controls.getObject());
-					console.log(camera);
-				}, false);
-
 				window.addEventListener( 'resize', onWindowResize, false );
 
 				light = new THREE.PointLight(0xd6d498, 1, 50, 1);
@@ -236,7 +259,9 @@
 			}
 
 			function render() {
-
+				window.addEventListener("mousemove", onMouseMove);
+				window.addEventListener("mousedown", getCrayon)
+;
 				renderer.render( scene, camera );
 
 			}
