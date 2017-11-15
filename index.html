@@ -88,13 +88,12 @@
 							currentObject = intersected;
 
 							currentObject.visible = false;
-							//console.log(currentObject)
+							console.log(currentObject)
 						}
 					}
 					else if(intersected.name.includes('Paper') && !coloredObjects.includes(intersected.name) && !intersected.name.includes('PaperInstructions') && !intersected.name.includes('PaperOutline') && currentObject) {
 						intersected.material = currentObject.material;
 						coloredObjects.push(intersected.name)
-						console.log(coloredObjects)
 					}
 				}
 			}
@@ -205,13 +204,15 @@
 
 				var element = document.body;
 				
-
-				element.addEventListener('click', function(event){
+				
+				element.addEventListener("keypress", function(event){
 					// console.log(camera);
 					nextPosition();
 				}, false);
 
 				window.addEventListener( 'resize', onWindowResize, false );
+				window.addEventListener("mousemove", onMouseMove);
+				window.addEventListener("mousedown", getCrayon)
 
 				light = new THREE.PointLight(0xd6d498, 1, 50, 1);
 				light.position.set(-4, 9, -1);
@@ -269,7 +270,7 @@
 				animate();
 			}
 
-			window.onload = changeColorVision();
+			//window.onload = changeColorVision();
 
 			function nextPosition(){
 				switch(cameraPosition){
@@ -327,8 +328,6 @@
 			}
 
 			function render() {
-				window.addEventListener("mousemove", onMouseMove);
-				window.addEventListener("mousedown", getCrayon)
 ;
 				renderer.render( scene, camera );
 
