@@ -61,6 +61,7 @@
 			var currentObject;
 			var coloredObjects = [];
 			var attempts = 0
+			var currentTable;
 
 			init();
 
@@ -135,7 +136,22 @@
 					var intersected = intersects[0].object;
 
 					if(intersected.name.includes("Table") && intersected.name.includes("Top")) {
-						console.log(intersected.name)
+						if(!currentTable) {
+							currentTable = intersected;
+							var highlightMaterial = intersected.material.clone()
+							highlightMaterial.color.set('#ffffff')
+							intersected.material = highlightMaterial
+						}
+						else {
+							currentTable.material = currentTable.material;
+							currentTable = intersected;
+							var highlightMaterial = intersected.material.clone()
+							highlightMaterial.color.set('#ffffff')
+							intersected.material = highlightMaterial
+						}
+					}
+					else {
+						console.log(currentTable)
 					}
 				}
 			}
