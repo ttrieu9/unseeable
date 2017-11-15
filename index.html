@@ -50,6 +50,8 @@
 			var container, stats, controls;
 			var camera, scene, renderer, light;
 
+			var cameraPosition = 1;
+
 			var clock = new THREE.Clock();
 
 			var mixers = [];
@@ -150,30 +152,52 @@
 				// controls.getObject().position.set(-.5, 2.5, 4);
 				// scene.add(controls.getObject());
 				//hardcoded camera position and where it looks
-				camera.position.set(7.5, 2.8, 8);
-				camera.lookAt(new THREE.Vector3(7.4, 2, 7.955));
+
+				//looking at the tables
+				camera.position.set(-4.8, 3.1, 8.7);
+				camera.rotation.set(-.71, -1.16, -.67);
+
+				//coloring
+				// camera.position.set(7.5, 2.8, 8);
+				// camera.lookAt(new THREE.Vector3(7.4, 2, 7.955));
+				
 
 				var element = document.body;
+				
 
 				element.addEventListener('click', function(event){
-					// console.log(controls.getObject());
-					console.log(camera);
+					// console.log(camera);
+					nextPosition();
 				}, false);
 
 				window.addEventListener( 'resize', onWindowResize, false );
 
 				light = new THREE.PointLight(0xd6d498, 1, 50, 1);
-				light.position.set(-4, 10, -1);
+				light.position.set(-4, 9, -1);
 				light.castShadow = true;
 				light.shadowMapWidth = 1024;
 				light.shadowMapHeight = 1024;
 				scene.add(light);
 
 				light = new THREE.PointLight(0xd6d498, 1, 50, 1);
-				light.position.set(4, 10, -1);
+				light.position.set(4, 9, -1);
 				light.castShadow = true;
 				light.shadowMapWidth = 1024;
 				light.shadowMapHeight = 1024;
+				scene.add(light);
+
+				light = new THREE.PointLight(0xd6d498, 1, 50, .7);
+				light.position.set(-4, 9, 10);
+				// light.castShadow = true;
+				// light.shadowMapWidth = 1024;
+				// light.shadowMapHeight = 1024;
+				scene.add(light);
+
+				light = new THREE.PointLight(0xd6d498, 1, 50, .7);
+				light.position.set(4, 9, 10);
+				// light.castShadow = true;
+				// light.shadowMapWidth = 1024;
+				// light.shadowMapHeight = 1024;
 				scene.add(light);
 
 				light = new THREE.AmbientLight( 0x656565 ); // soft white light
@@ -205,6 +229,30 @@
 			}
 
 			window.onload = changeColorVision();
+
+			function nextPosition(){
+				switch(cameraPosition){
+					case 1:
+							camera.position.set(7.5, 2.8, 8);
+							camera.lookAt(new THREE.Vector3(7.4, 2, 7.955));
+							cameraPosition = 2;
+						break;
+					case 2:
+						camera.position.set(2.8, 3.4, 6.7);
+						camera.rotation.set(2.55, 1.48, -2.54);
+						cameraPosition = 3;
+						break;
+					case 3:
+						camera.position.set(-4.8, 3.1, 8.7);
+						camera.rotation.set(-.71, -1.16, -.67);
+						cameraPosition = 1;
+						break;
+				}
+			}
+
+			function previousPosition(){
+
+			}
 
 			function onWindowResize() {
 
