@@ -1,5 +1,3 @@
-console.log("sanity check")
-
 function appendSVG(document) {
 
     /*
@@ -59,11 +57,5 @@ function applyingStyle(document, css) {
 
 function changeColorVision() {
     console.log("Filter executed");
-    chrome.storage.sync.get('colorblindingValue', function (obj) {
-        if (obj.colorblindingValue === null || obj.colorblindingValue === undefined) {
-            obj.colorblindingValue = "protanopia";
-            chrome.storage.sync.set({'colorblindingValue': obj.colorblindingValue});
-        }
-        changeColors(obj.colorblindingValue);
-    });
+    changeColors("deuteranopia");
 }
