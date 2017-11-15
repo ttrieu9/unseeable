@@ -41,6 +41,7 @@
 
 		<script src="Detector.js"></script>
 		<script src="stats.min.js"></script>
+		<script src="ColorblindFilter.js"></script>
 
 		<script>
 
@@ -129,7 +130,7 @@
 				};
 
 				var loader = new THREE.FBXLoader( manager );
-				loader.load( 'PreschoolGrayBox2.fbx', function( object ) {
+				loader.load( 'PreschoolPreAlphaScene.fbx', function( object ) {
 					//add shadow casting and receiving for all of the child objects loaded
 					for(var i in object.children){
 						object.children[i].castShadow = true;
@@ -177,8 +178,8 @@
 				// controls.getObject().position.set(-.5, 2.5, 4);
 				// scene.add(controls.getObject());
 				//hardcoded camera position and where it looks
-				camera.position.set(-.5, 2.5, 4.3);
-				camera.lookAt(new THREE.Vector3(.8, .6, 3));
+				camera.position.set(7.5, 2.8, 8);
+				camera.lookAt(new THREE.Vector3(7.4, 2, 7.955));
 
 				var element = document.body;
 
@@ -224,8 +225,9 @@
 				scene.add(light);
 
 				animate();
-
 			}
+
+			window.onload = changeColorVision();
 
 			function onWindowResize() {
 
@@ -265,8 +267,6 @@
 				renderer.render( scene, camera );
 
 			}
-
 		</script>
-
 	</body>
 </html>
