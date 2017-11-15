@@ -74,7 +74,7 @@
 			function colorPaper() {
 				raycaster.setFromCamera(mouse, camera);
 
-				var intersects = raycaster.intersectObjects(scene.children[8].children);
+				var intersects = raycaster.intersectObjects(scene.children[9].children);
 
 				if(intersects.length > 0) {
 					var intersected = intersects[0].object;
@@ -91,10 +91,52 @@
 
 							currentObject.visible = false;
 						}
+
+						var audioListener = new THREE.AudioListener();
+						camera.add(audioListener);
+						var song = new THREE.Audio(audioListener);
+						scene.add(song);
+						var audioLoader = new THREE.AudioLoader();
+
+						audioLoader.load(
+							'Click.mp3',
+							(audioBuffer) => {
+								song.setBuffer(audioBuffer);
+								song.setVolume(0.15);
+								song.play();
+							},
+							function ( xhr ) {
+								console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+							},
+							function ( xhr ) {
+								console.log( 'An error happened' );
+							}
+						)
 					}
 					else if(intersected.name.includes('Paper') && !coloredObjects.includes(intersected.name) && !intersected.name.includes('PaperInstructions') && !intersected.name.includes('PaperOutline') && currentObject) {
 						intersected.material = currentObject.material;
 						coloredObjects.push(intersected.name)
+
+						var audioListener = new THREE.AudioListener();
+						camera.add(audioListener);
+						var song = new THREE.Audio(audioListener);
+						scene.add(song);
+						var audioLoader = new THREE.AudioLoader();
+
+						audioLoader.load(
+							'Writing.wav',
+							(audioBuffer) => {
+								song.setBuffer(audioBuffer);
+								song.setVolume(0.15);
+								song.play();
+							},
+							function ( xhr ) {
+								console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+							},
+							function ( xhr ) {
+								console.log( 'An error happened' );
+							}
+						)
 
 						if(coloredObjects.length === 5) {
 							setTimeout(() => {nextPosition()}, 1000)
@@ -106,7 +148,7 @@
 			function selectTable() {
 				raycaster.setFromCamera(mouse, camera);
 
-				var intersects = raycaster.intersectObjects(scene.children[8].children);
+				var intersects = raycaster.intersectObjects(scene.children[9].children);
 
 				if(intersects.length > 0) {
 					var intersected = intersects[0].object;
@@ -160,8 +202,6 @@
 				raycaster = new THREE.Raycaster()
 				container = document.createElement( 'div' );
 				document.body.appendChild( container );
-
-				
 
 				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, .1, 2000 );
 
@@ -269,15 +309,36 @@
 				}, false);
 
 				window.addEventListener("mousemove", onMouseMove);
-				window.addEventListener("mousemove", () => {
-					if(cameraPosition === 1) {
-						highlightTables()
-					}
-				})
+				// window.addEventListener("mousemove", () => {
+				// 	if(cameraPosition === 1) {
+				// 		highlightTables()
+				// 	}
+				// })
 				window.addEventListener("mousedown", () => {
 					switch(cameraPosition) {
 						case 1:
 							selectTable();
+
+							var audioListener = new THREE.AudioListener();
+							camera.add(audioListener);
+							var song = new THREE.Audio(audioListener);
+							scene.add(song);
+							var audioLoader = new THREE.AudioLoader();
+
+							audioLoader.load(
+								'Click.mp3',
+								(audioBuffer) => {
+									song.setBuffer(audioBuffer);
+									song.setVolume(0.15);
+									song.play();
+								},
+								function ( xhr ) {
+									console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+								},
+								function ( xhr ) {
+									console.log( 'An error happened' );
+								}
+							)
 							break;
 						case 2:
 							colorPaper();
@@ -345,6 +406,30 @@
 
 				animate();
 			}
+
+			var audioListener = new THREE.AudioListener();
+			camera.add(audioListener);
+			var song = new THREE.Audio(audioListener);
+			scene.add(song);
+			var audioLoader = new THREE.AudioLoader();
+
+			audioLoader.load(
+				'kids-playing-1.mp3',
+				(audioBuffer) => {
+					song.setBuffer(audioBuffer);
+					song.setLoop(true);
+					song.setVolume(0.025);
+					song.play();
+
+					//document.addEventListener("keydown", song.play(), false);
+				},
+				function ( xhr ) {
+					console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+				},
+				function ( xhr ) {
+					console.log( 'An error happened' );
+				}
+			)
 
 			//window.onload = changeColorVision();
 
