@@ -56,10 +56,108 @@
 
 			var mixers = [];
 
+			var raycaster;
+			var mouse = new THREE.Vector2();
+			var currentObject;
+			var coloredObjects = [];
+			var attempts = 0
+			var currentTable;
+
 			init();
 
-			function init() {
+			function onMouseMove() {
+				event.preventDefault();
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y =  - ( event.clientY / window.innerHeight ) * 2 + 1;
+			}
 
+			function colorPaper() {
+				raycaster.setFromCamera(mouse, camera);
+
+				var intersects = raycaster.intersectObjects(scene.children[8].children);
+
+				if(intersects.length > 0) {
+					var intersected = intersects[0].object;
+					if (intersected.name.includes('Crayon')) {
+						if(intersected.name.includes('CrayonBox')){
+							currentObject.visible = true;
+							currentObject = null;
+						}
+						else {
+							if(currentObject && currentObject.visible === false) {
+								currentObject.visible = true;
+							}
+							currentObject = intersected;
+
+							currentObject.visible = false;
+						}
+					}
+					else if(intersected.name.includes('Paper') && !coloredObjects.includes(intersected.name) && !intersected.name.includes('PaperInstructions') && !intersected.name.includes('PaperOutline') && currentObject) {
+						intersected.material = currentObject.material;
+						coloredObjects.push(intersected.name)
+
+						if(coloredObjects.length === 5) {
+							setTimeout(() => {nextPosition()}, 1000)
+						}
+					}
+				}
+			}
+
+			function selectTable() {
+				raycaster.setFromCamera(mouse, camera);
+
+				var intersects = raycaster.intersectObjects(scene.children[8].children);
+
+				if(intersects.length > 0) {
+					var intersected = intersects[0].object;
+
+					if(intersected.name.includes("Table")){
+						if(intersected.name.includes("Table3Top")) {
+							nextPosition()
+						}
+						else {
+							if(attempts === 3) {
+								nextPosition()
+							}
+
+							attempts++;
+							alert("wrong table")
+						}
+					}
+				}
+			}
+			/*
+			function highlightTables() {
+				raycaster.setFromCamera(mouse, camera);
+
+				var intersects = raycaster.intersectObjects(scene.children[8].children);
+
+				if(intersects.length > 0) {
+					var intersected = intersects[0].object;
+
+					if(intersected.name.includes("Table") && intersected.name.includes("Top")) {
+						if(!currentTable) {
+							currentTable = intersected;
+							var highlightMaterial = intersected.material.clone()
+							highlightMaterial.color.set('#ffffff')
+							intersected.material = highlightMaterial
+						}
+						else {
+							currentTable.material = currentTable.material;
+							currentTable = intersected;
+							var highlightMaterial = intersected.material.clone()
+							highlightMaterial.color.set('#ffffff')
+							intersected.material = highlightMaterial
+						}
+					}
+					else {
+						console.log(currentTable)
+					}
+				}
+			}
+			*/
+			function init() {
+				raycaster = new THREE.Raycaster()
 				container = document.createElement( 'div' );
 				document.body.appendChild( container );
 
@@ -109,7 +207,7 @@
 					for(var i in object.children){
 						object.children[i].castShadow = true;
 						object.children[i].receiveShadow = true;
-						console.log(object.children[i]);
+						//console.log(object.children[i]);
 					}
 					object.castShadow = true;
 					object.receiveShadow = true;
@@ -184,11 +282,31 @@
 
 				var element = document.body;
 				
-
-				element.addEventListener('click', function(event){
+				
+				element.addEventListener("keypress", function(event){
 					// console.log(camera);
 					nextPosition();
 				}, false);
+
+				window.addEventListener("mousemove", onMouseMove);
+				window.addEventListener("mousemove", () => {
+					if(cameraPosition === 1) {
+						highlightTables()
+					}
+				})
+				window.addEventListener("mousedown", () => {
+					switch(cameraPosition) {
+						case 1:
+							selectTable();
+							break;
+						case 2:
+							colorPaper();
+							break;
+						case 3:							
+							console.log('Look at drawing')
+							break;
+					}
+				});
 
 				window.addEventListener( 'resize', onWindowResize, false );
 
@@ -248,7 +366,7 @@
 				animate();
 			}
 
-			window.onload = changeColorVision();
+			//window.onload = changeColorVision();
 
 			function nextPosition(){
 				switch(cameraPosition){
@@ -306,9 +424,7 @@
 			}
 
 			function render() {
-
 				renderer.render( scene, camera );
-
 			}
 		</script>
 	</body>
