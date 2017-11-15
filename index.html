@@ -57,6 +57,7 @@
 			var raycaster;
 			var mouse = new THREE.Vector2();
 			var currentObject;
+			var coloredObjects = [];
 
 			init();
 
@@ -72,14 +73,26 @@
 				var intersects = raycaster.intersectObjects(scene.children[6].children);
 
 				if(intersects.length > 0) {
-					if (intersects[0].object.name.includes('Crayon')) {
-						if(currentObject && currentObject.visible === false) {
+					var intersected = intersects[0].object;
+					if (intersected.name.includes('Crayon')) {
+						if(intersected.name.includes('CrayonBox')){
 							currentObject.visible = true;
+							currentObject = null;
 						}
-						currentObject = intersects[0].object;
+						else {
+							if(currentObject && currentObject.visible === false) {
+								currentObject.visible = true;
+							}
+							currentObject = intersected;
 
-						currentObject.visible = false;
-						console.log(currentObject)
+							currentObject.visible = false;
+							//console.log(currentObject)
+						}
+					}
+					else if(intersected.name.includes('Paper') && !coloredObjects.includes(intersected.name) && !intersected.name.includes('PaperInstructions') && !intersected.name.includes('PaperOutline') && currentObject) {
+						intersected.material = currentObject.material;
+						coloredObjects.push(intersected.name)
+						console.log(coloredObjects)
 					}
 				}
 			}
