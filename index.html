@@ -275,7 +275,7 @@
 
 				//add all of the children
 				//kid sitting at a table
-				loader.load( 'Sitting.fbx', function( object ) {
+				loader.load( 'Sitting Victory.fbx', function( object ) {
 
 					object.position.set(5.8, .3, .2);
 					object.rotation.y = Math.PI*3 / 4;;
@@ -494,9 +494,10 @@
 
 				if ( mixers.length > 0 ) {
 
+					var delta = clock.getDelta();
 					for ( var i = 0; i < mixers.length; i ++ ) {
 
-						mixers[ i ].update( clock.getDelta() );
+						mixers[ i ].update( delta );
 
 					}
 
