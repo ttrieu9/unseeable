@@ -87,6 +87,33 @@
 							}
 							break;
 						case 2:
+							if(intersected.name.includes('Crayon')) {
+								document.body.style.cursor = 'pointer'
+
+								if(!intersected.name.includes('Box')) {
+									if(!currentHover) {
+										currentHover = intersected
+										currentHover.position.set(-0.075, 0, -0.03)
+									}
+									else if(currentHover.name !== intersected.name) {
+										currentHover.position.set(0,0,0)
+										currentHover = intersected
+										currentHover.position.set(-0.075, 0, -0.03)
+									}
+								}
+								else if(currentHover) {
+									currentHover.position.set(0,0,0)
+									currentHover = null
+								}
+							}
+							else {
+								document.body.style.cursor = 'default'
+
+								if(currentHover) {
+									currentHover.position.set(0,0,0)
+									currentHover = null
+								}
+							}
 							break;
 						case 3:							
 							break;
