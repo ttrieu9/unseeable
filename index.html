@@ -59,6 +59,7 @@
 			var raycaster;
 			var mouse = new THREE.Vector2();
 			var currentObject;
+			var currentHover;
 			var coloredObjects = [];
 			var attempts = 0
 			var currentTable;
@@ -69,6 +70,28 @@
 				event.preventDefault();
 				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 				mouse.y =  - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+
+				raycaster.setFromCamera(mouse, camera);
+				var intersects = raycaster.intersectObjects(scene.children[9].children);
+
+				if(intersects.length > 0) {
+					var intersected = intersects[0].object
+					switch(cameraPosition) {
+						case 1:
+							if(intersected.name.includes('Table')) {
+								document.body.style.cursor = 'pointer'
+							}
+							else {
+								document.body.style.cursor = 'default'
+							}
+							break;
+						case 2:
+							break;
+						case 3:							
+							break;
+					}
+				}
 			}
 
 			function colorPaper() {
