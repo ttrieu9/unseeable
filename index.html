@@ -46,6 +46,7 @@
 
 			var container, stats, controls;
 			var camera, scene, renderer, light;
+			var teacher;
 
 			var cameraPosition = 1;
 
@@ -264,7 +265,7 @@
 
 					var action = object.mixer.clipAction( object.animations[ 0 ] );
 					action.play();
-
+					teacher = object;
 					scene.add( object );
 
 
@@ -291,8 +292,25 @@
 
 				loader.load( 'Sitting.fbx', function( object ) {
 
-					object.position.set(7, .3, .8);
-					object.rotation.y = Math.PI*5 / 6;;
+					object.position.set(6.7, .3, 5.4);
+					object.rotation.y = Math.PI*11 / 6;
+					var scale = 3;
+					object.scale.set(scale, scale, scale);
+					object.mixer = new THREE.AnimationMixer( object );
+					mixers.push( object.mixer );
+
+					var action = object.mixer.clipAction( object.animations[ 0 ] );
+					action.play();
+
+					scene.add( object );
+
+
+				}, onProgress, onError );
+
+				loader.load( 'Sitting Idle.fbx', function( object ) {
+
+					object.position.set(3.5, .3, 11.8);
+					object.rotation.y = Math.PI*5.5 / 4;
 					var scale = 3;
 					object.scale.set(scale, scale, scale);
 					object.mixer = new THREE.AnimationMixer( object );
@@ -328,7 +346,6 @@
 				
 				element.addEventListener("keypress", function(event){
 					nextPosition();
-					// nextPosition();
 					if(String.fromCharCode(event.keyCode) === "c"){
 						console.log(camera);
 					}
@@ -515,6 +532,7 @@
 						cameraPosition = 3;
 						break;
 					case 3:
+						teacher.position.set(-9, -.05, 8);
 						camera.position.set(-4.8, 3.1, 8.7);
 						camera.rotation.set(-.71, -1.16, -.67);
 						cameraPosition = 1;
