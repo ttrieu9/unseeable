@@ -60,6 +60,7 @@
 			var mouse = new THREE.Vector2();
 			var currentObject;
 			var currentHover;
+			var previousMaterial
 			var coloredObjects = [];
 			var attempts = 0
 			var currentTable;
@@ -81,9 +82,30 @@
 						case 1:
 							if(intersected.name.includes('Table')) {
 								document.body.style.cursor = 'pointer'
+
+								if(!currentHover) {
+									currentHover = intersected
+									newMaterial = currentHover.material.clone()
+									previousMaterial = currentHover.material
+									newMaterial.color.setHex('#ffffff')
+									currentHover.material = newMaterial
+								}
+								else {
+									currentHover.material = previousMaterial
+									currentHover = intersected
+									newMaterial = currentHover.material.clone()
+									previousMaterial = currentHover.material
+									newMaterial.color.setHex('#000000')
+									currentHover.material = newMaterial
+								}
 							}
 							else {
 								document.body.style.cursor = 'default'
+
+								if(currentHover) {
+									currentHover.material = previousMaterial
+									currentHover = null
+								}
 							}
 							break;
 						case 2:
@@ -205,6 +227,10 @@
 
 					if(intersected.name.includes("Table")){
 						if(intersected.name.includes("Table3Top")) {
+							if(currentHover) {
+								currentHover.material = previousMaterial
+								currentHover = null
+							}
 							nextPosition()
 						}
 						else {
@@ -295,8 +321,8 @@
 				loader.load( 'PreschoolPreAlphaScene.fbx', function( object ) {
 					//add shadow casting and receiving for all of the child objects loaded
 					for(var i in object.children){
-						object.children[i].castShadow = true;
-						object.children[i].receiveShadow = true;
+						// object.children[i].castShadow = true;
+						// object.children[i].receiveShadow = true;
 						//console.log(object.children[i]);
 					}
 					object.castShadow = true;
