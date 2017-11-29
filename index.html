@@ -128,6 +128,14 @@
 									currentHover = null
 								}
 							}
+							else if(intersected.name.includes('Paper')) {
+								if(!intersected.name.includes('PaperInstructions') && !intersected.name.includes('PaperOutline')) {
+									document.body.style.cursor = 'pointer'
+								}
+								else {
+									document.body.style.cursor = 'default'
+								}
+							}
 							else {
 								document.body.style.cursor = 'default'
 
@@ -244,36 +252,7 @@
 					}
 				}
 			}
-			/*
-			function highlightTables() {
-				raycaster.setFromCamera(mouse, camera);
 
-				var intersects = raycaster.intersectObjects(scene.children[8].children);
-
-				if(intersects.length > 0) {
-					var intersected = intersects[0].object;
-
-					if(intersected.name.includes("Table") && intersected.name.includes("Top")) {
-						if(!currentTable) {
-							currentTable = intersected;
-							var highlightMaterial = intersected.material.clone()
-							highlightMaterial.color.set('#ffffff')
-							intersected.material = highlightMaterial
-						}
-						else {
-							currentTable.material = currentTable.material;
-							currentTable = intersected;
-							var highlightMaterial = intersected.material.clone()
-							highlightMaterial.color.set('#ffffff')
-							intersected.material = highlightMaterial
-						}
-					}
-					else {
-						console.log(currentTable)
-					}
-				}
-			}
-			*/
 			function init() {
 				raycaster = new THREE.Raycaster()
 				container = document.createElement( 'div' );
