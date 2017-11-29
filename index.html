@@ -29,7 +29,8 @@
 	<body>
 
     <script src="three.min.js"></script>
-    <script src="inflate.min.js"></script>
+		<script src="inflate.min.js"></script>
+		<script src="tween.min.js"></script>
 
 		<script src="OrbitControls.js"></script>
     
@@ -238,11 +239,11 @@
 				};
 
 				var loader = new THREE.FBXLoader( manager );
-				loader.load( 'DatNewNew.fbx', function( object ) {
+				loader.load( 'All Pieces Separated.fbx', function( object ) {
 					//add shadow casting and receiving for all of the child objects loaded
 					for(var i in object.children){
-						object.children[i].castShadow = true;
-						object.children[i].receiveShadow = true;
+						// object.children[i].castShadow = true;
+						// object.children[i].receiveShadow = true;
 						//console.log(object.children[i]);
 					}
 					object.castShadow = true;
@@ -301,20 +302,9 @@
 				// camera.position.set( 2, 10, 28 );
 				// controls.update();
 
-				// controls = new THREE.PointerLockControls(camera);
-				// controls.enabled = true;
-				// controls.getObject().position.set(-.5, 2.5, 4);
-				// scene.add(controls.getObject());
-				//hardcoded camera position and where it looks
-
 				//looking at the tables
 				camera.position.set(-4.8, 3.1, 8.7);
-				camera.rotation.set(-.71, -1.16, -.67);
-
-				//coloring
-				// camera.position.set(7.5, 2.8, 8);
-				// camera.lookAt(new THREE.Vector3(7.4, 2, 7.955));
-				
+				camera.rotation.set(-.71, -1.16, -.67);				
 
 				var element = document.body;
 				
@@ -452,9 +442,14 @@
 			function nextPosition(){
 				switch(cameraPosition){
 					case 1:
-							camera.position.set(7.5, 2.8, 8);
-							camera.lookAt(new THREE.Vector3(7.4, 2, 7.955));
+							// camera.position.set(7.5, 2.8, 8);
+							// camera.lookAt(new THREE.Vector3(7.4, 2, 7.955));
 							cameraPosition = 2;
+
+							var start = {x: -4.8, y: 3.1, z: 8.7};
+							var end = {x: 7.5, y: 2.8, z: 8};
+							var tween = new TWEEN.Tween(camera.position).to(end, 2000);
+							tween.start();
 						break;
 					case 2:
 						camera.position.set(2.8, 3.4, 6.7);
@@ -506,6 +501,7 @@
 			}
 
 			function render() {
+				TWEEN.update();
 				renderer.render( scene, camera );
 			}
 		</script>
