@@ -65,6 +65,7 @@
 			var coloredObjects = [];
 			var attempts = 0
 			var currentTable;
+			var colormode = 1;
 
 			init();
 
@@ -88,7 +89,7 @@
 									currentHover = intersected
 									newMaterial = currentHover.material.clone()
 									previousMaterial = currentHover.material
-									newMaterial.color.setHex('#ffffff')
+									newMaterial.color.setHex('ffffff')
 									currentHover.material = newMaterial
 								}
 								else {
@@ -96,7 +97,7 @@
 									currentHover = intersected
 									newMaterial = currentHover.material.clone()
 									previousMaterial = currentHover.material
-									newMaterial.color.setHex('#000000')
+									newMaterial.color.setHex('000000')
 									currentHover.material = newMaterial
 								}
 							}
@@ -168,8 +169,8 @@
 							if(currentObject && currentObject.visible === false) {
 								currentObject.visible = true;
 							}
-							currentObject = intersected;
 
+							currentObject = intersected;
 							currentObject.visible = false;
 						}
 
@@ -414,12 +415,17 @@
 					}
 				}, false);
 
+				window.addEventListener("dblclick", () => {
+					if(colormode === 1) {
+						revertColors(document)
+					}
+					else {
+						changeColorVision()
+					}
+				})
+
 				window.addEventListener("mousemove", onMouseMove);
-				// window.addEventListener("mousemove", () => {
-				// 	if(cameraPosition === 1) {
-				// 		highlightTables()
-				// 	}
-				// })
+
 				window.addEventListener("mousedown", () => {
 					switch(cameraPosition) {
 						case 1:
@@ -537,7 +543,7 @@
 				}
 			)
 
-			//window.onload = changeColorVision();
+			window.onload = changeColorVision();
 
 			function nextPosition(){
 				switch(cameraPosition){
@@ -601,10 +607,6 @@
 						cameraPosition = 1;
 						break;
 				}
-			}
-
-			function previousPosition(){
-
 			}
 
 			function onWindowResize() {
