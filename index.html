@@ -52,6 +52,7 @@
 			var teacher;
 
 			var cameraPosition = 1;
+			var walkSteps;
 
 			var clock = new THREE.Clock();
 
@@ -300,7 +301,7 @@
 				};
 
 				var loader = new THREE.FBXLoader( manager );
-				loader.load( 'PreschoolPreAlphaScene.fbx', function( object ) {
+				loader.load( 'PreSchool_New10.6.1.fbx', function( object ) {
 					//add shadow casting and receiving for all of the child objects loaded
 					for(var i in object.children){
 						// object.children[i].castShadow = true;
@@ -607,6 +608,27 @@
 						cameraPosition = 1;
 						break;
 				}
+			}
+
+			/**
+			 * Begin the walk specified in the walkSteps variable
+			 */
+			function beginWalk(){
+				
+			}
+
+			function addStep(position){
+				//add tween to list of tweens
+
+				//rotaion might have to be separate
+				//or only do y axis and hand the wobble separately
+
+				//chain the tween so that they happen consecutively
+
+			}
+
+			function previousPosition(){
+
 			}
 
 			function onWindowResize() {
