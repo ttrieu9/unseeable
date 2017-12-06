@@ -49,6 +49,7 @@
 			var teacher;
 
 			var cameraPosition = 1;
+			var walkSteps;
 
 			var clock = new THREE.Clock();
 
@@ -538,6 +539,23 @@
 						cameraPosition = 1;
 						break;
 				}
+			}
+
+			/**
+			 * Begin the walk specified in the walkSteps variable
+			 */
+			function beginWalk(){
+				
+			}
+
+			function addStep(position){
+				//add tween to list of tweens
+
+				//rotaion might have to be separate
+				//or only do y axis and hand the wobble separately
+
+				//chain the tween so that they happen consecutively
+
 			}
 
 			function previousPosition(){
