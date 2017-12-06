@@ -77,28 +77,29 @@
 
 
 				raycaster.setFromCamera(mouse, camera);
-				var intersects = raycaster.intersectObjects(scene.children[8].children);
+				var intersects = raycaster.intersectObjects(scene.children[9].children);
 
 				if(intersects.length > 0) {
 					var intersected = intersects[0].object
 					switch(cameraPosition) {
 						case 1:
-							if(intersected.name.includes('Table')) {
+							if(intersected.name.includes('Table') && !intersected.name.includes('Chair') && !intersected.name.includes('Legs')) {
 								document.body.style.cursor = 'pointer'
 
 								if(!currentHover) {
 									currentHover = intersected
-									newMaterial = currentHover.material.clone()
-									previousMaterial = currentHover.material
-									newMaterial.color.setHex('ffffff')
+									console.log(currentHover.material)
+									newMaterial = currentHover.material[0].clone()
+									previousMaterial = [currentHover.material[0].clone(),currentHover.material[1].clone()]
+									newMaterial.color.setHex('0xffffff')
 									currentHover.material = newMaterial
 								}
 								else {
 									currentHover.material = previousMaterial
 									currentHover = intersected
-									newMaterial = currentHover.material.clone()
-									previousMaterial = currentHover.material
-									newMaterial.color.setHex('000000')
+									newMaterial = currentHover.material[0].clone()
+									previousMaterial = [currentHover.material[0].clone(),currentHover.material[1].clone()]
+									newMaterial.color.setHex('0xffffff')
 									currentHover.material = newMaterial
 								}
 							}
