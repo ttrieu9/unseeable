@@ -75,7 +75,7 @@
 
 
 				raycaster.setFromCamera(mouse, camera);
-				var intersects = raycaster.intersectObjects(scene.children[9].children);
+				var intersects = raycaster.intersectObjects(scene.children[8].children);
 
 				if(intersects.length > 0) {
 					var intersected = intersects[0].object
@@ -155,7 +155,7 @@
 			function colorPaper() {
 				raycaster.setFromCamera(mouse, camera);
 
-				var intersects = raycaster.intersectObjects(scene.children[9].children);
+				var intersects = raycaster.intersectObjects(scene.children[8].children);
 
 				if(intersects.length > 0) {
 					var intersected = intersects[0].object;
@@ -229,13 +229,14 @@
 			function selectTable() {
 				raycaster.setFromCamera(mouse, camera);
 
-				var intersects = raycaster.intersectObjects(scene.children[9].children);
+				var intersects = raycaster.intersectObjects(scene.children[8].children);
 
 				if(intersects.length > 0) {
 					var intersected = intersects[0].object;
+					console.log(intersected.name)
 
 					if(intersected.name.includes("Table")){
-						if(intersected.name.includes("Table3Top")) {
+						if(intersected.name.includes("Table3_Top")) {
 							if(currentHover) {
 								currentHover.material = previousMaterial
 								currentHover = null
