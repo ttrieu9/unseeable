@@ -236,9 +236,9 @@
 
 				if(intersects.length > 0) {
 					var intersected = intersects[0].object;
-
+					console.log(intersected)
 					if(intersected.name.includes("Table")){
-						if(intersected.name.includes("Table_Yellow")) {
+						if(intersected.name.includes("Table_Red")) {
 							if(currentHover) {
 								currentHover.material = previousMaterial
 								currentHover = null
