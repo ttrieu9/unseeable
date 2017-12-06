@@ -65,7 +65,6 @@
 			var coloredObjects = [];
 			var attempts = 0
 			var currentTable;
-			var paper = []
 
 			init();
 
@@ -305,9 +304,6 @@
 						// object.children[i].castShadow = true;
 						// object.children[i].receiveShadow = true;
 						//console.log(object.children[i]);
-						if(object.children[i].name.includes('Paper')) {
-							paper.push(object.children[i])
-						}
 					}
 					object.castShadow = true;
 					object.receiveShadow = true;
@@ -393,10 +389,10 @@
 				container.appendChild( renderer.domElement );
 
 				// controls, camera
-				controls = new THREE.OrbitControls( camera, renderer.domElement );
-				camera.position.set(-4.8, 3.1, 8.7);
-				camera.rotation.set(-.71, -1.16, -.67);	
-				controls.update();
+				// controls = new THREE.OrbitControls( camera, renderer.domElement );
+				// controls.target.set( 0, 5, 0 );
+				// camera.position.set( 2, 10, 28 );
+				// controls.update();
 
 				//looking at the tables
 				camera.position.set(-4.8, 3.1, 8.7);
@@ -596,20 +592,6 @@
 						camera.position.set(2.8, 3.4, 6.7);
 						camera.rotation.set(2.55, 1.48, -2.54);
 						cameraPosition = 3;
-
-						var group = new THREE.Group()
-						for(var i in paper) {
-							group.add(paper[i])
-						}
-						scene.add(group)
-						console.log(group)
-						//group.position.set(-18,0,0)
-						var pivot = new THREE.Group()
-						scene.add(pivot)
-
-						pivot.add(group)
-						group.position.set(-14,-12.2,-1.22)
-						pivot.rotation.z = 270 * (Math.PI/180)
 						break;
 					case 3:
 						teacher.position.set(-9, -.05, 8);
