@@ -157,12 +157,13 @@
 			function colorPaper() {
 				raycaster.setFromCamera(mouse, camera);
 
-				var intersects = raycaster.intersectObjects(scene.children[8].children);
+				var intersects = raycaster.intersectObjects(scene.children[9].children);
 
 				if(intersects.length > 0) {
 					var intersected = intersects[0].object;
+					console.log(intersected)
 					if (intersected.name.includes('Crayon')) {
-						if(intersected.name.includes('CrayonBox')){
+						if(intersected.name.includes('Crayon_Box')){
 							currentObject.visible = true;
 							currentObject = null;
 						}
@@ -197,7 +198,7 @@
 						)
 					}
 					else if(intersected.name.includes('Paper') && !coloredObjects.includes(intersected.name) && !intersected.name.includes('PaperInstructions') && !intersected.name.includes('PaperOutline') && currentObject) {
-						intersected.material = currentObject.material;
+						intersected.material = currentObject.material[0];
 						coloredObjects.push(intersected.name)
 
 						var audioListener = new THREE.AudioListener();
@@ -221,7 +222,7 @@
 							}
 						)
 
-						if(coloredObjects.length === 5) {
+						if(coloredObjects.length === 10) {
 							setTimeout(() => {nextPosition()}, 1000)
 						}
 					}
@@ -231,14 +232,13 @@
 			function selectTable() {
 				raycaster.setFromCamera(mouse, camera);
 
-				var intersects = raycaster.intersectObjects(scene.children[8].children);
+				var intersects = raycaster.intersectObjects(scene.children[9].children);
 
 				if(intersects.length > 0) {
 					var intersected = intersects[0].object;
-					console.log(intersected.name)
 
 					if(intersected.name.includes("Table")){
-						if(intersected.name.includes("Table3_Top")) {
+						if(intersected.name.includes("Table_Yellow")) {
 							if(currentHover) {
 								currentHover.material = previousMaterial
 								currentHover = null
@@ -391,11 +391,11 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				container.appendChild( renderer.domElement );
 
-				// controls, camera
-				// controls = new THREE.OrbitControls( camera, renderer.domElement );
-				// controls.target.set( 0, 5, 0 );
-				// camera.position.set( 2, 10, 28 );
-				// controls.update();
+				controls, camera
+				controls = new THREE.OrbitControls( camera, renderer.domElement );
+				controls.target.set( 0, 5, 0 );
+				camera.position.set( 2, 10, 28 );
+				controls.update();
 
 				//looking at the tables
 				camera.position.set(-4.8, 3.1, 8.7);
@@ -419,9 +419,11 @@
 				window.addEventListener("dblclick", () => {
 					if(colormode === 1) {
 						revertColors(document)
+						colormode = 0
 					}
 					else {
 						changeColorVision()
+						colormode = 1
 					}
 				})
 
@@ -544,7 +546,7 @@
 				}
 			)
 
-			window.onload = changeColorVision();
+			//window.onload = changeColorVision();
 
 			function nextPosition(){
 				switch(cameraPosition){
