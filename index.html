@@ -53,6 +53,8 @@
 			var rotSteps;
 			var cameraHolder;
 
+			var teacher;
+
 			var clock = new THREE.Clock();
 
 			var mixers = [];
@@ -260,17 +262,17 @@
 				
 				//add the teacher
 				loader.load( 'Idle.fbx', function( object ) {
-
-					object.position.set(4, -.05, -1);
-					var scale = 2.2;
-					object.scale.set(scale, scale, scale);
-					object.mixer = new THREE.AnimationMixer( object );
-					mixers.push( object.mixer );
-
-					var action = object.mixer.clipAction( object.animations[ 0 ] );
-					action.play();
 					teacher = object;
-					scene.add( object );
+					teacher.position.set(4, -.05, -1);
+					var scale = 2.2;
+					teacher.scale.set(scale, scale, scale);
+					teacher.mixer = new THREE.AnimationMixer( teacher );
+					mixers.push( teacher.mixer );
+
+					var action = teacher.mixer.clipAction( teacher.animations[ 0 ] );
+					action.play();
+					teacher = teacher;
+					scene.add( teacher );
 
 
 				}, onProgress, onError );
@@ -530,14 +532,21 @@
 							// pTweenOne.start();
 							// preTween.start();
 
+							cameraPosition = 2;
 							walkSteps = [];
 							rotSteps = [];
-							addStep({x: 8.996938314698967, y: 2.5854736710637027, z: 1.4215479412451644}, {x: -1.4675807838277213, y: 2.3593000107445814, z: 0}, 2000);
+							addStep({x: 4.024701570901415, y: 2.4626396345167465, z: 4.98938186450447}, {x: -0.03219963851275497, y: -0.998897834228987, z: -1.7356231597949947e-18}, 2000);
+							addStep({x: 5.063009743142326, y: 2.5470899665911286, z: -1.3016889197308628}, {x: -0.16046003693383085, y: -1.9555038079014748, z: -1.4058383394366767e-17}, 2000);
+							addStep({x: 7.057114945508873, y: 2.4966832947856045, z: -1.6316077031168945}, {x: -0.02499094920203149, y: -2.440302674230827, _z: 0}, 2000);
+							addStep({x: 8.996938314698967, y: 2.5854736710637027, z: 1.4215479412451644}, {x: -1.4675807838277213, y: -3.92388529644, z: 0}, 2000);
 							beginWalk();
 						break;
 					case 2:
 						camera.position.set(2.8, 3.4, 6.7);
-						camera.rotation.set(2.55, 1.48, -2.54);
+						// camera.rotation.set(2.55, 1.48, -2.54);
+						let lookat = teacher.position;
+						lookat.y += 4;
+						camera.lookAt(lookat);
 						cameraPosition = 3;
 						break;
 					case 3:
