@@ -50,6 +50,8 @@
 
 			var cameraPosition = 1;
 			var walkSteps;
+			var rotSteps;
+			var cameraHolder;
 
 			var clock = new THREE.Clock();
 
@@ -202,9 +204,10 @@
 				container = document.createElement( 'div' );
 				document.body.appendChild( container );
 
-				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, .1, 2000 );
-
 				scene = new THREE.Scene();
+
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, .1, 2000 );
+				camera.rotation.reorder( "YXZ" );
 
 				// grid
 				var gridHelper = new THREE.GridHelper( 28, 28, 0x303030, 0x303030 );
@@ -334,21 +337,21 @@
 
 				// controls, camera
 				controls = new THREE.OrbitControls( camera, renderer.domElement );
-				camera.position.set(-4.8, 3.1, 8.7);
-				camera.rotation.set(-.71, -1.16, -.67);	
 				controls.update();
-
-				//looking at the tables
-				camera.position.set(-4.8, 3.1, 8.7);
-				camera.rotation.set(-.71, -1.16, -.67);				
+				
+				// set the initial position
+				camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
+				camera.rotation.set(-0.09963408823470919, -1.5005061696940256, 2.0920433907298925e-17);				
 
 				var element = document.body;
 				
 				
 				element.addEventListener("keypress", function(event){
-					nextPosition();
 					if(String.fromCharCode(event.keyCode) === "c"){
 						console.log(camera);
+					}
+					else{
+						nextPosition();
 					}
 				}, false);
 
@@ -446,7 +449,7 @@
 				light = new THREE.DirectionalLight(0xffffff, 1.0);
 				light.position.set(0, 10, -50);
 				light.rotation.x = Math.PI / 2;
-				scene.add(light);
+				// scene.add(light);
 
 				animate();
 			}
@@ -480,52 +483,57 @@
 			function nextPosition(){
 				switch(cameraPosition){
 					case 1:
-							// camera.position.set(7.5, 2.8, 8);
-							// camera.lookAt(new THREE.Vector3(7.4, 2, 7.955));
-							cameraPosition = 2;
+							// // camera.position.set(7.5, 2.8, 8);
+							// // camera.lookAt(new THREE.Vector3(7.4, 2, 7.955));
+							// cameraPosition = 2;
 
-							//"walk" over to the table
-							//there will be movement tweens and rotation tweens
+							// //"walk" over to the table
+							// //there will be movement tweens and rotation tweens
 
-							//pre camera rotation
-							var preRot = {x: 0, y: -1.4, z: 0};
-							var preTween = new TWEEN.Tween(camera.rotation).to(preRot, 500);
+							// //pre camera rotation
+							// var preRot = {x: 0, y: -1.4, z: 0};
+							// var preTween = new TWEEN.Tween(camera.rotation).to(preRot, 500);
 
-							var posOne = {x: 1.9, y: 3.1, z: 6.6};
-							var rotOne = {x: -0, y: -2.5, z: -0};
-							var end = {x: 7.5, y: 2.8, z: 8};
+							// var posOne = {x: 1.9, y: 3.1, z: 6.6};
+							// var rotOne = {x: -0, y: -2.5, z: -0};
+							// var end = {x: 7.5, y: 2.8, z: 8};
 
-							var pTweenOne = new TWEEN.Tween(camera.position).to(posOne, 2000);
-							var rTweenOne = new TWEEN.Tween(camera.rotation).to(rotOne, 1500);
-							preTween.chain(rTweenOne);
+							// var pTweenOne = new TWEEN.Tween(camera.position).to(posOne, 2000);
+							// var rTweenOne = new TWEEN.Tween(camera.rotation).to(rotOne, 1500);
+							// preTween.chain(rTweenOne);
 
-							var posTwo = {x: 3.3, y: 3.1, z: 11.2};
-							var rotTwo = {x: 0, y: -1.4, z: 0};
-							var pTweenTwo = new TWEEN.Tween(camera.position).to(posTwo, 2000);
-							var rTweenTwo = new TWEEN.Tween(camera.rotation).to(rotTwo, 2000);
-							pTweenOne.chain(pTweenTwo);
-							rTweenOne.chain(rTweenTwo);
+							// var posTwo = {x: 3.3, y: 3.1, z: 11.2};
+							// var rotTwo = {x: 0, y: -1.4, z: 0};
+							// var pTweenTwo = new TWEEN.Tween(camera.position).to(posTwo, 2000);
+							// var rTweenTwo = new TWEEN.Tween(camera.rotation).to(rotTwo, 2000);
+							// pTweenOne.chain(pTweenTwo);
+							// rTweenOne.chain(rTweenTwo);
 
-							var posThree = {x: 8.4, y: 3.1, z: 12.2};
-							var rotThree = {x: 0, y: 0.37, z: 0};
-							var pTweenThree = new TWEEN.Tween(camera.position).to(posThree, 2000);
-							var rTweenThree = new TWEEN.Tween(camera.rotation).to(rotThree, 2000);
-							pTweenTwo.chain(pTweenThree);
-							rTweenTwo.chain(rTweenThree);
+							// var posThree = {x: 8.4, y: 3.1, z: 12.2};
+							// var rotThree = {x: 0, y: 0.37, z: 0};
+							// var pTweenThree = new TWEEN.Tween(camera.position).to(posThree, 2000);
+							// var rTweenThree = new TWEEN.Tween(camera.rotation).to(rotThree, 2000);
+							// pTweenTwo.chain(pTweenThree);
+							// rTweenTwo.chain(rTweenThree);
 
-							var posFour = {x: 7.5, y: 2.8, z: 8};
-							var rotFour = {x: 0, y: 1, z: 0};
-							var pTweenFour = new TWEEN.Tween(camera.position).to(posFour, 2000);
-							var rTweenFour = new TWEEN.Tween(camera.rotation).to(rotFour, 2000);
-							pTweenThree.chain(pTweenFour);
-							rTweenThree.chain(rTweenFour);
+							// var posFour = {x: 7.5, y: 2.8, z: 8};
+							// var rotFour = {x: 0, y: 1, z: 0};
+							// var pTweenFour = new TWEEN.Tween(camera.position).to(posFour, 2000);
+							// var rTweenFour = new TWEEN.Tween(camera.rotation).to(rotFour, 2000);
+							// pTweenThree.chain(pTweenFour);
+							// rTweenThree.chain(rTweenFour);
 
-							var rotFive = {x: -1.51, y: .12, z: 1.14};
-							var rTweenFive = new TWEEN.Tween(camera.rotation).to(rotFive, 2000);
-							rTweenFour.chain(rTweenFive);
+							// var rotFive = {x: -1.51, y: .12, z: 1.14};
+							// var rTweenFive = new TWEEN.Tween(camera.rotation).to(rotFive, 2000);
+							// rTweenFour.chain(rTweenFive);
 
-							pTweenOne.start();
-							preTween.start();
+							// pTweenOne.start();
+							// preTween.start();
+
+							walkSteps = [];
+							rotSteps = [];
+							addStep({x: 8.996938314698967, y: 2.5854736710637027, z: 1.4215479412451644}, {x: -1.4675807838277213, y: 2.3593000107445814, z: 0}, 2000);
+							beginWalk();
 						break;
 					case 2:
 						camera.position.set(2.8, 3.4, 6.7);
@@ -545,16 +553,28 @@
 			 * Begin the walk specified in the walkSteps variable
 			 */
 			function beginWalk(){
-				
+				walkSteps[0].start();
+				rotSteps[0].start();
 			}
 
-			function addStep(position){
-				//add tween to list of tweens
-
-				//rotaion might have to be separate
-				//or only do y axis and hand the wobble separately
-
-				//chain the tween so that they happen consecutively
+			/**
+			 * Add step to the list of tweens
+			 * /@argument position position to go to
+			 * /@argument rotation rotation to go to
+			 * /@argument time how long to transition
+			 **/
+			function addStep(position, rotation, time){
+				//add tweens to lists of tweens
+				let walkLen = walkSteps.push(new TWEEN.Tween(camera.position).to(position, time));
+				let rotLen = rotSteps.push(new TWEEN.Tween(camera.rotation).to(rotation, time));
+				
+				//chain the tweens so that they happen consecutively
+				if(walkLen > 1){
+					walkSteps[walkLen-2].chain(walkSteps[walkLen-1]);
+				}
+				if(rotLen > 1){
+					rotSteps[rotLen-2].chain(rotSteps[rotLen-1]);
+				}
 
 			}
 
