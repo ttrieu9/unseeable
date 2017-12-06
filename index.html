@@ -277,59 +277,6 @@
 
 				}, onProgress, onError );
 
-				//add all of the children
-				//kid sitting at a table
-				loader.load( 'Sitting Victory.fbx', function( object ) {
-
-					object.position.set(7, .3, .8);
-					object.rotation.y = Math.PI*5 / 6;;
-					var scale = 3;
-					object.scale.set(scale, scale, scale);
-					object.mixer = new THREE.AnimationMixer( object );
-					mixers.push( object.mixer );
-
-					var action = object.mixer.clipAction( object.animations[ 0 ] );
-					action.play();
-
-					scene.add( object );
-
-
-				}, onProgress, onError );
-
-				loader.load( 'Sitting.fbx', function( object ) {
-
-					object.position.set(6.7, .3, 5.4);
-					object.rotation.y = Math.PI*11 / 6;
-					var scale = 3;
-					object.scale.set(scale, scale, scale);
-					object.mixer = new THREE.AnimationMixer( object );
-					mixers.push( object.mixer );
-
-					var action = object.mixer.clipAction( object.animations[ 0 ] );
-					action.play();
-
-					scene.add( object );
-
-
-				}, onProgress, onError );
-
-				loader.load( 'Sitting Idle.fbx', function( object ) {
-
-					object.position.set(3.5, .3, 11.8);
-					object.rotation.y = Math.PI*5.5 / 4;
-					var scale = 3;
-					object.scale.set(scale, scale, scale);
-					object.mixer = new THREE.AnimationMixer( object );
-					mixers.push( object.mixer );
-
-					var action = object.mixer.clipAction( object.animations[ 0 ] );
-					action.play();
-
-					scene.add( object );
-
-
-				}, onProgress, onError );
-
 				renderer = new THREE.WebGLRenderer({ antialias: true });
 				renderer.shadowMap.enabled = true;
 				renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -536,23 +483,19 @@
 							walkSteps = [];
 							rotSteps = [];
 							addStep({x: 4.024701570901415, y: 2.4626396345167465, z: 4.98938186450447}, {x: -0.03219963851275497, y: -0.998897834228987, z: -1.7356231597949947e-18}, 2000);
-							addStep({x: 5.063009743142326, y: 2.5470899665911286, z: -1.3016889197308628}, {x: -0.16046003693383085, y: -1.9555038079014748, z: -1.4058383394366767e-17}, 2000);
-							addStep({x: 7.057114945508873, y: 2.4966832947856045, z: -1.6316077031168945}, {x: -0.02499094920203149, y: -2.440302674230827, _z: 0}, 2000);
+							addStep({x: 5.063009743142326, y: 2.5470899665911286, z: -1.3016889197308628}, {x: -0.18626367269226687, y: -1.4851049078987137, z: 1.4122056774290025e-17}, 2000);
+							addStep({x: 7.057114945508873, y: 2.4966832947856045, z: -1.6316077031168945}, {x: -0.02499094920203149, y: -2.440302674230827, z: 0}, 2000);
 							addStep({x: 8.996938314698967, y: 2.5854736710637027, z: 1.4215479412451644}, {x: -1.4675807838277213, y: -3.92388529644, z: 0}, 2000);
 							beginWalk();
 						break;
 					case 2:
 						camera.position.set(2.8, 3.4, 6.7);
-						// camera.rotation.set(2.55, 1.48, -2.54);
-						let lookat = teacher.position;
-						lookat.y += 4;
-						camera.lookAt(lookat);
 						cameraPosition = 3;
 						break;
 					case 3:
 						teacher.position.set(-9, -.05, 8);
-						camera.position.set(-4.8, 3.1, 8.7);
-						camera.rotation.set(-.71, -1.16, -.67);
+						camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
+						camera.rotation.set(-0.09963408823470919, -1.5005061696940256, 2.0920433907298925e-17);
 						cameraPosition = 1;
 						break;
 				}
