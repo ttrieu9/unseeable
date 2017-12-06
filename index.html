@@ -49,6 +49,7 @@
 
 			var container, stats, controls;
 			var camera, scene, renderer, light;
+			var teacher;
 
 			var cameraPosition = 1;
 
@@ -325,6 +326,59 @@
 
 					var action = object.mixer.clipAction( object.animations[ 0 ] );
 					action.play();
+					teacher = object;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+
+				//add all of the children
+				//kid sitting at a table
+				loader.load( 'Sitting Victory.fbx', function( object ) {
+
+					object.position.set(7, .3, .8);
+					object.rotation.y = Math.PI*5 / 6;;
+					var scale = 3;
+					object.scale.set(scale, scale, scale);
+					object.mixer = new THREE.AnimationMixer( object );
+					mixers.push( object.mixer );
+
+					var action = object.mixer.clipAction( object.animations[ 0 ] );
+					action.play();
+
+					scene.add( object );
+
+
+				}, onProgress, onError );
+
+				loader.load( 'Sitting.fbx', function( object ) {
+
+					object.position.set(6.7, .3, 5.4);
+					object.rotation.y = Math.PI*11 / 6;
+					var scale = 3;
+					object.scale.set(scale, scale, scale);
+					object.mixer = new THREE.AnimationMixer( object );
+					mixers.push( object.mixer );
+
+					var action = object.mixer.clipAction( object.animations[ 0 ] );
+					action.play();
+
+					scene.add( object );
+
+
+				}, onProgress, onError );
+
+				loader.load( 'Sitting Idle.fbx', function( object ) {
+
+					object.position.set(3.5, .3, 11.8);
+					object.rotation.y = Math.PI*5.5 / 4;
+					var scale = 3;
+					object.scale.set(scale, scale, scale);
+					object.mixer = new THREE.AnimationMixer( object );
+					mixers.push( object.mixer );
+
+					var action = object.mixer.clipAction( object.animations[ 0 ] );
+					action.play();
 
 					scene.add( object );
 
@@ -338,17 +392,11 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				container.appendChild( renderer.domElement );
 
-				controls, camera
+				// controls, camera
 				controls = new THREE.OrbitControls( camera, renderer.domElement );
-				controls.target.set( 0, 5, 0 );
-				camera.position.set( 2, 10, 28 );
+				camera.position.set(-4.8, 3.1, 8.7);
+				camera.rotation.set(-.71, -1.16, -.67);	
 				controls.update();
-
-				// controls = new THREE.PointerLockControls(camera);
-				// controls.enabled = true;
-				// controls.getObject().position.set(-.5, 2.5, 4);
-				// scene.add(controls.getObject());
-				//hardcoded camera position and where it looks
 
 				//looking at the tables
 				camera.position.set(-4.8, 3.1, 8.7);
@@ -363,8 +411,10 @@
 				
 				
 				element.addEventListener("keypress", function(event){
-					// console.log(camera);
 					nextPosition();
+					if(String.fromCharCode(event.keyCode) === "c"){
+						console.log(camera);
+					}
 				}, false);
 
 				window.addEventListener("mousemove", onMouseMove);
@@ -438,8 +488,8 @@
 				// light.shadowMapHeight = 1024;
 				scene.add(light);
 
-				light = new THREE.AmbientLight( 0x656565 ); // soft white light
-				scene.add( light );
+				// light = new THREE.AmbientLight( 0x656565 ); // soft white light
+				// scene.add( light );
 				
 				var spotLight = new THREE.SpotLight( 0x222222 );
 				spotLight.position.set( 100, 1000, 100 );
@@ -498,6 +548,49 @@
 							camera.position.set(7.5, 2.8, 8);
 							camera.lookAt(new THREE.Vector3(7.4, 2, 7.955));
 							cameraPosition = 2;
+
+							//"walk" over to the table
+							//there will be movement tweens and rotation tweens
+
+							//pre camera rotation
+							var preRot = {x: 0, y: -1.4, z: 0};
+							var preTween = new TWEEN.Tween(camera.rotation).to(preRot, 500);
+
+							var posOne = {x: 1.9, y: 3.1, z: 6.6};
+							var rotOne = {x: -0, y: -2.5, z: -0};
+							var end = {x: 7.5, y: 2.8, z: 8};
+
+							var pTweenOne = new TWEEN.Tween(camera.position).to(posOne, 2000);
+							var rTweenOne = new TWEEN.Tween(camera.rotation).to(rotOne, 1500);
+							preTween.chain(rTweenOne);
+
+							var posTwo = {x: 3.3, y: 3.1, z: 11.2};
+							var rotTwo = {x: 0, y: -1.4, z: 0};
+							var pTweenTwo = new TWEEN.Tween(camera.position).to(posTwo, 2000);
+							var rTweenTwo = new TWEEN.Tween(camera.rotation).to(rotTwo, 2000);
+							pTweenOne.chain(pTweenTwo);
+							rTweenOne.chain(rTweenTwo);
+
+							var posThree = {x: 8.4, y: 3.1, z: 12.2};
+							var rotThree = {x: 0, y: 0.37, z: 0};
+							var pTweenThree = new TWEEN.Tween(camera.position).to(posThree, 2000);
+							var rTweenThree = new TWEEN.Tween(camera.rotation).to(rotThree, 2000);
+							pTweenTwo.chain(pTweenThree);
+							rTweenTwo.chain(rTweenThree);
+
+							var posFour = {x: 7.5, y: 2.8, z: 8};
+							var rotFour = {x: 0, y: 1, z: 0};
+							var pTweenFour = new TWEEN.Tween(camera.position).to(posFour, 2000);
+							var rTweenFour = new TWEEN.Tween(camera.rotation).to(rotFour, 2000);
+							pTweenThree.chain(pTweenFour);
+							rTweenThree.chain(rTweenFour);
+
+							var rotFive = {x: -1.51, y: .12, z: 1.14};
+							var rTweenFive = new TWEEN.Tween(camera.rotation).to(rotFive, 2000);
+							rTweenFour.chain(rTweenFive);
+
+							pTweenOne.start();
+							preTween.start();
 						break;
 					case 2:
 						camera.position.set(2.8, 3.4, 6.7);
@@ -519,6 +612,7 @@
 						pivot.rotation.z = 270 * (Math.PI/180)
 						break;
 					case 3:
+						teacher.position.set(-9, -.05, 8);
 						camera.position.set(-4.8, 3.1, 8.7);
 						camera.rotation.set(-.71, -1.16, -.67);
 						cameraPosition = 1;
