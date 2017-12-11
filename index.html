@@ -411,10 +411,11 @@
 				
 				
 				element.addEventListener("keypress", function(event){
-					nextPosition();
 					if(String.fromCharCode(event.keyCode) === "c"){
 						console.log(camera);
 					}
+
+					nextPosition();
 				}, false);
 
 				window.addEventListener("dblclick", () => {
@@ -552,8 +553,8 @@
 			function nextPosition(){
 				switch(cameraPosition){
 					case 1:
-							camera.position.set(7.5, 2.8, 8);
-							camera.lookAt(new THREE.Vector3(7.4, 2, 7.955));
+							camera.position.set(9.129101983449774, 2.3746024659484903, 1.2641468785551278);
+							camera.rotation.set(-1.7975522876891403, 0.22892354767218343, 2.3644861087167754);
 							cameraPosition = 2;
 
 							//"walk" over to the table
