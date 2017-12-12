@@ -246,12 +246,12 @@
 				};
 
 				var loader = new THREE.FBXLoader( manager );
-				loader.load( 'PreSchool_New10.6.1.fbx', function( object ) {
+				loader.load( 'PreSchool_New12.12.fbx', function( object ) {
 					//add shadow casting and receiving for all of the child objects loaded
 					for(var i in object.children){
 						// object.children[i].castShadow = true;
 						// object.children[i].receiveShadow = true;
-						//console.log(object.children[i]);
+						console.log(object.children[i]);
 					}
 					object.castShadow = true;
 					object.receiveShadow = true;
