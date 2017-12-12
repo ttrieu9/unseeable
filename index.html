@@ -62,7 +62,8 @@
 			var mouse = new THREE.Vector2();
 			var currentObject;
 			var currentHover;
-			var previousMaterial
+			var previousMaterial;
+			var previousPosition;
 			var coloredObjects = [];
 			var attempts = 0
 			var currentTable;
@@ -119,16 +120,18 @@
 								if(!intersected.name.includes('Box')) {
 									if(!currentHover) {
 										currentHover = intersected
-										currentHover.position.set(-0.075, 0, -0.03)
+										previousPosition = { x: intersected.position.x, y: intersected.position.y, z: intersected.position.z }
+										currentHover.position.set(previousPosition.x - 0.025, previousPosition.y, previousPosition.z + 0.025)
 									}
 									else if(currentHover.name !== intersected.name) {
-										currentHover.position.set(0,0,0)
+										currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z)
 										currentHover = intersected
-										currentHover.position.set(-0.075, 0, -0.03)
+										previousPosition = { x: intersected.position.x, y: intersected.position.y, z: intersected.position.z }
+										currentHover.position.set(previousPosition.x - 0.025, previousPosition.y, previousPosition.z + 0.025)
 									}
 								}
 								else if(currentHover) {
-									currentHover.position.set(0,0,0)
+									currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z)
 									currentHover = null
 								}
 							}
@@ -144,7 +147,7 @@
 								document.body.style.cursor = 'default'
 
 								if(currentHover) {
-									currentHover.position.set(0,0,0)
+									currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z)
 									currentHover = null
 								}
 							}
@@ -628,10 +631,6 @@
 				//or only do y axis and hand the wobble separately
 
 				//chain the tween so that they happen consecutively
-
-			}
-
-			function previousPosition(){
 
 			}
 
