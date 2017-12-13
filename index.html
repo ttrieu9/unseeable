@@ -72,6 +72,8 @@
 			var attempts = 0
 			var currentTable;
 			var colormode = 1;
+			var paths = [];
+			var intersectableObjects = []
 
 			init();
 
@@ -82,18 +84,17 @@
 
 
 				raycaster.setFromCamera(mouse, camera);
-				var intersects = raycaster.intersectObjects(scene.children[9].children);
+				var intersects = raycaster.intersectObjects(intersectableObjects);
 
 				if(intersects.length > 0) {
 					var intersected = intersects[0].object
 					switch(cameraPosition) {
 						case 1:
-							if(intersected.name.includes('Table') && !intersected.name.includes('Chair') && !intersected.name.includes('Legs')) {
+							if(intersected.name.includes('Table') && !intersected.name.includes('Chair') && !intersected.name.includes('Legs') && !intersected.name.includes("Path")) {
 								document.body.style.cursor = 'pointer'
 
 								if(!currentHover) {
 									currentHover = intersected
-									console.log(currentHover.material)
 									newMaterial = currentHover.material[0].clone()
 									previousMaterial = [currentHover.material[0].clone(),currentHover.material[1].clone()]
 									newMaterial.color.setHex('0xffffff')
@@ -173,7 +174,7 @@
 			function colorPaper() {
 				raycaster.setFromCamera(mouse, camera);
 
-				var intersects = raycaster.intersectObjects(scene.children[9].children);
+				var intersects = raycaster.intersectObjects(intersectableObjects);
 
 				if(intersects.length > 0) {
 					var intersected = intersects[0].object;
@@ -248,12 +249,12 @@
 			function selectTable() {
 				raycaster.setFromCamera(mouse, camera);
 
-				var intersects = raycaster.intersectObjects(scene.children[9].children);
+				var intersects = raycaster.intersectObjects(intersectableObjects);
 
 				if(intersects.length > 0) {
 					var intersected = intersects[0].object;
 					console.log(intersected)
-					if(intersected.name.includes("Table")){
+					if(intersected.name.includes("Table") && !intersected.name.includes("Path")){
 						if(intersected.name.includes("Table_Red")) {
 							if(currentHover) {
 								currentHover.material = previousMaterial
@@ -323,7 +324,12 @@
 					for(var i in object.children){
 						// object.children[i].castShadow = true;
 						// object.children[i].receiveShadow = true;
-						console.log(object.children[i]);
+						if(object.children[i].name.includes("Path")) {
+							paths.push(object.children[i])
+						}
+						else {
+							intersectableObjects.push(object.children[i])
+						}
 					}
 					object.castShadow = true;
 					object.receiveShadow = true;
@@ -331,7 +337,7 @@
 
 
 				}, onProgress, onError );
-				
+				console.log(scene)
 				loader.load( 'Idle.fbx', function( object ) {
 					teacher = object;
 					teacher.position.set(4, -.05, -1);
@@ -570,7 +576,6 @@
 							beginWalk();
 						break;
 					case 2:
-						//camera.position.set(2.8, 3.4, 6.7);
 						camera.position.set(0.11333127647429019, 1.5369136371003131, -2.028078509213737);
 						camera.rotation.set(0.490486809597034, 0.0016298261023861107, 0);
 						cameraPosition = 3;
