@@ -97,10 +97,13 @@
 			var currentTable;
 			var colormode = 1;
 			var paths = [];
+			var splines = [];
 			var intersectableObjects = [];
 			var paperGroup = [];
 			var paper = new THREE.Group()
 			var posted = false
+
+			var activeSpline = null;
 
 			init();
 
@@ -410,6 +413,13 @@
 						// object.children[i].receiveShadow = true;
 						if(object.children[i].name.includes("Path")) {
 							paths.push(object.children[i]);
+							var points = object.children[i].geometry.attributes.position.array;
+							console.log(points);
+							var vectors = [];
+							for(var i = 0; i < points.length; i += 3){
+								vectors.push(new THREE.Vector3(points[i], points[i+1], points[i+2]));
+							}
+							splines.push(new THREE.CatmullRomCurve3(vectors));
 						}
 						else {
 							intersectableObjects.push(object.children[i])
@@ -611,56 +621,6 @@
 			function nextPosition(){
 				switch(cameraPosition){
 					case 1:
-							// // camera.position.set(7.5, 2.8, 8);
-							// // camera.lookAt(new THREE.Vector3(7.4, 2, 7.955));
-							// cameraPosition = 2;
-
-							// //"walk" over to the table
-							// //there will be movement tweens and rotation tweens
-
-							// //pre camera rotation
-							// var preRot = {x: 0, y: -1.4, z: 0};
-							// var preTween = new TWEEN.Tween(camera.rotation).to(preRot, 500);
-
-							// var posOne = {x: 1.9, y: 3.1, z: 6.6};
-							// var rotOne = {x: -0, y: -2.5, z: -0};
-							// var end = {x: 7.5, y: 2.8, z: 8};
-
-							// var pTweenOne = new TWEEN.Tween(camera.position).to(posOne, 2000);
-							// var rTweenOne = new TWEEN.Tween(camera.rotation).to(rotOne, 1500);
-							// preTween.chain(rTweenOne);
-
-							// var posTwo = {x: 3.3, y: 3.1, z: 11.2};
-							// var rotTwo = {x: 0, y: -1.4, z: 0};
-							// var pTweenTwo = new TWEEN.Tween(camera.position).to(posTwo, 2000);
-							// var rTweenTwo = new TWEEN.Tween(camera.rotation).to(rotTwo, 2000);
-							// pTweenOne.chain(pTweenTwo);
-							// rTweenOne.chain(rTweenTwo);
-
-							// var posThree = {x: 8.4, y: 3.1, z: 12.2};
-							// var rotThree = {x: 0, y: 0.37, z: 0};
-							// var pTweenThree = new TWEEN.Tween(camera.position).to(posThree, 2000);
-							// var rTweenThree = new TWEEN.Tween(camera.rotation).to(rotThree, 2000);
-							// pTweenTwo.chain(pTweenThree);
-							// rTweenTwo.chain(rTweenThree);
-
-							// var posFour = {x: 7.5, y: 2.8, z: 8};
-							// var rotFour = {x: 0, y: 1, z: 0};
-							// var pTweenFour = new TWEEN.Tween(camera.position).to(posFour, 2000);
-							// var rTweenFour = new TWEEN.Tween(camera.rotation).to(rotFour, 2000);
-							// pTweenThree.chain(pTweenFour);
-							// rTweenThree.chain(rTweenFour);
-
-							// var rotFive = {x: -1.51, y: .12, z: 1.14};
-							// var rTweenFive = new TWEEN.Tween(camera.rotation).to(rotFive, 2000);
-							// rTweenFour.chain(rTweenFive);
-
-							// pTweenOne.start();
-							// preTween.start();
-							
-							camera.position.set(6.962359430337607, 2.121043760351845, 4.453431362994369);
-							camera.rotation.set(-1.0581080584316573, -0.5617291507874522, 0);
-							cameraPosition = 2;
 
 							// cameraPosition = 2;
 							// walkSteps = [];
@@ -670,6 +630,12 @@
 							// addStep({x: 7.057114945508873, y: 2.4966832947856045, z: -1.6316077031168945}, {x: -0.02499094920203149, y: -2.440302674230827, z: 0}, 2000);
 							// addStep({x: 8.996938314698967, y: 2.5854736710637027, z: 1.4215479412451644}, {x: -1.4675807838277213, y: -3.92388529644, z: 0}, 2000);
 							// beginWalk();
+							
+							// camera.position.set(6.962359430337607, 2.121043760351845, 4.453431362994369);
+							// camera.rotation.set(-1.0581080584316573, -0.5617291507874522, 0);
+							// cameraPosition = 2;
+
+							moveAlongSpline(0);
 						break;
 					case 2:
 						// grab camera rotation on view of teacher
@@ -739,6 +705,14 @@
 
 			}
 
+			/**
+			 * Function to move the camera along the designated spline
+			 * /@argument spline spline to move along
+			 **/
+			function moveAlongSpline(spline){
+				activeSpline = spline;
+			}
+
 			function onWindowResize() {
 
 				camera.aspect = window.innerWidth / window.innerHeight;
@@ -771,8 +745,28 @@
 
 			}
 
+			var camPosIndex = 0;
 			function render() {
 				TWEEN.update()
+
+				if(activeSpline !== null){
+					camPosIndex++;
+					if (camPosIndex > 300) {
+						camPosIndex = 0;
+					}
+					var camPos = splines[activeSpline].getPoint(camPosIndex / 300);
+					// var camRot = splines[activeSpline].getTangent(camPosIndex / 100);
+				
+					camera.position.x = camPos.x;
+					camera.position.y = camPos.y+.5;
+					camera.position.z = camPos.z;
+					
+					// camera.rotation.x = camRot.x;
+					// camera.rotation.y = camRot.y;
+					// camera.rotation.z = camRot.z;
+					console.log("moving");
+				}
+
 				renderer.render( scene, camera );
 			}
 		</script>
