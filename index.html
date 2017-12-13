@@ -278,7 +278,7 @@
 							}
 						)
 
-						if(coloredObjects.length === 2) {
+						if(coloredObjects.length === 15) {
 							setTimeout(() => {
 								// create paper group
 								for(var i in paperGroup) {
@@ -333,6 +333,20 @@
 
 					if(whiteBoardIndex >= 0) {
 						posted = true
+						
+						var currentZoom = {
+							value: camera.zoom
+						}
+
+						var nextZoom = {
+							value: camera.zoom * 0.65
+						}
+
+						var zoomOut = new TWEEN.Tween(currentZoom).to(nextZoom, 750)
+						zoomOut.onUpdate(() => {
+							camera.zoom = currentZoom.value
+						})
+						zoomOut.start()
 					}
 				}
 			}
@@ -738,6 +752,7 @@
 
 			function animate() {
 
+				camera.updateProjectionMatrix()
 				requestAnimationFrame( animate );
 
 				if ( mixers.length > 0 ) {
