@@ -754,17 +754,35 @@
 						// Tween camera to view teacher
 						var lookAtTeacher = new TWEEN.Tween(camera.rotation).to(teacherView, 1000).onComplete(() => {
 							// teacher makes announcement to place art on board
-							setTimeout(() => {
-								// fade to view of whiteboard
+							var audioListener = new THREE.AudioListener();
+							camera.add(audioListener);
+							var teacherAudio = new THREE.Audio(audioListener);
+							teacherAudio.onEnded = () => {
+								// fade to view of whiteboard after audio ends
 								fade()
 								setTimeout(() => {
 									camera.position.set(0.11333127647429019, 1.5369136371003131, -2.028078509213737);
 									camera.rotation.set(0.490486809597034, 0.0016298261023861107, 0);
 								}, 1000)
-							}, 2000)
+							}
+							scene.add(teacherAudio);
+							var audioLoader = new THREE.AudioLoader();
 
-							
-						})
+							audioLoader.load(
+								'FinishColoring.ogg',
+								(audioBuffer) => {
+									teacherAudio.setBuffer(audioBuffer);
+									teacherAudio.setVolume(0.3);
+									teacherAudio.play();
+								},
+								function ( xhr ) {
+									console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+								},
+								function ( xhr ) {
+									console.log( 'An error happened' );
+								}
+							)
+						}, 2000)
 						lookAtTeacher.start()
 
 						
