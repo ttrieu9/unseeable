@@ -49,7 +49,7 @@
 	</head>
 
 	<body>
-		<div id="curtain"></div>
+		<!-- <div id="curtain"></div> -->
 
     <script src="three.min.js"></script>
     <script src="inflate.min.js"></script>
@@ -97,7 +97,10 @@
 			var currentTable;
 			var colormode = 1;
 			var paths = [];
-			var intersectableObjects = []
+			var intersectableObjects = [];
+			var paperGroup = [];
+			var paper = new THREE.Group()
+			var posted = false
 
 			init();
 
@@ -189,7 +192,16 @@
 								}
 							}
 							break;
-						case 3:							
+						case 3:
+							if(posted === false) {
+								var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
+								vector.unproject(camera)
+								var dir = vector.sub( camera.position ).normalize();
+								var distance = - camera.position.z / dir.z;
+								var pos = camera.position.clone().add( dir.multiplyScalar( distance ) );
+								pos.set(-1.9*(pos.x + 3.9), -1.9*(pos.y - 1.2), pos.z - 7.5)
+								paper.position.copy(pos);	
+							}
 							break;
 					}
 				}
@@ -238,9 +250,12 @@
 							}
 						)
 					}
-					else if(intersected.name.includes('Paper') && !coloredObjects.includes(intersected.name) && !intersected.name.includes("Outline") && currentObject) {
+					else if(intersected.name.includes('Paper') && coloredObjects.includes(intersected.name) && !intersected.name.includes("Outline") && currentObject) {
 						intersected.material = currentObject.material[0];
-						coloredObjects.push(intersected.name)
+						var paperIndex = coloredObjects.findIndex((object) => {
+							return object.includes(intersected.name)
+						})
+						coloredObjects.splice(paperIndex, 1)
 
 						var audioListener = new THREE.AudioListener();
 						camera.add(audioListener);
@@ -263,8 +278,17 @@
 							}
 						)
 
-						if(coloredObjects.length === 10) {
-							setTimeout(() => {nextPosition()}, 1000)
+						if(coloredObjects.length === 2) {
+							setTimeout(() => {
+								// create paper group
+								for(var i in paperGroup) {
+									paper.add(paperGroup[i])
+								}
+								paper.rotateX(Math.PI/2)
+								paper.rotateY(Math.PI/4)
+								scene.add(paper)
+								nextPosition()
+							}, 1000)
 						}
 					}
 				}
@@ -277,7 +301,6 @@
 
 				if(intersects.length > 0) {
 					var intersected = intersects[0].object;
-					console.log(intersected)
 					if(intersected.name.includes("Table") && !intersected.name.includes("Path")){
 						if(intersected.name.includes("Table_Red")) {
 							if(currentHover) {
@@ -294,6 +317,22 @@
 							attempts++;
 							alert("wrong table")
 						}
+					}
+				}
+			}
+
+			function postPaper() {
+				raycaster.setFromCamera(mouse, camera);
+
+				var intersects = raycaster.intersectObjects(intersectableObjects);
+
+				if(intersects.length > 0) {
+					var whiteBoardIndex = intersects.findIndex((intersected) => {
+						return intersected.object.name.includes("WhiteBoard")
+					})
+
+					if(whiteBoardIndex >= 0) {
+						posted = true
 					}
 				}
 			}
@@ -356,10 +395,18 @@
 						// object.children[i].castShadow = true;
 						// object.children[i].receiveShadow = true;
 						if(object.children[i].name.includes("Path")) {
-							paths.push(object.children[i])
+							paths.push(object.children[i]);
 						}
 						else {
 							intersectableObjects.push(object.children[i])
+
+							if(object.children[i].name.includes("MainPaper")) {
+								paperGroup.push(object.children[i]);
+
+								if(!object.children[i].name.includes("Outline")) {
+									coloredObjects.push(object.children[i].name);
+								}
+							}
 						}
 					}
 					object.castShadow = true;
@@ -458,7 +505,7 @@
 							colorPaper();
 							break;
 						case 3:							
-							console.log('Look at drawing')
+							postPaper()
 							break;
 					}
 				});
@@ -622,11 +669,10 @@
 
 						// Tween camera to view teacher
 						var lookAtTeacher = new TWEEN.Tween(camera.rotation).to(teacherView, 1000).onComplete(() => {
+							// teacher makes announcement to place art on board
 							setTimeout(() => {
-								console.log('Teacher says something')
-
 								// fade to view of whiteboard
-								fade()
+								//fade()
 								setTimeout(() => {
 									camera.position.set(0.11333127647429019, 1.5369136371003131, -2.028078509213737);
 									camera.rotation.set(0.490486809597034, 0.0016298261023861107, 0);
