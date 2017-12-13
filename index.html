@@ -590,10 +590,16 @@
 				window.addEventListener("dblclick", () => {
 					if(colormode === 1) {
 						revertColors(document)
+						for(var i in paths) {
+							paths[i].visible = true;
+						}
 						colormode = 0
 					}
 					else {
 						changeColorVision()
+						for(var i in paths) {
+							paths[i].visible = false;
+						}
 						colormode = 1
 					}
 				})
