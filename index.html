@@ -638,7 +638,13 @@
 							// camera.rotation.set(-1.0581080584316573, -0.5617291507874522, 0);
 							// cameraPosition = 2;
 							cameraPosition = 2;
-							moveAlongSpline(1, 1);
+							moveAlongSpline(1, -1);
+							setTimeout(function(){
+								rotSteps = [];
+								walkSteps = [];
+								addStep({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, {x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 2000);
+								beginWalk();
+							}, 5000);
 						break;
 					case 2:
 						// grab camera rotation on view of teacher
