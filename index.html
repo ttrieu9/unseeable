@@ -61,6 +61,7 @@
 		<script src="NURBSUtils.js"></script>
 		<script src="FBXLoader.js"></script>
 		<script src="ColladaLoader2.js"></script>
+		<script src="tween.min.js"></script>
 
 		<script src="Detector.js"></script>
 		<script src="stats.min.js"></script>
@@ -595,25 +596,48 @@
 
 							// pTweenOne.start();
 							// preTween.start();
+							
 							camera.position.set(6.962359430337607, 2.121043760351845, 4.453431362994369);
 							camera.rotation.set(-1.0581080584316573, -0.5617291507874522, 0);
 							cameraPosition = 2;
 
-							cameraPosition = 2;
-							walkSteps = [];
-							rotSteps = [];
-							addStep({x: 4.024701570901415, y: 2.4626396345167465, z: 4.98938186450447}, {x: -0.03219963851275497, y: -0.998897834228987, z: -1.7356231597949947e-18}, 2000);
-							addStep({x: 5.063009743142326, y: 2.5470899665911286, z: -1.3016889197308628}, {x: -0.18626367269226687, y: -1.4851049078987137, z: 1.4122056774290025e-17}, 2000);
-							addStep({x: 7.057114945508873, y: 2.4966832947856045, z: -1.6316077031168945}, {x: -0.02499094920203149, y: -2.440302674230827, z: 0}, 2000);
-							addStep({x: 8.996938314698967, y: 2.5854736710637027, z: 1.4215479412451644}, {x: -1.4675807838277213, y: -3.92388529644, z: 0}, 2000);
-							beginWalk();
+							// cameraPosition = 2;
+							// walkSteps = [];
+							// rotSteps = [];
+							// addStep({x: 4.024701570901415, y: 2.4626396345167465, z: 4.98938186450447}, {x: -0.03219963851275497, y: -0.998897834228987, z: -1.7356231597949947e-18}, 2000);
+							// addStep({x: 5.063009743142326, y: 2.5470899665911286, z: -1.3016889197308628}, {x: -0.18626367269226687, y: -1.4851049078987137, z: 1.4122056774290025e-17}, 2000);
+							// addStep({x: 7.057114945508873, y: 2.4966832947856045, z: -1.6316077031168945}, {x: -0.02499094920203149, y: -2.440302674230827, z: 0}, 2000);
+							// addStep({x: 8.996938314698967, y: 2.5854736710637027, z: 1.4215479412451644}, {x: -1.4675807838277213, y: -3.92388529644, z: 0}, 2000);
+							// beginWalk();
 						break;
 					case 2:
-					  fade()
-						setTimeout(() => {
-							camera.position.set(0.11333127647429019, 1.5369136371003131, -2.028078509213737);
-							camera.rotation.set(0.490486809597034, 0.0016298261023861107, 0);
-						}, 1000)
+						// grab camera rotation on view of teacher
+						camera.lookAt(new THREE.Vector3(4, 3.55, -1))
+						var teacherView = {
+							x: camera.rotation.x,
+							y: camera.rotation.y,
+							z: camera.rotation.z
+						}
+						camera.rotation.set(-1.0581080584316573, -0.5617291507874522, 0);
+
+						// Tween camera to view teacher
+						var lookAtTeacher = new TWEEN.Tween(camera.rotation).to(teacherView, 1000).onComplete(() => {
+							setTimeout(() => {
+								console.log('Teacher says something')
+
+								// fade to view of whiteboard
+								fade()
+								setTimeout(() => {
+									camera.position.set(0.11333127647429019, 1.5369136371003131, -2.028078509213737);
+									camera.rotation.set(0.490486809597034, 0.0016298261023861107, 0);
+								}, 1000)
+							}, 2000)
+
+							
+						})
+						lookAtTeacher.start()
+
+						
 
 						cameraPosition = 3;
 						break;
@@ -687,6 +711,7 @@
 			}
 
 			function render() {
+				TWEEN.update()
 				renderer.render( scene, camera );
 			}
 		</script>
