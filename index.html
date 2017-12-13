@@ -346,7 +346,7 @@
 										'ShowToSeat.ogg',
 										(audioBuffer) => {
 											song.setBuffer(audioBuffer);
-											song.setVolume(0.15);
+											song.setVolume(0.4);
 											song.play();
 										},
 										function ( xhr ) {
@@ -367,7 +367,7 @@
 										'NotSeatOne.ogg',
 										(audioBuffer) => {
 											song.setBuffer(audioBuffer);
-											song.setVolume(0.15);
+											song.setVolume(0.4);
 											song.onEnded = function(){
 												moveAlongSpline(table, 1);
 											};
@@ -385,7 +385,7 @@
 										'NotSeatTwo.ogg',
 										(audioBuffer) => {
 											song.setBuffer(audioBuffer);
-											song.setVolume(0.15);
+											song.setVolume(0.4);
 											song.onEnded = function(){
 												moveAlongSpline(table, 1);
 											};
@@ -433,6 +433,22 @@
 							camera.zoom = currentZoom.value
 						})
 						zoomOut.start()
+						zoomOut.onComplete(() => {
+							teacherLoader.load(
+					'HackJob.ogg',
+					(audioBuffer) => {
+						voice.setBuffer(audioBuffer);
+						voice.setVolume(0.4);
+						voice.play();
+					},
+					function ( xhr ) {
+						console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+					},
+					function ( xhr ) {
+						console.log( 'An error happened' );
+					}
+			)
+						})
 					}
 				}
 			}
@@ -699,6 +715,28 @@
 				}
 			)
 
+
+			var teacherListener = new THREE.AudioListener();
+			camera.add(teacherListener);
+			var voice = new THREE.Audio(teacherListener);
+			scene.add(voice);
+			var teacherLoader = new THREE.AudioLoader();
+
+			teacherLoader.load(
+					'TakeSeats.ogg',
+					(audioBuffer) => {
+						voice.setBuffer(audioBuffer);
+						voice.setVolume(0.4);
+						voice.play();
+					},
+					function ( xhr ) {
+						console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+					},
+					function ( xhr ) {
+						console.log( 'An error happened' );
+					}
+			)
+
 			//window.onload = changeColorVision();
 
 			function nextPosition(){
@@ -724,25 +762,10 @@
 								walkSteps = [];
 								addStep({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, {x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 2000);
 								beginWalk();
-							}, 5000);
+							}, 3500);
 						break;
 					case 2:
 						// grab camera rotation on view of teacher
-
-						audioLoader.load(
-							'HowToDraw.ogg',
-							(audioBuffer) => {
-								song.setBuffer(audioBuffer);
-								song.setVolume(0.15);
-								song.play();
-							},
-							function ( xhr ) {
-								console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-							},
-							function ( xhr ) {
-								console.log( 'An error happened' );
-							}
-						)
 						camera.lookAt(new THREE.Vector3(4, 3.55, -1))
 						var teacherView = {
 							x: camera.rotation.x,
@@ -786,6 +809,29 @@
 			function beginWalk(){
 				walkSteps[0].start();
 				rotSteps[0].start();
+
+				var audioListener = new THREE.AudioListener();
+				camera.add(audioListener);
+				var song = new THREE.Audio(audioListener);
+				scene.add(song);
+				var audioLoader = new THREE.AudioLoader();
+
+				walkSteps[0].onComplete(() => {
+					audioLoader.load(
+					'HowToDraw.ogg',
+					(audioBuffer) => {
+						song.setBuffer(audioBuffer);
+						song.setVolume(0.4);
+						song.play();
+					},
+					function ( xhr ) {
+						console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+					},
+					function ( xhr ) {
+						console.log( 'An error happened' );
+					}
+					)
+				})
 			}
 
 			/**
