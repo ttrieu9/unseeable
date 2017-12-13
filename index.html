@@ -103,6 +103,10 @@
 			var paper = new THREE.Group()
 			var posted = false
 
+			var paths = [];
+			var splines = [];
+			var splineTargets = [];
+			splineTargets.push();
 			var activeSpline = null;
 
 			var camPosIndex;
@@ -316,65 +320,88 @@
 							nextPosition()
 						}
 						else {
-
-							var audioListener = new THREE.AudioListener();
-							camera.add(audioListener);
-							var song = new THREE.Audio(audioListener);
-							scene.add(song);
-							var audioLoader = new THREE.AudioLoader();
-
-							if(attempts === 2) {
-								audioLoader.load(
-									'ShowToSeat.ogg',
-									(audioBuffer) => {
-										song.setBuffer(audioBuffer);
-										song.setVolume(0.15);
-										song.play();
-									},
-									function ( xhr ) {
-										console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-									},
-									function ( xhr ) {
-										console.log( 'An error happened' );
-									}
-								)
-								nextPosition()
+							//get what table you selected
+							var table;
+							if(intersected.name.includes("Table_Green")){
+								table = 0;
 							}
-
-							attempts++;
-							if(attempts === 1){
-								
-
-								audioLoader.load(
-									'NotSeatOne.ogg',
-									(audioBuffer) => {
-										song.setBuffer(audioBuffer);
-										song.setVolume(0.15);
-										song.play();
-									},
-									function ( xhr ) {
-										console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-									},
-									function ( xhr ) {
-										console.log( 'An error happened' );
-									}
-								)
-							} else if(attempts === 2){
-								audioLoader.load(
-									'NotSeatTwo.ogg',
-									(audioBuffer) => {
-										song.setBuffer(audioBuffer);
-										song.setVolume(0.15);
-										song.play();
-									},
-									function ( xhr ) {
-										console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-									},
-									function ( xhr ) {
-										console.log( 'An error happened' );
-									}
-								)
+							else if(intersected.name.includes("Table_Yellow")){
+								table = 2;
 							}
+							else if(intersected.name.includes("Table_Blue")){
+								table = 3;
+							}
+							moveAlongSpline(table, -1);
+
+							setTimeout(function(){
+
+								var audioListener = new THREE.AudioListener();
+								camera.add(audioListener);
+								var song = new THREE.Audio(audioListener);
+								scene.add(song);
+								var audioLoader = new THREE.AudioLoader();
+
+								if(attempts === 2) {
+									audioLoader.load(
+										'ShowToSeat.ogg',
+										(audioBuffer) => {
+											song.setBuffer(audioBuffer);
+											song.setVolume(0.15);
+											song.play();
+										},
+										function ( xhr ) {
+											console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+										},
+										function ( xhr ) {
+											console.log( 'An error happened' );
+										}
+									)
+									nextPosition()
+								}
+
+								attempts++;
+								if(attempts === 1){
+									
+
+									audioLoader.load(
+										'NotSeatOne.ogg',
+										(audioBuffer) => {
+											song.setBuffer(audioBuffer);
+											song.setVolume(0.15);
+											song.onEnded = function(){
+												moveAlongSpline(table, 1);
+											};
+											song.play();
+										},
+										function ( xhr ) {
+											console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+										},
+										function ( xhr ) {
+											console.log( 'An error happened' );
+										}
+									)
+								} else if(attempts === 2){
+									audioLoader.load(
+										'NotSeatTwo.ogg',
+										(audioBuffer) => {
+											song.setBuffer(audioBuffer);
+											song.setVolume(0.15);
+											song.onEnded = function(){
+												moveAlongSpline(table, 1);
+											};
+											song.play();
+										},
+										function ( xhr ) {
+											console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+										},
+										function ( xhr ) {
+											console.log( 'An error happened' );
+										}
+									)
+								}
+
+							}, 3500)
+							
 						}
 					}
 				}
@@ -795,7 +822,7 @@
 				}
 				else{
 					direction = -1;
-					camPosIndex = 300;
+					camPosIndex = 200;
 				}
 				activeSpline = spline;
 			}
@@ -835,7 +862,7 @@
 				TWEEN.update()
 
 				if(activeSpline !== null){
-					var camPos = splines[activeSpline].getPoint(camPosIndex / 300);
+					var camPos = splines[activeSpline].getPoint(camPosIndex / 200);
 				
 					camera.position.x = camPos.x;
 					camera.position.y = camPos.y+.5;
@@ -846,7 +873,7 @@
 					
 					camPosIndex += direction;
 					//stop moving the camera once it reaches the end of the spline
-					if (camPosIndex < 0 || camPosIndex > 300) {
+					if (camPosIndex < 0 || camPosIndex > 200) {
 						activeSpline = null;
 					}
 				}
