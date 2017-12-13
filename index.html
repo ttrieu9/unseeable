@@ -310,12 +310,65 @@
 							nextPosition()
 						}
 						else {
-							if(attempts === 3) {
+
+							var audioListener = new THREE.AudioListener();
+							camera.add(audioListener);
+							var song = new THREE.Audio(audioListener);
+							scene.add(song);
+							var audioLoader = new THREE.AudioLoader();
+
+							if(attempts === 2) {
+								audioLoader.load(
+									'ShowToSeat.ogg',
+									(audioBuffer) => {
+										song.setBuffer(audioBuffer);
+										song.setVolume(0.15);
+										song.play();
+									},
+									function ( xhr ) {
+										console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+									},
+									function ( xhr ) {
+										console.log( 'An error happened' );
+									}
+								)
 								nextPosition()
 							}
 
 							attempts++;
-							alert("wrong table")
+							if(attempts === 1){
+								
+
+								audioLoader.load(
+									'NotSeatOne.ogg',
+									(audioBuffer) => {
+										song.setBuffer(audioBuffer);
+										song.setVolume(0.15);
+										song.play();
+									},
+									function ( xhr ) {
+										console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+									},
+									function ( xhr ) {
+										console.log( 'An error happened' );
+									}
+								)
+							} else if(attempts === 2){
+								audioLoader.load(
+									'NotSeatTwo.ogg',
+									(audioBuffer) => {
+										song.setBuffer(audioBuffer);
+										song.setVolume(0.15);
+										song.play();
+									},
+									function ( xhr ) {
+										console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+									},
+									function ( xhr ) {
+										console.log( 'An error happened' );
+									}
+								)
+							}
 						}
 					}
 				}
@@ -454,8 +507,8 @@
 				container.appendChild( renderer.domElement );
 
 				controls, camera
-				controls = new THREE.OrbitControls( camera, renderer.domElement );
-				controls.update();
+				//controls = new THREE.OrbitControls( camera, renderer.domElement );
+				//controls.update();
 				
 				// set the initial position
 				camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
@@ -673,6 +726,21 @@
 						break;
 					case 2:
 						// grab camera rotation on view of teacher
+
+						audioLoader.load(
+							'HowToDraw.ogg',
+							(audioBuffer) => {
+								song.setBuffer(audioBuffer);
+								song.setVolume(0.15);
+								song.play();
+							},
+							function ( xhr ) {
+								console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+							},
+							function ( xhr ) {
+								console.log( 'An error happened' );
+							}
+						)
 						camera.lookAt(new THREE.Vector3(4, 3.55, -1))
 						var teacherView = {
 							x: camera.rotation.x,
