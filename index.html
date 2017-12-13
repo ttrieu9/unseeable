@@ -149,7 +149,7 @@
 								}
 							}
 							else if(intersected.name.includes('Paper')) {
-								if(!intersected.name.includes('PaperInstructions') && !intersected.name.includes('PaperOutline')) {
+								if(!intersected.name.includes('Outline')) {
 									document.body.style.cursor = 'pointer'
 								}
 								else {
@@ -214,7 +214,7 @@
 							}
 						)
 					}
-					else if(intersected.name.includes('Paper') && !coloredObjects.includes(intersected.name) && !intersected.name.includes('PaperInstructions') && !intersected.name.includes('PaperOutline') && currentObject) {
+					else if(intersected.name.includes('Paper') && !coloredObjects.includes(intersected.name) && !intersected.name.includes("Outline") && currentObject) {
 						intersected.material = currentObject.material[0];
 						coloredObjects.push(intersected.name)
 
