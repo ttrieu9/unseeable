@@ -49,7 +49,7 @@
 	</head>
 
 	<body>
-		<!-- <div id="curtain"></div> -->
+		<div id="curtain"></div>
 
     <script src="three.min.js"></script>
     <script src="inflate.min.js"></script>
@@ -332,21 +332,23 @@
 					})
 
 					if(whiteBoardIndex >= 0) {
-						posted = true
 						
-						var currentZoom = {
-							value: camera.zoom
-						}
+						if(!posted) {
+							var currentZoom = {
+								value: camera.zoom
+							}
 
-						var nextZoom = {
-							value: camera.zoom * 0.65
-						}
+							var nextZoom = {
+								value: camera.zoom * 0.65
+							}
 
-						var zoomOut = new TWEEN.Tween(currentZoom).to(nextZoom, 750)
-						zoomOut.onUpdate(() => {
-							camera.zoom = currentZoom.value
-						})
-						zoomOut.start()
+							var zoomOut = new TWEEN.Tween(currentZoom).to(nextZoom, 750)
+							zoomOut.onUpdate(() => {
+								camera.zoom = currentZoom.value
+							})
+							zoomOut.start()
+						}
+						posted = true
 					}
 				}
 			}
@@ -686,7 +688,7 @@
 							// teacher makes announcement to place art on board
 							setTimeout(() => {
 								// fade to view of whiteboard
-								//fade()
+								fade()
 								setTimeout(() => {
 									camera.position.set(0.11333127647429019, 1.5369136371003131, -2.028078509213737);
 									camera.rotation.set(0.490486809597034, 0.0016298261023861107, 0);
