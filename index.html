@@ -124,13 +124,21 @@
 								if(!intersected.name.includes('Box')) {
 									if(!currentHover) {
 										currentHover = intersected
-										previousPosition = { x: intersected.position.x, y: intersected.position.y, z: intersected.position.z }
+										previousPosition = { 
+											x: intersected.position.x, 
+											y: intersected.position.y, 
+											z: intersected.position.z 
+										}
 										currentHover.position.set(previousPosition.x - 0.025, previousPosition.y, previousPosition.z + 0.025)
 									}
 									else if(currentHover.name !== intersected.name) {
 										currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z)
 										currentHover = intersected
-										previousPosition = { x: intersected.position.x, y: intersected.position.y, z: intersected.position.z }
+										previousPosition = { 
+											x: intersected.position.x, 
+											y: intersected.position.y, 
+											z: intersected.position.z 
+										}
 										currentHover.position.set(previousPosition.x - 0.025, previousPosition.y, previousPosition.z + 0.025)
 									}
 								}
@@ -169,7 +177,7 @@
 
 				if(intersects.length > 0) {
 					var intersected = intersects[0].object;
-					console.log(intersected)
+
 					if (intersected.name.includes('Crayon')) {
 						if(intersected.name.includes('Crayon_Box')){
 							currentObject.visible = true;
@@ -310,7 +318,7 @@
 				};
 
 				var loader = new THREE.FBXLoader( manager );
-				loader.load( 'PreSchool_New12.12.fbx', function( object ) {
+				loader.load( 'PreSchool_New12.12.1.fbx', function( object ) {
 					//add shadow casting and receiving for all of the child objects loaded
 					for(var i in object.children){
 						// object.children[i].castShadow = true;
