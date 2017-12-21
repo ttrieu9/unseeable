@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "description": "Alex Horton Drew Tisdelle Isaiah Cochran Tommy Trieu",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "express": "^4.16.2"
+  },
   "devDependencies": {},
   "scripts": {
     "start": "http-server -p 8000"
