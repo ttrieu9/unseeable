@@ -1,0 +1,18 @@
+{
+  "name": "unseeable",
+  "version": "0.0.0",
+  "description": "Alex Horton Drew Tisdelle Isaiah Cochran Tommy Trieu",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "start": "http-server -p 8000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://ttrieu9@bitbucket.org/aihorton1/unseeable.git"
+  },
+  "author": "Isaiah Cochran, Alex Horton, Drew Tisdelle, Tommy Trieu",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/aihorton1/unseeable#readme"
+}
