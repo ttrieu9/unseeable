@@ -24,8 +24,8 @@ function loadAnimationFBX(fileName, onLoad, onProgress, onError, object){}
 /**
  * Load Fbx file that contains the world
  * @param fileName String name of the file to be loaded
- * @param onLoad function to be executed on file load
- * @param onProgress function to be executed on load progress
- * @param onError function to be executed on error
+ * @param onLoad optional function to be executed on file load instead of default
+ * @param onProgress optional function to be executed on load progress instead of default
+ * @param onError optional function to be executed on error instead of default
  */
 function loadWorldFBX(fileName, onLoad, onProgress, onError){}
