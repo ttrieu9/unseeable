@@ -73,14 +73,12 @@
 
 			var container, stats, controls;
 			var camera, scene, renderer, light;
-			var teacher;
+			var teacher = {};
 
 			var cameraPosition = 1;
 			var walkSteps;
 			var rotSteps;
 			var cameraHolder;
-
-			var teacher;
 
 			var clock = new THREE.Clock();
 
@@ -516,25 +514,16 @@
 
 				};
 
-				// var loader = new THREE.FBXLoader( manager );
-				//load the classroom
+				// load the classroom
 				loadWorldFBX('PreSchool_New12.12.1.fbx', null, onProgress, onError);
 
-				fbxloader.load( 'Idle.fbx', function( object ) {
+				loadAnimationFBX('Idle.fbx', function(object){
 					teacher = object;
-					teacher.position.set(4, -.05, -1);
-					var scale = 2.2;
-					teacher.scale.set(scale, scale, scale);
-					teacher.mixer = new THREE.AnimationMixer( teacher );
-					mixers.push( teacher.mixer );
+                    teacher.position.set(4, -.05, -1);
+                    let scale = 2.2;
+                    teacher.scale.set(scale, scale, scale);
+				}, onProgress, onError);
 
-					var action = teacher.mixer.clipAction( teacher.animations[ 0 ] );
-					action.play();
-					teacher = teacher;
-					scene.add( teacher );
-
-
-				}, onProgress, onError );
 
 				renderer = new THREE.WebGLRenderer({ antialias: true });
 				renderer.shadowMap.enabled = true;

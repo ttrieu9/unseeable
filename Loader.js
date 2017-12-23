@@ -1,4 +1,4 @@
-var fbxloader = new THREE.FBXLoader();
+const fbxloader = new THREE.FBXLoader();
 
 /**
  * Load Static FBX asset and add it to the scene
@@ -14,12 +14,29 @@ function loadStaticFBX(fileName, onLoad, onProgress, onError){
 /**
  * Load animated FBX asset and add it to the scene
  * @param fileName String name of the file to be loaded
- * @param onLoad function to be executed on file load
+ * @param onLoad function to be executed on file load. It can take the loaded object as a parameter.
  * @param onProgress function to be executed on load progress
  * @param onError function to be executed on error
- * @param object optional object to save the asset to
  */
-function loadAnimationFBX(fileName, onLoad, onProgress, onError, object){}
+function loadAnimationFBX(fileName, onLoad, onProgress, onError){
+    fbxloader.load(fileName, function( object ) {
+        //execute onLoad function if there is one
+        if(onLoad !== null){
+            onLoad(object);
+        }
+
+        //add the object's animation mixer
+        object.mixer = new THREE.AnimationMixer( object );
+        mixers.push( object.mixer );
+
+        //play the animation
+        let action = object.mixer.clipAction(object.animations[0]);
+        action.play();
+
+        scene.add( object );
+
+    }, onProgress, onError );
+}
 
 /**
  * Load Fbx file that contains the world
@@ -32,15 +49,14 @@ function loadWorldFBX(fileName, onLoad, onProgress, onError){
 
     fbxloader.load( 'PreSchool_New12.12.1.fbx', function( object ) {
         //add shadow casting and receiving for all of the child objects loaded
-        for(var i in object.children){
+        for(let i in object.children){
             // object.children[i].castShadow = true;
             // object.children[i].receiveShadow = true;
             if(object.children[i].name.includes("Path")) {
                 paths.push(object.children[i]);
-                var points = object.children[i].geometry.attributes.position.array;
-                console.log(points);
-                var vectors = [];
-                for(var j = 0; j < points.length; j += 3){
+                let points = object.children[i].geometry.attributes.position.array;
+                let vectors = [];
+                for(let j = 0; j < points.length; j += 3){
                     vectors.push(new THREE.Vector3(points[j], points[j+1], points[j+2]));
                 }
                 splines.push(new THREE.CatmullRomCurve3(vectors));
