@@ -8,7 +8,6 @@ const fbxloader = new THREE.FBXLoader();
  * @param onError function to be executed on error
  */
 function loadStaticFBX(fileName, onLoad, onProgress, onError){
-    console.log("something");
 }
 
 /**
@@ -41,7 +40,7 @@ function loadAnimationFBX(fileName, onLoad, onProgress, onError){
 /**
  * Load Fbx file that contains the world
  * @param fileName String name of the file to be loaded
- * @param onLoad optional function to be executed on file load instead of default
+ * @param onLoad optional function to be executed on all children of the scene
  * @param onProgress optional function to be executed on load progress instead of default
  * @param onError optional function to be executed on error instead of default
  */
@@ -52,6 +51,9 @@ function loadWorldFBX(fileName, onLoad, onProgress, onError){
         for(let i in object.children){
             // object.children[i].castShadow = true;
             // object.children[i].receiveShadow = true;
+
+            //convert the paths in the scene into splines
+            //TODO: is this part going to be constant in all of the levels?
             if(object.children[i].name.includes("Path")) {
                 paths.push(object.children[i]);
                 let points = object.children[i].geometry.attributes.position.array;
@@ -61,16 +63,11 @@ function loadWorldFBX(fileName, onLoad, onProgress, onError){
                 }
                 splines.push(new THREE.CatmullRomCurve3(vectors));
             }
-            else {
-                intersectableObjects.push(object.children[i]);
 
-                if(object.children[i].name.includes("MainPaper")) {
-                    paperGroup.push(object.children[i]);
-
-                    if(!object.children[i].name.includes("Outline")) {
-                        coloredObjects.push(object.children[i].name);
-                    }
-                }
+            //add objects for raycasting
+            //TODO: should the onLoad be performed here or outside of the loop?
+            else if(onLoad !== null) {
+                onLoad(object.children[i]);
             }
         }
         object.castShadow = true;

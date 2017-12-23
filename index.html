@@ -514,15 +514,29 @@
 
 				};
 
-				// load the classroom
-				loadWorldFBX('PreSchool_New12.12.1.fbx', null, onProgress, onError);
+				//load the classroom
+				//TODO: make the onLoad function something that will be applied to all of the room's children?
+				loadWorldFBX('PreSchool_New12.12.1.fbx',
+					function(child){
+                        intersectableObjects.push(child);
 
-				loadAnimationFBX('Idle.fbx', function(object){
-					teacher = object;
-                    teacher.position.set(4, -.05, -1);
-                    let scale = 2.2;
-                    teacher.scale.set(scale, scale, scale);
-				}, onProgress, onError);
+                        if(child.name.includes("MainPaper")) {
+                            paperGroup.push(child);
+
+                            if(!child.name.includes("Outline")) {
+                                coloredObjects.push(child.name);
+                            }
+                        }
+					}, onProgress, onError);
+
+				//load and place the teacher
+				loadAnimationFBX('Idle.fbx',
+					function(object){
+						teacher = object;
+						teacher.position.set(4, -.05, -1);
+						let scale = 2.2;
+						teacher.scale.set(scale, scale, scale);
+                    }, onProgress, onError);
 
 
 				renderer = new THREE.WebGLRenderer({ antialias: true });
