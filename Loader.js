@@ -37,6 +37,7 @@ function loadAnimationFBX(fileName, onLoad, onProgress, onError){
     }, onProgress, onError );
 }
 
+//TODO: scope of the onLoad function
 /**
  * Load Fbx file that contains the world
  * @param fileName String name of the file to be loaded
@@ -66,8 +67,11 @@ function loadWorldFBX(fileName, onLoad, onProgress, onError){
 
             //add objects for raycasting
             //TODO: should the onLoad be performed here or outside of the loop?
-            else if(onLoad !== null) {
-                onLoad(object.children[i]);
+            else {
+                intersectableObjects.push(object.children[i]);
+                if(onLoad !== null) {
+                        onLoad(object.children[i]);
+                }
             }
         }
         object.castShadow = true;

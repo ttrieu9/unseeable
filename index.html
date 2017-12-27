@@ -470,15 +470,30 @@
 				curtain.classList.add("screen-change");
 			}
 
+            function onProgress( xhr ) {
+
+                if ( xhr.lengthComputable ) {
+
+                    var percentComplete = xhr.loaded / xhr.total * 100;
+                    console.log( Math.round( percentComplete, 2 ) + '% downloaded' );
+
+                }
+
+            };
+
+            function onError( xhr ) {
+
+                console.error( xhr );
+
+            };
+
 			function init() {
 
                 //load the classroom
                 //TODO: make the onLoad function something that will be applied to all of the room's children?
                 loadWorldFBX('PreSchool_New12.12.1.fbx',
                     function(child){
-                        intersectableObjects.push(child);
-
-                        if(child.name.includes("MainPaper")) {
+                    	if(child.name.includes("MainPaper")) {
                             paperGroup.push(child);
 
                             if(!child.name.includes("Outline")) {
@@ -495,7 +510,7 @@
                         let scale = 2.2;
                         teacher.scale.set(scale, scale, scale);
                     }, onProgress, onError);
-                
+
 				raycaster = new THREE.Raycaster();
 				container = document.createElement( 'div' );
 				document.body.appendChild( container );
@@ -519,23 +534,6 @@
 				manager.onProgress = function( item, loaded, total ) {
 
 					console.log( item, loaded, total );
-
-				};
-
-				var onProgress = function( xhr ) {
-
-					if ( xhr.lengthComputable ) {
-
-						var percentComplete = xhr.loaded / xhr.total * 100;
-						console.log( Math.round( percentComplete, 2 ) + '% downloaded' );
-
-					}
-
-				};
-
-				var onError = function( xhr ) {
-
-					console.error( xhr );
 
 				};
 
