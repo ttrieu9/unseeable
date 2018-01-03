@@ -33,10 +33,11 @@
 class Logger {
   /**
    * Creates initial log.
-   * @param {String} playerId 
-   * @param {Number} levelId 
-   * @param {*} date 
-   * @param {Number} startTime 
+   * 
+   * @param {String} playerId - GUID representing the player.
+   * @param {Number} levelId - An integer representing the level being played.
+   * @param {*} date - The date the level was played.
+   * @param {Number} startTime - The the time the level started (in milliseconds).
    */
   constructor(playerId, levelId, startTime) {
     this.log = {
@@ -53,10 +54,11 @@ class Logger {
 
   /**
    * Adds event to log.
-   * @param {String} type 
-   * @param {Number} time 
-   * @param {Number} x 
-   * @param {Number} y 
+   * 
+   * @param {String} type - The type of event that occurred (e.g. mouseclick, mouseover, etc.).
+   * @param {Number} time - The time the event occurred (in milliseconds).
+   * @param {Number} x - The x-coordinate of the event.
+   * @param {Number} y - The y-coordiante of the event.
    */
   logEvent(type, time, x, y) {
     this.log.events.push(
@@ -72,7 +74,8 @@ class Logger {
 
   /**
    * Records the start time of the current task.
-   * @param {Number} taskStartTime 
+   * 
+   * @param {Number} taskStartTime - The time that the task started (in milliseconds).
    */
   recordTaskStartTime(taskStartTime) {
     this.taskStartTime = taskStartTime;
@@ -80,10 +83,11 @@ class Logger {
 
   /**
    * Adds task to log.
-   * @param {String} name 
-   * @param {Milliseconds} duration 
-   * @param {String} gradingCriteria 
-   * @param {Number} grade 
+   * 
+   * @param {String} name - The name of the task.
+   * @param {Milliseconds} duration - The time it took to complete the task (in milliseconds).
+   * @param {String} gradingCriteria - The criteria success is based on.
+   * @param {Number} grade - The amount of success achieved by the player in doing the task.
    */
   logTask(name, taskEndTime, gradingCriteria, grade) {
     this.log.tasks.push(
@@ -97,7 +101,8 @@ class Logger {
 
   /**
    * Calculates the level duration and uploads log to DB.
-   * @param {Number} endTime 
+   * 
+   * @param {Number} endTime - The time the level was completed (in milliseconds).
    */
   endLog(endTime) {
     this.log.levelDuration = endTime - this.log.startTime;
