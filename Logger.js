@@ -36,15 +36,14 @@ class Logger {
    * 
    * @param {String} playerId - GUID representing the player.
    * @param {Number} levelId - An integer representing the level being played.
-   * @param {*} date - The date the level was played.
-   * @param {Number} startTime - The the time the level started (in milliseconds).
+   * @param {Object} date - Date object representing the start of the level.
    */
-  constructor(playerId, levelId, startTime) {
+  constructor(playerId, levelId, date) {
     this.log = {
       playerId: playerId,
       levelId: levelId,
       date: date,
-      startTime: startTime,
+      startTime: date.getTime(),
       levelDuration: 0.0,
       events: [],
       tasks: []
@@ -109,6 +108,13 @@ class Logger {
 
     // log is send to DB
   }
+
+  /**
+   * Prints the current Log to the console.
+   */
+  printLog() {
+    console.log(this.log);
+  }
 }
 
-module.exports = Logger;
+// module.exports = Logger;
