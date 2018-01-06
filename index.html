@@ -484,6 +484,16 @@
             };
 
 			function init() {
+			    //create the scene
+                scene = new THREE.Scene();
+
+                //create camera that will be used
+                camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, .1, 2000 );
+                camera.rotation.reorder( "YXZ" );
+
+                //
+				// LOADING
+				//
 
                 //load the classroom
                 //TODO: make the onLoad function something that will be applied to all of the room's children?
@@ -507,32 +517,20 @@
                         teacher.scale.set(scale, scale, scale);
                     }, onProgress, onError);
 
+                //load the sounds
+
+
+
+                //create raycaster for object selection
 				raycaster = new THREE.Raycaster();
 				container = document.createElement( 'div' );
 				document.body.appendChild( container );
-
-				scene = new THREE.Scene();
-
-				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, .1, 2000 );
-				camera.rotation.reorder( "YXZ" );
-
-				// grid
-				var gridHelper = new THREE.GridHelper( 28, 28, 0x303030, 0x303030 );
-				gridHelper.position.set( 0, - 0.04, 0 );
-				scene.add( gridHelper );
 
 				// stats
 				stats = new Stats();
 				container.appendChild( stats.dom );
 
-				// model
-				var manager = new THREE.LoadingManager();
-				manager.onProgress = function( item, loaded, total ) {
-
-					console.log( item, loaded, total );
-
-				};
-
+				// renderer
 				renderer = new THREE.WebGLRenderer({ antialias: true });
 				renderer.shadowMap.enabled = true;
 				renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -540,11 +538,11 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				container.appendChild( renderer.domElement );
 
-				controls, camera;
+				//controls, camera
 				//controls = new THREE.OrbitControls( camera, renderer.domElement );
 				//controls.update();
 				
-				// set the initial position
+				// set the initial camera position
 				camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
 				camera.rotation.set(-0.09963408823470919, -1.5005061696940256, 2.0920433907298925e-17);				
 
