@@ -75,6 +75,8 @@
 			var camera, scene, renderer, light;
 			var teacher = {};
 
+			var audioLoader;
+
 			var cameraPosition = 1;
 
 			//TODO: remove these as they will no longer be necessary
@@ -492,6 +494,8 @@
                 //create camera that will be used
                 camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, .1, 2000 );
                 camera.rotation.reorder( "YXZ" );
+                var audioListener = new THREE.AudioListener();
+                camera.add(audioListener);
 
                 //
 				// LOADING
@@ -520,7 +524,26 @@
                     }, onProgress, onError);
 
                 //load the sounds
+				audioLoader = new THREE.AudioLoader();
+                var song = new THREE.Audio(audioListener);
+                scene.add(song);
 
+                //kids playing in background
+                audioLoader.load(
+                    'kids-playing-1.mp3',
+                    (audioBuffer) => {
+                        song.setBuffer(audioBuffer);
+                        song.setLoop(true);
+                        song.setVolume(0.025);
+                        song.play();
+                    },
+                    function ( xhr ) {
+                        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+                    },
+                    function ( xhr ) {
+                        console.log( 'An error happened' );
+                    }
+                );
 
 
                 //create raycaster for object selection
@@ -677,31 +700,6 @@
 
 				animate();
 			}
-
-			var audioListener = new THREE.AudioListener();
-			camera.add(audioListener);
-			var song = new THREE.Audio(audioListener);
-			scene.add(song);
-			var audioLoader = new THREE.AudioLoader();
-
-			audioLoader.load(
-				'kids-playing-1.mp3',
-				(audioBuffer) => {
-					song.setBuffer(audioBuffer);
-					song.setLoop(true);
-					song.setVolume(0.025);
-					song.play();
-
-					//document.addEventListener("keydown", song.play(), false);
-				},
-				function ( xhr ) {
-					console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-				},
-				function ( xhr ) {
-					console.log( 'An error happened' );
-				}
-			);
-
 
 			var teacherListener = new THREE.AudioListener();
 			camera.add(teacherListener);
