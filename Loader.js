@@ -47,7 +47,7 @@ function loadAnimationFBX(fileName, onLoad, onProgress, onError){
  */
 function loadWorldFBX(fileName, onLoad, onProgress, onError){
 
-    fbxloader.load( 'PreSchool_New12.12.1.fbx', function( object ) {
+    fbxloader.load( fileName, function( object ) {
         //add shadow casting and receiving for all of the child objects loaded
         for(let i in object.children){
             // object.children[i].castShadow = true;

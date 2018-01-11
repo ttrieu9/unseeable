@@ -409,7 +409,7 @@
 
                 //load the classroom
                 //TODO: make the onLoad function something that will be applied to all of the room's children?
-                loadWorldFBX('PreSchool_New12.12.1.fbx',
+                loadWorldFBX('TryNumber10_Ew.fbx',
                     function(child){
                     	if(child.name.includes("MainPaper")) {
                             paperGroup.push(child);
@@ -417,7 +417,8 @@
                             if(!child.name.includes("Outline")) {
                                 coloredObjects.push(child.name);
                             }
-                        }
+						}
+						console.log("ass");
                     }, onProgress, onError);
 
                 //load and place the teacher
@@ -594,8 +595,8 @@
 				container.appendChild( renderer.domElement );
 
 				//controls, camera
-				//controls = new THREE.OrbitControls( camera, renderer.domElement );
-				//controls.update();
+				// controls = new THREE.OrbitControls( camera, renderer.domElement );
+				// controls.update();
 				
 				// set the initial camera position
 				camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
@@ -712,7 +713,7 @@
 				animate();
 			}
 
-			//window.onload = changeColorVision();
+			window.onload = changeColorVision();
 
 			function nextPosition(){
 				switch(cameraPosition){
