@@ -240,7 +240,7 @@
 							currentObject.visible = false;
 						}
 
-						sounds[0].play();
+						playSound("Click.mp3");
 					}
 					else if(intersected.name.includes('Paper') && coloredObjects.includes(intersected.name) && !intersected.name.includes("Outline") && currentObject) {
 						intersected.material = currentObject.material[0];
@@ -451,6 +451,22 @@
 				curtain.classList.add("screen-change");
 			}
 
+			/**
+			 * Play the given sound
+			 * @param name String name of the sound to be played
+			 */
+			function playSound(name) {
+				if(name !== null){
+				    //search the array of sounds for a sound with the given name and play it
+					for(let i in sounds){
+					    if(sounds[i].name === name){
+					        sounds[i].play();
+					        return;
+						}
+					}
+				}
+            }
+
             function onProgress( xhr ) {
 
                 if ( xhr.lengthComputable ) {
@@ -604,7 +620,7 @@
 						case 1:
 							selectTable();
 
-							sounds[0].play();
+							playSound("Click.mp3");
 							break;
 						case 2:
 							colorPaper();
