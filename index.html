@@ -249,26 +249,7 @@
 						});
 						coloredObjects.splice(paperIndex, 1);
 
-						var audioListener = new THREE.AudioListener();
-						camera.add(audioListener);
-						var song = new THREE.Audio(audioListener);
-						scene.add(song);
-						var audioLoader = new THREE.AudioLoader();
-
-						audioLoader.load(
-							'Writing.wav',
-							(audioBuffer) => {
-								song.setBuffer(audioBuffer);
-								song.setVolume(0.15);
-								song.play();
-							},
-							function ( xhr ) {
-								console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-							},
-							function ( xhr ) {
-								console.log( 'An error happened' );
-							}
-						);
+						playSound('Writing.wav');
 
 						if(coloredObjects.length === 2) {
 							setTimeout(() => {
@@ -318,75 +299,16 @@
 
 							setTimeout(function(){
 
-								var audioListener = new THREE.AudioListener();
-								camera.add(audioListener);
-								var song = new THREE.Audio(audioListener);
-								scene.add(song);
-								var audioLoader = new THREE.AudioLoader();
-
 								if(attempts === 2) {
-									audioLoader.load(
-										'ShowToSeat.ogg',
-										(audioBuffer) => {
-											song.setBuffer(audioBuffer);
-											song.setVolume(0.4);
-											song.play();
-										},
-										function ( xhr ) {
-											console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-										},
-										function ( xhr ) {
-											console.log( 'An error happened' );
-										}
-									);
+								    playSound('ShowToSeat.ogg');
 									nextPosition()
 								}
 
 								attempts++;
 								if(attempts === 1){
-									
-
-									audioLoader.load(
-										'NotSeatOne.ogg',
-										(audioBuffer) => {
-											song.setBuffer(audioBuffer);
-											song.setVolume(0.4);
-											song.onEnded = function(){
-												moveAlongSpline(table, 1);
-												//reset camera angle
-												var reset = new TWEEN.Tween(camera.rotation).to({x: -0.09963408823470919, y: -1.5005061696940256, z: 2.0920433907298925e-17}, 3500);
-												reset.start();
-											};
-											song.play();
-										},
-										function ( xhr ) {
-											console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-										},
-										function ( xhr ) {
-											console.log( 'An error happened' );
-										}
-									)
+									playSound('NotSeatOne.ogg');
 								} else if(attempts === 2){
-									audioLoader.load(
-										'NotSeatTwo.ogg',
-										(audioBuffer) => {
-											song.setBuffer(audioBuffer);
-											song.setVolume(0.4);
-											song.onEnded = function(){
-												moveAlongSpline(table, 1);
-												// reset camera angle
-												var reset = new TWEEN.Tween(camera.rotation).to({x: -0.09963408823470919, y: -1.5005061696940256, z: 2.0920433907298925e-17}, 3500);
-												reset.start();
-											};
-											song.play();
-										},
-										function ( xhr ) {
-											console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-										},
-										function ( xhr ) {
-											console.log( 'An error happened' );
-										}
-									)
+								    playSound('NotSeatTwo.ogg');
 								}
 
 							}, 3500)
@@ -423,20 +345,7 @@
 						});
 						zoomOut.start();
 						zoomOut.onComplete(() => {
-							teacherLoader.load(
-					'HackJob.ogg',
-					(audioBuffer) => {
-						voice.setBuffer(audioBuffer);
-						voice.setVolume(0.4);
-						voice.play();
-					},
-					function ( xhr ) {
-						console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-					},
-					function ( xhr ) {
-						console.log( 'An error happened' );
-					}
-			)
+						    playSound('HackJob.ogg');
 						})
 					}
 					posted = true
@@ -551,6 +460,120 @@
                         song.name = 'Click.mp3';
                     }, onProgress, onError
 				);
+
+                //drawing sound
+                audioLoader.load(
+                    'Writing.wav',
+                    (audioBuffer) => {
+                        let song = new THREE.Audio(audioListener);
+                        scene.add(song);
+                        sounds.push(song);
+                        song.setBuffer(audioBuffer);
+                        song.setVolume(0.15);
+                        song.name = 'Writing.wav';
+                    }, onProgress, onError
+                );
+
+                //teacher dialogue to sit
+                audioLoader.load(
+                    'TakeSeats.ogg',
+                    (audioBuffer) => {
+                        let song = new THREE.Audio(audioListener);
+                        scene.add(song);
+                        sounds.push(song);
+                        song.setBuffer(audioBuffer);
+                        song.setVolume(0.4);
+                        song.name = 'takeSeats.ogg';
+                        song.play();
+                    }, onProgress, onError
+                );
+
+                //TODO: add onEnd() functions to these, which will turn camera to look at the rest of the tables
+                //teacher dialogue with first wrong attempt
+                audioLoader.load(
+                    'NotSeatOne.ogg',
+                    (audioBuffer) => {
+                        let song = new THREE.Audio(audioListener);
+                        scene.add(song);
+                        sounds.push(song);
+                        song.setBuffer(audioBuffer);
+                        song.setVolume(0.4);
+                        song.name = 'NotSeatOne.ogg';
+                    }, onProgress, onError
+                );
+
+                //teacher dialogue with second wrong attempt
+                audioLoader.load(
+                    'NotSeatTwo.ogg',
+                    (audioBuffer) => {
+                        let song = new THREE.Audio(audioListener);
+                        scene.add(song);
+                        sounds.push(song);
+                        song.setBuffer(audioBuffer);
+                        song.setVolume(0.4);
+                        song.name = 'NotSeatTwo.ogg';
+                    }, onProgress, onError
+                );
+
+                //teacher dialogue showing to right table
+                audioLoader.load(
+                    'ShowToSeat.ogg',
+                    (audioBuffer) => {
+                        let song = new THREE.Audio(audioListener);
+                        scene.add(song);
+                        sounds.push(song);
+                        song.setBuffer(audioBuffer);
+                        song.setVolume(0.4);
+                        song.name = 'ShowToSeat.ogg';
+                    }, onProgress, onError
+                );
+
+                //teacher dialogue about coloring
+                audioLoader.load(
+                    'HowToDraw.ogg',
+                    (audioBuffer) => {
+                        let song = new THREE.Audio(audioListener);
+                        scene.add(song);
+                        sounds.push(song);
+                        song.setBuffer(audioBuffer);
+                        song.setVolume(0.4);
+                        song.name = 'HowToDraw.ogg';
+                    }, onProgress, onError
+                );
+
+                //teacher dialogue when coloring is finished
+                audioLoader.load(
+                    'FinishColoring.ogg',
+                    (audioBuffer) => {
+                        let song = new THREE.Audio(audioListener);
+                        scene.add(song);
+                        sounds.push(song);
+                        song.setBuffer(audioBuffer);
+                        song.setVolume(0.3);
+                        song.onEnded = () => {
+                            // fade to view of whiteboard after audio ends
+                            fade();
+                            setTimeout(() => {
+                                camera.position.set(0.11333127647429019, 1.5369136371003131, -2.028078509213737);
+                                camera.rotation.set(0.490486809597034, 0.0016298261023861107, 0);
+                            }, 1000)
+                        };
+                        song.name = 'FinishColoring.ogg';
+                    }, onProgress, onError
+				);
+
+                //kids mocking the bad painting
+                audioLoader.load(
+                    'HackJob.ogg',
+                    (audioBuffer) => {
+                        let song = new THREE.Audio(audioListener);
+                        scene.add(song);
+                        sounds.push(song);
+                        song.setBuffer(audioBuffer);
+                        song.setVolume(0.4);
+                        song.name = 'HackJob.ogg';
+                    }, onProgress, onError
+                );
 
 
                 //create raycaster for object selection
@@ -689,27 +712,6 @@
 				animate();
 			}
 
-			var teacherListener = new THREE.AudioListener();
-			camera.add(teacherListener);
-			var voice = new THREE.Audio(teacherListener);
-			scene.add(voice);
-			var teacherLoader = new THREE.AudioLoader();
-
-			teacherLoader.load(
-					'TakeSeats.ogg',
-					(audioBuffer) => {
-						voice.setBuffer(audioBuffer);
-						voice.setVolume(0.4);
-						voice.play();
-					},
-					function ( xhr ) {
-						console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-					},
-					function ( xhr ) {
-						console.log( 'An error happened' );
-					}
-			);
-
 			//window.onload = changeColorVision();
 
 			function nextPosition(){
@@ -737,34 +739,7 @@
 						// Tween camera to view teacher
 						var lookAtTeacher = new TWEEN.Tween(camera.rotation).to(teacherView, 1000).onComplete(() => {
 							// teacher makes announcement to place art on board
-							var audioListener = new THREE.AudioListener();
-							camera.add(audioListener);
-							var teacherAudio = new THREE.Audio(audioListener);
-							teacherAudio.onEnded = () => {
-								// fade to view of whiteboard after audio ends
-								fade();
-								setTimeout(() => {
-									camera.position.set(0.11333127647429019, 1.5369136371003131, -2.028078509213737);
-									camera.rotation.set(0.490486809597034, 0.0016298261023861107, 0);
-								}, 1000)
-							};
-							scene.add(teacherAudio);
-							var audioLoader = new THREE.AudioLoader();
-
-							audioLoader.load(
-								'FinishColoring.ogg',
-								(audioBuffer) => {
-									teacherAudio.setBuffer(audioBuffer);
-									teacherAudio.setVolume(0.3);
-									teacherAudio.play();
-								},
-								function ( xhr ) {
-									console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-								},
-								function ( xhr ) {
-									console.log( 'An error happened' );
-								}
-							)
+							playSound('FinishColoring.ogg');
 						}, 2000);
 						lookAtTeacher.start();
 
@@ -789,31 +764,13 @@
 				walkSteps[0].start();
 				rotSteps[0].start();
 
-				var audioListener = new THREE.AudioListener();
-				camera.add(audioListener);
-				var song = new THREE.Audio(audioListener);
-				scene.add(song);
-				var audioLoader = new THREE.AudioLoader();
-
+				//TODO: move this audio somewhere else so that this function can be removed
 				walkSteps[0].onComplete(() => {
-					audioLoader.load(
-					'HowToDraw.ogg',
-					(audioBuffer) => {
-						song.setBuffer(audioBuffer);
-						song.setVolume(0.4);
-						song.play();
-					},
-					function ( xhr ) {
-						console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-					},
-					function ( xhr ) {
-						console.log( 'An error happened' );
-					}
-					)
+				    playSound('HowToDraw.ogg');
 				})
 			}
 
-			//TODO: remove this
+			//TODO: remove this function
 			/**
 			 * Add step to the list of tweens
 			 * /@argument position position to go to
