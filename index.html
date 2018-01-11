@@ -76,6 +76,7 @@
 			var teacher = {};
 
 			var audioLoader;
+			var sounds = [];
 
 			var cameraPosition = 1;
 
@@ -525,25 +526,19 @@
 
                 //load the sounds
 				audioLoader = new THREE.AudioLoader();
-                var song = new THREE.Audio(audioListener);
-                scene.add(song);
 
                 //kids playing in background
                 audioLoader.load(
                     'kids-playing-1.mp3',
                     (audioBuffer) => {
+                        let song = new THREE.Audio(audioListener);
+                        scene.add(song);
+                        sounds.push(song);
                         song.setBuffer(audioBuffer);
                         song.setLoop(true);
                         song.setVolume(0.025);
                         song.play();
-                    },
-                    function ( xhr ) {
-                        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-                    },
-                    function ( xhr ) {
-                        console.log( 'An error happened' );
-                    }
-                );
+                    }, onProgress, onError);
 
 
                 //create raycaster for object selection
