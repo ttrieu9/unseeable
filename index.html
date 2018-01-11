@@ -68,7 +68,6 @@
 		<script src="ColorblindFilter.js"></script>
 
 		<script>
-			loadStaticFBX();
 			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 			var container, stats, controls;
@@ -241,26 +240,7 @@
 							currentObject.visible = false;
 						}
 
-						var audioListener = new THREE.AudioListener();
-						camera.add(audioListener);
-						var song = new THREE.Audio(audioListener);
-						scene.add(song);
-						var audioLoader = new THREE.AudioLoader();
-
-						audioLoader.load(
-							'Click.mp3',
-							(audioBuffer) => {
-								song.setBuffer(audioBuffer);
-								song.setVolume(0.15);
-								song.play();
-							},
-							function ( xhr ) {
-								console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-							},
-							function ( xhr ) {
-								console.log( 'An error happened' );
-							}
-						)
+						sounds[0].play();
 					}
 					else if(intersected.name.includes('Paper') && coloredObjects.includes(intersected.name) && !intersected.name.includes("Outline") && currentObject) {
 						intersected.material = currentObject.material[0];
@@ -538,7 +518,23 @@
                         song.setLoop(true);
                         song.setVolume(0.025);
                         song.play();
-                    }, onProgress, onError);
+                        song.name = 'kids-playing-1.mp3';
+                        console.log(sounds);
+                    }, onProgress, onError
+				);
+
+				//click sound
+                audioLoader.load(
+                    'Click.mp3',
+                    (audioBuffer) => {
+                        let song = new THREE.Audio(audioListener);
+                        scene.add(song);
+                        sounds.push(song);
+                        song.setBuffer(audioBuffer);
+                        song.setVolume(0.15);
+                        song.name = 'Click.mp3';
+                    }, onProgress, onError
+				);
 
 
                 //create raycaster for object selection
@@ -608,26 +604,7 @@
 						case 1:
 							selectTable();
 
-							var audioListener = new THREE.AudioListener();
-							camera.add(audioListener);
-							var song = new THREE.Audio(audioListener);
-							scene.add(song);
-							var audioLoader = new THREE.AudioLoader();
-
-							audioLoader.load(
-								'Click.mp3',
-								(audioBuffer) => {
-									song.setBuffer(audioBuffer);
-									song.setVolume(0.15);
-									song.play();
-								},
-								function ( xhr ) {
-									console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-								},
-								function ( xhr ) {
-									console.log( 'An error happened' );
-								}
-							);
+							sounds[0].play();
 							break;
 						case 2:
 							colorPaper();
