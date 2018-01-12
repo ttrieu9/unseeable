@@ -339,7 +339,7 @@ function init() {
 
     //load the classroom
     //TODO: make the onLoad function something that will be applied to all of the room's children?
-    loadWorldFBX('TryNumber10_Ew.fbx',
+    loadWorldFBX('Progress_1.11.2018.fbx',
         function(object){
             for(let i in object.children) {
                 let child = object.children[i];
