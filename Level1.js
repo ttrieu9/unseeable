@@ -4,6 +4,7 @@ var container, stats, controls;
 var camera, scene, renderer, light;
 var teacher = {};
 
+var audioListener;
 var sounds = [];
 
 var cameraPosition = 1;
@@ -329,7 +330,7 @@ function init() {
     //create camera that will be used
     camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, .1, 2000 );
     camera.rotation.reorder( "YXZ" );
-    var audioListener = new THREE.AudioListener();
+    audioListener = new THREE.AudioListener();
     camera.add(audioListener);
 
     //
@@ -337,7 +338,6 @@ function init() {
     //
 
     //load the classroom
-    //TODO: make the onLoad function something that will be applied to all of the room's children?
     loadWorldFBX('Progress_1.11.2018.fbx',
         function(object){
             for(let i in object.children) {
@@ -361,114 +361,32 @@ function init() {
             teacher.scale.set(scale, scale, scale);
         }, onProgress, onError);
 
+    //load sounds
+
     //kids playing in background
-    audioLoader.load(
-        'kids-playing-1.mp3',
-        (audioBuffer) => {
-            let song = new THREE.Audio(audioListener);
-            scene.add(song);
-            sounds.push(song);
-            song.setBuffer(audioBuffer);
-            song.setLoop(true);
-            song.setVolume(0.025);
-            song.play();
-            song.name = 'kids-playing-1.mp3';
-            console.log(sounds);
-        }, onProgress, onError
-    );
+    loadSound('kids-playing-1.mp3', 0.025, true, true);
 
     //click sound
-    audioLoader.load(
-        'Click.mp3',
-        (audioBuffer) => {
-            let song = new THREE.Audio(audioListener);
-            scene.add(song);
-            sounds.push(song);
-            song.setBuffer(audioBuffer);
-            song.setVolume(0.15);
-            song.name = 'Click.mp3';
-        }, onProgress, onError
-    );
+    loadSound('Click.mp3', 0.15);
 
     //drawing sound
-    audioLoader.load(
-        'Writing.wav',
-        (audioBuffer) => {
-            let song = new THREE.Audio(audioListener);
-            scene.add(song);
-            sounds.push(song);
-            song.setBuffer(audioBuffer);
-            song.setVolume(0.15);
-            song.name = 'Writing.wav';
-        }, onProgress, onError
-    );
+    loadSound('Writing.wav', 0.15);
 
     //teacher dialogue to sit
-    audioLoader.load(
-        'TakeSeats.ogg',
-        (audioBuffer) => {
-            let song = new THREE.Audio(audioListener);
-            scene.add(song);
-            sounds.push(song);
-            song.setBuffer(audioBuffer);
-            song.setVolume(0.4);
-            song.name = 'takeSeats.ogg';
-            song.play();
-        }, onProgress, onError
-    );
+    loadSound('TakeSeats.ogg', 0.4, true);
 
     //TODO: add onEnd() functions to these, which will turn camera to look at the rest of the tables
     //teacher dialogue with first wrong attempt
-    audioLoader.load(
-        'NotSeatOne.ogg',
-        (audioBuffer) => {
-            let song = new THREE.Audio(audioListener);
-            scene.add(song);
-            sounds.push(song);
-            song.setBuffer(audioBuffer);
-            song.setVolume(0.4);
-            song.name = 'NotSeatOne.ogg';
-        }, onProgress, onError
-    );
+    loadSound('NotSeatOne.ogg', 0.4);
 
     //teacher dialogue with second wrong attempt
-    audioLoader.load(
-        'NotSeatTwo.ogg',
-        (audioBuffer) => {
-            let song = new THREE.Audio(audioListener);
-            scene.add(song);
-            sounds.push(song);
-            song.setBuffer(audioBuffer);
-            song.setVolume(0.4);
-            song.name = 'NotSeatTwo.ogg';
-        }, onProgress, onError
-    );
+    loadSound('NotSeatTwo.ogg', 0.4);
 
     //teacher dialogue showing to right table
-    audioLoader.load(
-        'ShowToSeat.ogg',
-        (audioBuffer) => {
-            let song = new THREE.Audio(audioListener);
-            scene.add(song);
-            sounds.push(song);
-            song.setBuffer(audioBuffer);
-            song.setVolume(0.4);
-            song.name = 'ShowToSeat.ogg';
-        }, onProgress, onError
-    );
+    loadSound('ShowToSeat.ogg', 0.4);
 
     //teacher dialogue about coloring
-    audioLoader.load(
-        'HowToDraw.ogg',
-        (audioBuffer) => {
-            let song = new THREE.Audio(audioListener);
-            scene.add(song);
-            sounds.push(song);
-            song.setBuffer(audioBuffer);
-            song.setVolume(0.4);
-            song.name = 'HowToDraw.ogg';
-        }, onProgress, onError
-    );
+    loadSound('HowToDraw.ogg', 0.4);
 
     //teacher dialogue when coloring is finished
     audioLoader.load(
@@ -492,18 +410,7 @@ function init() {
     );
 
     //kids mocking the bad painting
-    audioLoader.load(
-        'HackJob.ogg',
-        (audioBuffer) => {
-            let song = new THREE.Audio(audioListener);
-            scene.add(song);
-            sounds.push(song);
-            song.setBuffer(audioBuffer);
-            song.setVolume(0.4);
-            song.name = 'HackJob.ogg';
-        }, onProgress, onError
-    );
-
+    loadSound('HackJob.ogg', 0.4);
 
     //create raycaster for object selection
     raycaster = new THREE.Raycaster();

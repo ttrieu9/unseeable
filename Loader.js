@@ -89,9 +89,27 @@ function loadWorldFBX(fileName, onLoad, onProgress, onError){
  * Load audio file
  * @param filename name of the audio file to be loaded
  * @param volume volume that the audio should be set to
- * @param loop boolean whether or not the audio should loop
  * @param playImmediately boolean whether or not to play the audio immediately after loading
+ * @param loop boolean whether or not the audio should loop
  */
-function loadSound(filename, volume, loop, playImmediately){
-
+function loadSound(filename, volume, playImmediately, loop){
+    audioLoader.load(
+        filename,
+        (audioBuffer) => {
+            let song = new THREE.Audio(audioListener);
+            scene.add(song);
+            sounds.push(song);
+            song.setBuffer(audioBuffer);
+            if(volume !== null){
+                song.setVolume(volume);
+            }
+            if(loop === true){
+                song.setLoop(true);
+            }
+            if(playImmediately === true){
+                song.play();
+            }
+            song.name = filename;
+        }, onProgress, onError
+    )
 }
