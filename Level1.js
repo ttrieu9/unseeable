@@ -4,7 +4,6 @@ var container, stats, controls;
 var camera, scene, renderer, light;
 var teacher = {};
 
-var audioLoader;
 var sounds = [];
 
 var cameraPosition = 1;
@@ -361,9 +360,6 @@ function init() {
             let scale = 2.2;
             teacher.scale.set(scale, scale, scale);
         }, onProgress, onError);
-
-    //load the sounds
-    audioLoader = new THREE.AudioLoader();
 
     //kids playing in background
     audioLoader.load(

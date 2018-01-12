@@ -1,4 +1,5 @@
 const fbxloader = new THREE.FBXLoader();
+const audioLoader = new THREE.AudioLoader();
 
 /**
  * Load Static FBX asset and add it to the scene
@@ -37,7 +38,6 @@ function loadAnimationFBX(fileName, onLoad, onProgress, onError){
     }, onProgress, onError );
 }
 
-//TODO: scope of the onLoad function
 /**
  * Load Fbx file that contains the world
  * @param fileName String name of the file to be loaded
@@ -50,11 +50,11 @@ function loadWorldFBX(fileName, onLoad, onProgress, onError){
     fbxloader.load( fileName, function( object ) {
         //add shadow casting and receiving for all of the child objects loaded
         for(let i in object.children){
+            //set shadows for the objects
             // object.children[i].castShadow = true;
             // object.children[i].receiveShadow = true;
 
             //convert the paths in the scene into splines
-            //TODO: is this part going to be constant in all of the levels?
             if(object.children[i].name.includes("Path")) {
                 paths.push(object.children[i]);
                 let points = object.children[i].geometry.attributes.position.array;
@@ -66,23 +66,32 @@ function loadWorldFBX(fileName, onLoad, onProgress, onError){
             }
 
             //add objects for raycasting
-            //TODO: should the onLoad be performed here or outside of the loop?
             else {
                 intersectableObjects.push(object.children[i]);
-                if(onLoad !== null) {
-                        onLoad(object.children[i]);
-                }
             }
         }
 
-        //
+        //perform the onLoad function, if one is specified
         if(onLoad !== null) {
             onLoad(object);
         }
+
+        //set shadows for the objects
         object.castShadow = true;
         object.receiveShadow = true;
+
         scene.add( object );
 
-
     }, onProgress, onError );
+}
+
+/**
+ * Load audio file
+ * @param filename name of the audio file to be loaded
+ * @param volume volume that the audio should be set to
+ * @param loop boolean whether or not the audio should loop
+ * @param playImmediately boolean whether or not to play the audio immediately after loading
+ */
+function loadSound(filename, volume, loop, playImmediately){
+
 }
