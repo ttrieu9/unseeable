@@ -340,12 +340,15 @@ function init() {
     //load the classroom
     //TODO: make the onLoad function something that will be applied to all of the room's children?
     loadWorldFBX('TryNumber10_Ew.fbx',
-        function(child){
-            if(child.name.includes("MainPaper")) {
-                paperGroup.push(child);
+        function(object){
+            for(let i in object.children) {
+                let child = object.children[i];
+                if (child.name.includes("MainPaper")) {
+                    paperGroup.push(child);
 
-                if(!child.name.includes("Outline")) {
-                    coloredObjects.push(child.name);
+                    if (!child.name.includes("Outline")) {
+                        coloredObjects.push(child.name);
+                    }
                 }
             }
         }, onProgress, onError);

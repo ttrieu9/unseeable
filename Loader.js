@@ -74,6 +74,11 @@ function loadWorldFBX(fileName, onLoad, onProgress, onError){
                 }
             }
         }
+
+        //
+        if(onLoad !== null) {
+            onLoad(object);
+        }
         object.castShadow = true;
         object.receiveShadow = true;
         scene.add( object );
