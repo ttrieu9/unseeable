@@ -389,25 +389,14 @@ function init() {
     loadSound('HowToDraw.ogg', 0.4);
 
     //teacher dialogue when coloring is finished
-    audioLoader.load(
-        'FinishColoring.ogg',
-        (audioBuffer) => {
-            let song = new THREE.Audio(audioListener);
-            scene.add(song);
-            sounds.push(song);
-            song.setBuffer(audioBuffer);
-            song.setVolume(0.3);
-            song.onEnded = () => {
-                // fade to view of whiteboard after audio ends
-                fade();
-                setTimeout(() => {
-                    camera.position.set(0.11333127647429019, 1.5369136371003131, -2.028078509213737);
-                    camera.rotation.set(0.490486809597034, 0.0016298261023861107, 0);
-                }, 1000)
-            };
-            song.name = 'FinishColoring.ogg';
-        }, onProgress, onError
-    );
+    loadSound('FinishColoring.ogg', 0.3, false, false, () => {
+        // fade to view of whiteboard after audio ends
+        fade();
+        setTimeout(() => {
+            camera.position.set(0.11333127647429019, 1.5369136371003131, -2.028078509213737);
+            camera.rotation.set(0.490486809597034, 0.0016298261023861107, 0);
+        }, 1000)
+    });
 
     //kids mocking the bad painting
     loadSound('HackJob.ogg', 0.4);

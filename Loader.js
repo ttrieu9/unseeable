@@ -91,8 +91,9 @@ function loadWorldFBX(fileName, onLoad, onProgress, onError){
  * @param volume volume that the audio should be set to
  * @param playImmediately boolean whether or not to play the audio immediately after loading
  * @param loop boolean whether or not the audio should loop
+ * @param onEnded function to be performed once the audio finishes playing
  */
-function loadSound(filename, volume, playImmediately, loop){
+function loadSound(filename, volume, playImmediately, loop, onEnded){
     audioLoader.load(
         filename,
         (audioBuffer) => {
@@ -108,6 +109,9 @@ function loadSound(filename, volume, playImmediately, loop){
             }
             if(playImmediately === true){
                 song.play();
+            }
+            if(onEnded !== undefined){
+                song.onEnded = onEnded;
             }
             song.name = filename;
         }, onProgress, onError
