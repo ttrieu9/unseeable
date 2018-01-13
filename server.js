@@ -2,7 +2,12 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var mongoose = require('mongoose');
-var mongoUrl = 'mongodb://ttrieu:unseeable@ds239587.mlab.com:39587/unseeable-logger-test'
+var mongoUrl = 'mongodb://ttrieu:unseeable@ds239587.mlab.com:39587/unseeable-logger-test';
+
+// Import routes
+var logger = require('./routes/logger');
+
+app.use(logger);
 
 // Set up mongo connection
 mongoose.connect(mongoUrl, () => {
