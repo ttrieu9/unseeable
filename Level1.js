@@ -183,15 +183,18 @@ function colorPaper() {
 
             if(coloredObjects.length === 2) {
                 setTimeout(() => {
+                    nextPosition();
+                }, 750);
+
+                setTimeout(() => {
                     // create paper group
                     for(var i in paperGroup) {
-                        paper.add(paperGroup[i])
+                        paper.add(paperGroup[i]);
                     }
                     paper.rotateX(Math.PI/2);
                     paper.rotateY(Math.PI/4);
                     scene.add(paper);
-                    nextPosition()
-                }, 1000)
+                }, 1500);
             }
         }
     }
