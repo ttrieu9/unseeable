@@ -399,10 +399,14 @@ function init() {
 
     //TODO: add onEnd() functions to these, which will turn camera to look at the rest of the tables
     //teacher dialogue with first wrong attempt
-    loadSound('NotSeatOne.ogg', 0.4);
+    loadSound('NotSeatOne.ogg', 0.4, false, false, () => {
+        enableControls();
+    });
 
     //teacher dialogue with second wrong attempt
-    loadSound('NotSeatTwo.ogg', 0.4);
+    loadSound('NotSeatTwo.ogg', 0.4, false, false, () => {
+        enableControls();
+    });
 
     //teacher dialogue showing to right table
     loadSound('ShowToSeat.ogg', 0.4);
