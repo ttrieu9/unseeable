@@ -9,10 +9,6 @@ var sounds = [];
 
 var cameraPosition = 1;
 
-//TODO: remove these as they will no longer be necessary
-var walkSteps;
-var rotSteps;
-
 var clock = new THREE.Clock();
 
 var mixers = [];
@@ -37,9 +33,12 @@ splineTargets.push({x: 2.45540189743042, y: 1.3381956815719604, z: 1.42893624305
 splineTargets.push({x: 8.0117347240448, y: 1.3381956815719604, z: 2.7985452115535736});
 splineTargets.push({x: 8.132792711257935, y: 1.3381957411766052, z: 8.569308996200562});
 splineTargets.push({x: 2.9254701137542725, y: 1.3381956815719604, z: 11.149720668792725});
+var currentTable = null;
+
+var lookatPosition = {x: 5, y: 2, z: 6};
+var lookatRotation;
 
 var camPosIndex;
-var direction;
 
 init();
 
@@ -195,6 +194,20 @@ function colorPaper() {
     }
 }
 
+/**
+ * function to be called whenever the camera needs to look at the center of all of the tables
+ */
+function lookAtCenter(){
+    let originalRot = {x: camera.rotation.x, y: camera.rotation.y, z: camera.rotation.z};
+    camera.lookAt(lookatPosition.x, lookatPosition.y, lookatPosition.z);
+    lookatRotation = {x: camera.rotation.x, y: camera.rotation.y, z: camera.rotation.z};
+    camera.rotation.x = originalRot.x;
+    camera.rotation.y = originalRot.y;
+    camera.rotation.z = originalRot.z;
+    let rot = new TWEEN.Tween(camera.rotation).to(lookatRotation, 1500);
+    rot.start();
+}
+
 function selectTable() {
     raycaster.setFromCamera(mouse, camera);
 
@@ -204,44 +217,100 @@ function selectTable() {
         var intersected = intersects[0].object;
         if(intersected.name.includes("Table") && !intersected.name.includes("Path")){
             console.log(intersected);
-            if(intersected.name.includes("Table_Red")) {
-                if(currentHover) {
-                    currentHover.material = previousMaterial;
-                    currentHover = null
-                }
-                nextPosition()
+            if(currentHover) {
+                currentHover.material = previousMaterial;
+                currentHover = null
             }
-            else {
-                //get what table you selected
-                var table;
-                if(intersected.name.includes("Table_Green")){
-                    table = 0;
+            //TODO: find a less ugly of selecting which spline to traverse besides all these ifs
+            //select the correct spline to move along, depending on the current table you are at
+            //starting position
+            if(currentTable === null){
+                if(intersected.name.includes("Green")){
+                    currentTable = "Green";
+                    console.log(currentTable);
+                    moveAlongSpline2(0, -1, 3);
                 }
-                else if(intersected.name.includes("Table_Yellow")){
-                    table = 2;
+                else if(intersected.name.includes("Red")){
+                    currentTable = "Red";
+                    moveAlongSpline2(1, -1, 4);
                 }
-                else if(intersected.name.includes("Table_Blue")){
-                    table = 3;
+                else if(intersected.name.includes("Yellow")){
+                    currentTable = "Yellow";
+                    moveAlongSpline2(2, -1, 4);
                 }
-                moveAlongSpline(table, -1);
+                else if(intersected.name.includes("Blue")){
+                    currentTable = "Blue";
+                    moveAlongSpline2(3, -1, 3);
+                }
+            }
+            //green table
+            else if(currentTable === "Green"){
+                if(intersected.name.includes("Red")){
+                    currentTable = "Red";
+                    moveAlongSpline2(5, -1, 3);
+                }
+                else if(intersected.name.includes("Yellow")){
+                    currentTable = "Yellow";
+                    moveAlongSpline2(8, -1, 4);
+                }
+                else if(intersected.name.includes("Blue")){
+                    currentTable = "Blue";
+                    moveAlongSpline2(9, 1, 3);
+                }
+            }
+            //yellow table
+            else if(currentTable === "Yellow"){
+                if(intersected.name.includes("Green")){
+                    currentTable = "Green";
+                    moveAlongSpline2(8, 1, 4);
+                }
+                else if(intersected.name.includes("Red")){
+                    currentTable = "Red";
+                    moveAlongSpline2(6, -1, 2.5);
+                }
+                else if(intersected.name.includes("Blue")){
+                    currentTable = "Blue";
+                    moveAlongSpline2(7, 1, 3);
+                }
+            }
+            //blue table
+            else if(currentTable === "Blue"){
+                if(intersected.name.includes("Green")){
+                    currentTable = "Green";
+                    moveAlongSpline2(9, -1, 3);
+                }
+                else if(intersected.name.includes("Red")){
+                    currentTable = "Red";
+                    moveAlongSpline2(4, -1, 3);
+                }
+                else if(intersected.name.includes("Yellow")){
+                    currentTable = "Yellow";
+                    moveAlongSpline2(7, -1, 3);
+                }
+            }
 
-                setTimeout(function(){
+            //TODO: this sometimes ends up getting called at the wrong time
+            if(currentTable !== "Red") {
+                setTimeout(function () {
 
-                    if(attempts === 2) {
+                    if (attempts === 2) {
                         playSound('ShowToSeat.ogg');
                         nextPosition()
                     }
 
                     attempts++;
-                    if(attempts === 1){
+                    if (attempts === 1) {
                         playSound('NotSeatOne.ogg');
-                    } else if(attempts === 2){
+                    } else if (attempts === 2) {
                         playSound('NotSeatTwo.ogg');
                     }
 
-                }, 3500)
-
+                }, 3500);
             }
+            else{
+                nextPosition();
+            }
+
         }
     }
 }
@@ -375,10 +444,14 @@ function init() {
 
     //TODO: add onEnd() functions to these, which will turn camera to look at the rest of the tables
     //teacher dialogue with first wrong attempt
-    loadSound('NotSeatOne.ogg', 0.4);
+    loadSound('NotSeatOne.ogg', 0.4, false, false, function(){
+        lookAtCenter();
+    });
 
     //teacher dialogue with second wrong attempt
-    loadSound('NotSeatTwo.ogg', 0.4);
+    loadSound('NotSeatTwo.ogg', 0.4, false, false, function(){
+        lookAtCenter();
+    });
 
     //teacher dialogue showing to right table
     loadSound('ShowToSeat.ogg', 0.4);
@@ -541,7 +614,7 @@ function nextPosition(){
     switch(cameraPosition){
         case 1:
             cameraPosition = 2;
-            moveAlongSpline2(1, -1, 4, function(){console.log("DONE WITH THIS")});
+            //TODO make the following the onEnded function of the above spline
             // moveAlongSpline(1, -1);
             // setTimeout(function(){
             //     rotSteps = [];
@@ -578,42 +651,6 @@ function nextPosition(){
             cameraPosition = 1;
             break;
     }
-}
-
-//TODO: tweens won't be used as often as planned so this method should be removed
-/**
- * Begin the walk specified in the walkSteps variable
- */
-function beginWalk(){
-    walkSteps[0].start();
-    rotSteps[0].start();
-
-    //TODO: move this audio somewhere else so that this function can be removed
-    walkSteps[0].onComplete(() => {
-        playSound('HowToDraw.ogg');
-    })
-}
-
-//TODO: remove this function
-/**
- * Add step to the list of tweens
- * /@argument position position to go to
- * /@argument rotation rotation to go to
- * /@argument time how long to transition
- **/
-function addStep(position, rotation, time){
-    //add tweens to lists of tweens
-    let walkLen = walkSteps.push(new TWEEN.Tween(camera.position).to(position, time));
-    let rotLen = rotSteps.push(new TWEEN.Tween(camera.rotation).to(rotation, time));
-
-    //chain the tweens so that they happen consecutively
-    if(walkLen > 1){
-        walkSteps[walkLen-2].chain(walkSteps[walkLen-1]);
-    }
-    if(rotLen > 1){
-        rotSteps[rotLen-2].chain(rotSteps[rotLen-1]);
-    }
-
 }
 
 /**
