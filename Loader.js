@@ -56,6 +56,7 @@ function loadWorldFBX(fileName, onLoad, onProgress, onError){
 
             //convert the paths in the scene into splines
             if(object.children[i].name.includes("Path")) {
+                object.children[i].visible = false;
                 paths.push(object.children[i]);
                 let points = object.children[i].geometry.attributes.position.array;
                 let vectors = [];

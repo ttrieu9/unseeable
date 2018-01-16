@@ -733,7 +733,7 @@ function init() {
     }, 3000)
 }
 
-//window.onload = changeColorVision();
+window.onload = changeColorVision();
 
 function nextPosition(){
     switch(cameraPosition){
