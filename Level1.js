@@ -296,8 +296,7 @@ function postPaper() {
                 })
             }
             posted = true;
-            document.body.style.cursor = 'default';
-
+            disableControls();
         }
     }
 }
