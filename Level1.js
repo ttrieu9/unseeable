@@ -196,7 +196,7 @@ function colorPaper() {
             playSound('Writing.wav');
 
             if(coloredObjects.length === 2) {
-                disableControls();
+                startCutScene();
                 setTimeout(() => {
                     nextPosition();
                 }, 750);
@@ -223,6 +223,7 @@ function selectTable() {
     if(intersects.length > 0) {
         var intersected = intersects[0].object;
         if(intersected.name.includes("Table") && !intersected.name.includes("Path")){
+            startCutScene();
             console.log(intersected);
             if(intersected.name.includes("Table_Red")) {
                 if(currentHover) {
@@ -296,9 +297,44 @@ function postPaper() {
                 })
             }
             posted = true;
-            disableControls();
+            startCutScene();
         }
     }
+}
+
+function startCutScene() {
+    disableControls();
+
+    var topBar = document.getElementById("top_bar");
+    var bottomBar = document.getElementById("bottom_bar");
+    topBar.classList.remove("fade-out");
+    bottomBar.classList.remove("fade-out");
+    topBar.offsetWidth;
+    bottomBar.offsetWidth;
+    topBar.classList.add("fade-in");
+    bottomBar.classList.add("fade-in");
+
+    setTimeout(() => {
+        topBar.style.opacity = 1;
+        bottomBar.style.opacity = 1;
+    }, 1000);
+}
+
+function endCutScene () {
+    var topBar = document.getElementById("top_bar");
+    var bottomBar = document.getElementById("bottom_bar");
+    topBar.classList.remove("fade-in");
+    bottomBar.classList.remove("fade-in");
+    topBar.offsetWidth;
+    bottomBar.offsetWidth;
+    topBar.classList.add("fade-out");
+    bottomBar.classList.add("fade-out");
+
+    setTimeout(() => {
+        enableControls();
+        topBar.style.opacity = 0;
+        bottomBar.style.opacity = 0;
+    }, 950);
 }
 
 function fade() {
@@ -342,7 +378,7 @@ function onError( xhr ) {
 };
 
 function init() {
-    disableControls();
+    startCutScene();
     //create the scene
     scene = new THREE.Scene();
 
@@ -393,18 +429,18 @@ function init() {
 
     //teacher dialogue to sit
     loadSound('TakeSeats.ogg', 0.4, false, false, () => {
-        enableControls();
+        endCutScene();
     });
 
     //TODO: add onEnd() functions to these, which will turn camera to look at the rest of the tables
     //teacher dialogue with first wrong attempt
     loadSound('NotSeatOne.ogg', 0.4, false, false, () => {
-        enableControls();
+        endCutScene();
     });
 
     //teacher dialogue with second wrong attempt
     loadSound('NotSeatTwo.ogg', 0.4, false, false, () => {
-        enableControls();
+        endCutScene();
     });
 
     //teacher dialogue showing to right table
@@ -412,7 +448,7 @@ function init() {
 
     //teacher dialogue about coloring
     loadSound('HowToDraw.ogg', 0.4, false, false, () => {
-        enableControls();
+        endCutScene();
     });
 
     //teacher dialogue when coloring is finished
@@ -425,7 +461,7 @@ function init() {
         }, 1000)
 
         setTimeout(() => {
-            enableControls();
+            endCutScene();
         }, 2000);
     });
 
@@ -468,7 +504,7 @@ function init() {
             fade();
         }
         else if(String.fromCharCode(event.keyCode) === "t"){
-
+            startCutScene();
         }
         else{
             nextPosition();
@@ -567,6 +603,7 @@ function init() {
     // scene.add(light);
 
     animate();
+    startCutScene();
     setTimeout(() => {
         playSound('TakeSeats.ogg');
     }, 3000)
