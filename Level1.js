@@ -228,62 +228,62 @@ function selectTable() {
                 if(intersected.name.includes("Green")){
                     currentTable = "Green";
                     console.log(currentTable);
-                    moveAlongSpline2(0, -1, 3);
+                    moveAlongSpline(0, -1, 3);
                 }
                 else if(intersected.name.includes("Red")){
                     currentTable = "Red";
-                    moveAlongSpline2(1, -1, 4);
+                    moveAlongSpline(1, -1, 4);
                 }
                 else if(intersected.name.includes("Yellow")){
                     currentTable = "Yellow";
-                    moveAlongSpline2(2, -1, 4);
+                    moveAlongSpline(2, -1, 4);
                 }
                 else if(intersected.name.includes("Blue")){
                     currentTable = "Blue";
-                    moveAlongSpline2(3, -1, 3);
+                    moveAlongSpline(3, -1, 3);
                 }
             }
             //green table
             else if(currentTable === "Green"){
                 if(intersected.name.includes("Red")){
                     currentTable = "Red";
-                    moveAlongSpline2(5, -1, 3);
+                    moveAlongSpline(5, -1, 3);
                 }
                 else if(intersected.name.includes("Yellow")){
                     currentTable = "Yellow";
-                    moveAlongSpline2(8, -1, 4);
+                    moveAlongSpline(8, -1, 4);
                 }
                 else if(intersected.name.includes("Blue")){
                     currentTable = "Blue";
-                    moveAlongSpline2(9, 1, 3);
+                    moveAlongSpline(9, 1, 3);
                 }
             }
             //yellow table
             else if(currentTable === "Yellow"){
                 if(intersected.name.includes("Green")){
                     currentTable = "Green";
-                    moveAlongSpline2(8, 1, 4);
+                    moveAlongSpline(8, 1, 4);
                 }
                 else if(intersected.name.includes("Red")){
                 }
                 else if(intersected.name.includes("Blue")){
                     currentTable = "Blue";
-                    moveAlongSpline2(7, 1, 3);
+                    moveAlongSpline(7, 1, 3);
                 }
             }
             //blue table
             else if(currentTable === "Blue"){
                 if(intersected.name.includes("Green")){
                     currentTable = "Green";
-                    moveAlongSpline2(9, -1, 3);
+                    moveAlongSpline(9, -1, 3);
                 }
                 else if(intersected.name.includes("Red")){
                     currentTable = "Red";
-                    moveAlongSpline2(4, -1, 3);
+                    moveAlongSpline(4, -1, 3);
                 }
                 else if(intersected.name.includes("Yellow")){
                     currentTable = "Yellow";
-                    moveAlongSpline2(7, -1, 3);
+                    moveAlongSpline(7, -1, 3);
                 }
             }
 
@@ -291,6 +291,7 @@ function selectTable() {
             if(currentTable !== "Red") {
                 setTimeout(function () {
 
+                    //move them to the correct table
                     if (attempts === 2) {
                         playSound('ShowToSeat.ogg');
                         nextPosition();
@@ -439,8 +440,6 @@ function init() {
 
     //teacher dialogue to sit
     loadSound('TakeSeats.ogg', 0.4, true);
-
-    //TODO: add onEnd() functions to these, which will turn camera to look at the rest of the tables
     //teacher dialogue with first wrong attempt
     loadSound('NotSeatOne.ogg', 0.4, false, false, function(){
         lookAtCenter();
@@ -455,15 +454,15 @@ function init() {
     loadSound('ShowToSeat.ogg', 0.4, false, false, function(){
         if(currentTable === "Green"){
             currentTable = "Red";
-            moveAlongSpline2(5, -1, 3);
+            moveAlongSpline(5, -1, 3);
         }
         else if(currentTable === "Yellow"){
             currentTable = "Red";
-            moveAlongSpline2(6, -1, 2.5);
+            moveAlongSpline(6, -1, 2.5);
         }
         else if(currentTable === "Blue"){
             currentTable = "Red";
-            moveAlongSpline2(4, -1, 3);
+            moveAlongSpline(4, -1, 3);
 
         }
     });
@@ -627,7 +626,6 @@ function nextPosition(){
         case 1:
             cameraPosition = 2;
             //TODO make the following the onEnded function of the above spline
-            // moveAlongSpline(1, -1);
             // setTimeout(function(){
             //     rotSteps = [];
             //     walkSteps = [];
@@ -663,24 +661,6 @@ function nextPosition(){
             cameraPosition = 1;
             break;
     }
-}
-
-/**
- * Function to move the camera along the designated spline
- * /@argument spline spline to move along
- * /@argument dir 1 is forward, -1 is backwards
- **/
-function moveAlongSpline(spline, dir){
-    //go in direction of spline
-    if(dir === 1){
-        direction = 1;
-        camPosIndex = 0;
-    }
-    else{
-        direction = -1;
-        camPosIndex = 200;
-    }
-    activeSpline = spline;
 }
 
 function onWindowResize() {

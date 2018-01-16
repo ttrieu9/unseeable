@@ -13,7 +13,7 @@ var dir;
  * @param duration How many seconds to take to move along the spline
  * @param onEnded Optional function to execute once, the spline is fully traversed
  */
-function moveAlongSpline2(spline, direction, duration, onEnded){
+function moveAlongSpline(spline, direction, duration, onEnded){
     activeSpline = spline;
     dir = direction;
     splineDuration = duration;
@@ -55,6 +55,7 @@ function updateSpline(){
                 newPos = spline.getPointAt(0);
             }
             camera.position.set(newPos.x, 2.3, newPos.z);
+
             //execute the onEnded function once the spline is finished
             if(spline.onEnded){
                 spline.onEnded();
