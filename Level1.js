@@ -204,8 +204,39 @@ function lookAtCenter(){
     camera.rotation.x = originalRot.x;
     camera.rotation.y = originalRot.y;
     camera.rotation.z = originalRot.z;
-    let rot = new TWEEN.Tween(camera.rotation).to(lookatRotation, 1500);
-    rot.start();
+    new TWEEN.Tween(camera.rotation).to(lookatRotation, 1500).interpolation( TWEEN.Interpolation.CatmullRom ).start();
+}
+
+function lookAtTeacher(){
+    // grab camera rotation on view of teacher
+    let rot = {x: camera.rotation.x, y: camera.rotation.y, z: camera.rotation.z};
+    camera.lookAt(new THREE.Vector3(4, 3.55, -1));
+    var teacherView = {
+        x: camera.rotation.x,
+        y: camera.rotation.y,
+        z: camera.rotation.z
+    };
+    camera.rotation.set(rot.x, rot.y, rot.z);
+    //-1.0581080584316573, -0.5617291507874522, 0
+
+    // Tween camera to view teacher
+    var lookAtTeacher = new TWEEN.Tween(camera.rotation).to(teacherView, 2000);
+    lookAtTeacher.start();
+
+}
+
+/**
+ * makes the camera appear to sit down at the table
+ */
+function sitAtTable(){
+    setTimeout(function(){
+        new TWEEN.Tween(camera.position).to({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, 2000).onComplete(function(){
+            lookAtTeacher();
+            playSound('HowToDraw.ogg');
+        }).start();
+    }, 500);
+    // {x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}
+    // {x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 2000
 }
 
 function selectTable() {
@@ -232,7 +263,9 @@ function selectTable() {
                 }
                 else if(intersected.name.includes("Red")){
                     currentTable = "Red";
-                    moveAlongSpline(1, -1, 4);
+                    moveAlongSpline(1, -1, 4, function(){
+                        sitAtTable();
+                    });
                 }
                 else if(intersected.name.includes("Yellow")){
                     currentTable = "Yellow";
@@ -247,7 +280,9 @@ function selectTable() {
             else if(currentTable === "Green"){
                 if(intersected.name.includes("Red")){
                     currentTable = "Red";
-                    moveAlongSpline(5, -1, 3);
+                    moveAlongSpline(5, -1, 3, function(){
+                        sitAtTable();
+                    });
                 }
                 else if(intersected.name.includes("Yellow")){
                     currentTable = "Yellow";
@@ -265,6 +300,10 @@ function selectTable() {
                     moveAlongSpline(8, 1, 4);
                 }
                 else if(intersected.name.includes("Red")){
+                    currentTable = "Red";
+                    moveAlongSpline(6, -1, 2, function(){
+                        sitAtTable();
+                    });
                 }
                 else if(intersected.name.includes("Blue")){
                     currentTable = "Blue";
@@ -279,7 +318,9 @@ function selectTable() {
                 }
                 else if(intersected.name.includes("Red")){
                     currentTable = "Red";
-                    moveAlongSpline(4, -1, 3);
+                    moveAlongSpline(4, -1, 3, function(){
+                        sitAtTable();
+                    });
                 }
                 else if(intersected.name.includes("Yellow")){
                     currentTable = "Yellow";
@@ -468,7 +509,9 @@ function init() {
     });
 
     //teacher dialogue about coloring
-    loadSound('HowToDraw.ogg', 0.4);
+    loadSound('HowToDraw.ogg', 0.4, false, false, function(){
+        new TWEEN.Tween(camera.rotation).to({x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 1300).start();
+    });
 
     //teacher dialogue when coloring is finished
     loadSound('FinishColoring.ogg', 0.3, false, false, () => {

@@ -44,6 +44,25 @@ function updateSpline(){
                 newPos = spline.getPointAt(1-elapsed/splineDuration);
             }
             camera.position.set(newPos.x, 2.3, newPos.z);
+
+            //look at the table that you are walking towards
+            let target;
+            switch(currentTable){
+                case "Green":
+                    target = splineTargets[0];
+                    break;
+                case "Red":
+                    target = splineTargets[1];
+                    break;
+                case "Yellow":
+                    target = splineTargets[2];
+                    break;
+                case "Blue":
+                    target = splineTargets[3];
+                    break;
+            }
+
+            camera.lookAt(target.x, 2, target.z);
         }
         //end the spline and place the camera at the end of it
         else{
