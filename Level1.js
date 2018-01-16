@@ -49,13 +49,11 @@ init();
 function disableControls() {
     controlsEnabled = false;
     document.body.style.cursor = 'none';
-    console.log('Control disabled')
 }
 
 function enableControls() {
     controlsEnabled = true;
     document.body.style.cursor = 'default';
-    console.log('Controleds enabled')
 }
 
 function onMouseMove() {
@@ -251,7 +249,7 @@ function selectTable() {
 
                     if(attempts === 2) {
                         playSound('ShowToSeat.ogg');
-                        nextPosition()
+                        nextPosition();
                     }
 
                     attempts++;
@@ -410,7 +408,9 @@ function init() {
     loadSound('ShowToSeat.ogg', 0.4);
 
     //teacher dialogue about coloring
-    loadSound('HowToDraw.ogg', 0.4);
+    loadSound('HowToDraw.ogg', 0.4, false, false, () => {
+        enableControls();
+    });
 
     //teacher dialogue when coloring is finished
     loadSound('FinishColoring.ogg', 0.3, false, false, () => {
@@ -696,6 +696,7 @@ function render() {
     //TODO: move this out of the render function, create new function
     //TODO: make it work with time instead of frames, use a clock
     if(activeSpline !== null){
+        disableControls();
         var camPos = splines[activeSpline].getPoint(camPosIndex / 200);
 
         camera.position.x = camPos.x;
