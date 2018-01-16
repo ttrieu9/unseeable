@@ -26,6 +26,7 @@ var intersectableObjects = [];
 var paperGroup = [];
 var paper = new THREE.Group();
 var posted = false;
+var controlsEnabled = true;
 
 var paths = [];
 var splineTargets = [];
@@ -42,106 +43,118 @@ var camPosIndex;
 
 init();
 
+function disableControls() {
+    controlsEnabled = false;
+    document.body.style.cursor = 'none';
+}
+
+function enableControls() {
+    controlsEnabled = true;
+    document.body.style.cursor = 'default';
+}
+
 function onMouseMove() {
-    event.preventDefault();
-    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    mouse.y =  - ( event.clientY / window.innerHeight ) * 2 + 1;
+    if(controlsEnabled) {
+        event.preventDefault();
+        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+        mouse.y =  - ( event.clientY / window.innerHeight ) * 2 + 1;
 
 
-    raycaster.setFromCamera(mouse, camera);
-    var intersects = raycaster.intersectObjects(intersectableObjects);
+        raycaster.setFromCamera(mouse, camera);
+        var intersects = raycaster.intersectObjects(intersectableObjects);
 
-    if(intersects.length > 0) {
-        var intersected = intersects[0].object;
-        switch(cameraPosition) {
-            case 1:
-                if(intersected.name.includes('Table') && !intersected.name.includes('Chair') && !intersected.name.includes('Legs') && !intersected.name.includes("Path")) {
-                    document.body.style.cursor = 'pointer';
+        if(intersects.length > 0) {
+            var intersected = intersects[0].object;
+            switch(cameraPosition) {
+                case 1:
+                    if(intersected.name.includes('Table') && !intersected.name.includes('Chair') && !intersected.name.includes('Legs') && !intersected.name.includes("Path")) {
+                        document.body.style.cursor = 'pointer';
 
-                    if(!currentHover) {
-                        currentHover = intersected;
-                        newMaterial = currentHover.material[0].clone();
-                        previousMaterial = [currentHover.material[0].clone(),currentHover.material[1].clone()];
-                        newMaterial.color.setHex('0xffffff');
-                        currentHover.material = newMaterial
-                    }
-                    else {
-                        currentHover.material = previousMaterial;
-                        currentHover = intersected;
-                        newMaterial = currentHover.material[0].clone();
-                        previousMaterial = [currentHover.material[0].clone(),currentHover.material[1].clone()];
-                        newMaterial.color.setHex('0xffffff');
-                        currentHover.material = newMaterial
-                    }
-                }
-                else {
-                    document.body.style.cursor = 'default';
-
-                    if(currentHover) {
-                        currentHover.material = previousMaterial;
-                        currentHover = null
-                    }
-                }
-                break;
-            case 2:
-                if(intersected.name.includes('Crayon')) {
-                    document.body.style.cursor = 'pointer';
-
-                    if(!intersected.name.includes('Box')) {
                         if(!currentHover) {
                             currentHover = intersected;
-                            previousPosition = {
-                                x: intersected.position.x,
-                                y: intersected.position.y,
-                                z: intersected.position.z
-                            };
-                            currentHover.position.set(previousPosition.x + 0.015, previousPosition.y, previousPosition.z - 0.025)
+                            newMaterial = currentHover.material[0].clone();
+                            previousMaterial = [currentHover.material[0].clone(),currentHover.material[1].clone()];
+                            newMaterial.color.setHex('0xffffff');
+                            currentHover.material = newMaterial
                         }
-                        else if(currentHover.name !== intersected.name) {
-                            currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+                        else {
+                            currentHover.material = previousMaterial;
                             currentHover = intersected;
-                            previousPosition = {
-                                x: intersected.position.x,
-                                y: intersected.position.y,
-                                z: intersected.position.z
-                            };
-                            currentHover.position.set(previousPosition.x + 0.015, previousPosition.y, previousPosition.z - 0.025)
+                            newMaterial = currentHover.material[0].clone();
+                            previousMaterial = [currentHover.material[0].clone(),currentHover.material[1].clone()];
+                            newMaterial.color.setHex('0xffffff');
+                            currentHover.material = newMaterial
                         }
-                    }
-                    else if(currentHover) {
-                        currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
-                        currentHover = null
-                    }
-                }
-                else if(intersected.name.includes('Paper')) {
-                    if(!intersected.name.includes('Outline')) {
-                        document.body.style.cursor = 'pointer'
                     }
                     else {
-                        document.body.style.cursor = 'default'
-                    }
-                }
-                else {
-                    document.body.style.cursor = 'default';
+                        document.body.style.cursor = 'default';
 
-                    if(currentHover) {
-                        currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
-                        currentHover = null
+                        if(currentHover) {
+                            currentHover.material = previousMaterial;
+                            currentHover = null
+                        }
                     }
-                }
-                break;
-            case 3:
-                if(posted === false) {
-                    document.body.style.cursor = 'pointer'
-                    var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
-                    vector.unproject(camera);
-                    var dir = vector.sub( camera.position ).normalize();
-                    var distance = - camera.position.z / dir.z;
-                    var pos = camera.position.clone().add( dir.multiplyScalar( distance ) );
-                    pos.set(-1.9*(pos.x + 3.9), -1.9*(pos.y - 1.2), pos.z - 7.5);
-                    paper.position.copy(pos);
-                }
-                break;
+                    break;
+                case 2:
+                    if(intersected.name.includes('Crayon')) {
+                        document.body.style.cursor = 'pointer';
+
+                        if(!intersected.name.includes('Box')) {
+                            if(!currentHover) {
+                                currentHover = intersected;
+                                previousPosition = {
+                                    x: intersected.position.x,
+                                    y: intersected.position.y,
+                                    z: intersected.position.z
+                                };
+                                currentHover.position.set(previousPosition.x + 0.015, previousPosition.y, previousPosition.z - 0.025)
+                            }
+                            else if(currentHover.name !== intersected.name) {
+                                currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+                                currentHover = intersected;
+                                previousPosition = {
+                                    x: intersected.position.x,
+                                    y: intersected.position.y,
+                                    z: intersected.position.z
+                                };
+                                currentHover.position.set(previousPosition.x + 0.015, previousPosition.y, previousPosition.z - 0.025)
+                            }
+                        }
+                        else if(currentHover) {
+                            currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+                            currentHover = null
+                        }
+                    }
+                    else if(intersected.name.includes('Paper')) {
+                        if(!intersected.name.includes('Outline')) {
+                            document.body.style.cursor = 'pointer'
+                        }
+                        else {
+                            document.body.style.cursor = 'default'
+                        }
+                    }
+                    else {
+                        document.body.style.cursor = 'default';
+
+                        if(currentHover) {
+                            currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+                            currentHover = null
+                        }
+                    }
+                    break;
+                case 3:
+                    if(posted === false) {
+                        document.body.style.cursor = 'pointer'
+                        var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
+                        vector.unproject(camera);
+                        var dir = vector.sub( camera.position ).normalize();
+                        var distance = - camera.position.z / dir.z;
+                        var pos = camera.position.clone().add( dir.multiplyScalar( distance ) );
+                        pos.set(-1.9*(pos.x + 3.9), -1.9*(pos.y - 1.2), pos.z - 7.5);
+                        paper.position.copy(pos);
+                    }
+                    break;
+            }
         }
     }
 }
@@ -180,7 +193,7 @@ function colorPaper() {
             playSound('Writing.wav');
 
             if(coloredObjects.length === 2) {
-                document.body.style.cursor = 'default';
+                startCutScene();
                 setTimeout(() => {
                     nextPosition();
                 }, 750);
@@ -252,6 +265,7 @@ function selectTable() {
     if(intersects.length > 0) {
         var intersected = intersects[0].object;
         if(intersected.name.includes("Table") && !intersected.name.includes("Path")){
+            startCutScene();
             console.log(intersected);
             if(currentHover) {
                 currentHover.material = previousMaterial;
@@ -360,7 +374,7 @@ function selectTable() {
     }
 }
 
-function postPaper() {
+function postPaper() { 
     raycaster.setFromCamera(mouse, camera);
 
     var intersects = raycaster.intersectObjects(intersectableObjects);
@@ -390,10 +404,44 @@ function postPaper() {
                 })
             }
             posted = true;
-            document.body.style.cursor = 'default';
-
+            startCutScene();
         }
     }
+}
+
+function startCutScene() {
+    disableControls();
+
+    var topBar = document.getElementById("top_bar");
+    var bottomBar = document.getElementById("bottom_bar");
+    topBar.classList.remove("fade-out");
+    bottomBar.classList.remove("fade-out");
+    topBar.offsetWidth;
+    bottomBar.offsetWidth;
+    topBar.classList.add("fade-in");
+    bottomBar.classList.add("fade-in");
+
+    setTimeout(() => {
+        topBar.style.opacity = 1;
+        bottomBar.style.opacity = 1;
+    }, 1000);
+}
+
+function endCutScene () {
+    var topBar = document.getElementById("top_bar");
+    var bottomBar = document.getElementById("bottom_bar");
+    topBar.classList.remove("fade-in");
+    bottomBar.classList.remove("fade-in");
+    topBar.offsetWidth;
+    bottomBar.offsetWidth;
+    topBar.classList.add("fade-out");
+    bottomBar.classList.add("fade-out");
+
+    setTimeout(() => {
+        enableControls();
+        topBar.style.opacity = 0;
+        bottomBar.style.opacity = 0;
+    }, 950);
 }
 
 function fade() {
@@ -437,6 +485,7 @@ function onError( xhr ) {
 };
 
 function init() {
+    startCutScene();
     //create the scene
     scene = new THREE.Scene();
 
@@ -486,15 +535,21 @@ function init() {
     loadSound('Writing.wav', 0.15);
 
     //teacher dialogue to sit
-    loadSound('TakeSeats.ogg', 0.4, true);
+    loadSound('TakeSeats.ogg', 0.4, false, false, () => {
+        endCutScene();
+    });
+
+    //TODO: add onEnd() functions to these, which will turn camera to look at the rest of the tables
     //teacher dialogue with first wrong attempt
-    loadSound('NotSeatOne.ogg', 0.4, false, false, function(){
+    loadSound('NotSeatOne.ogg', 0.4, false, false, () => {
         lookAtCenter();
+        endCutScene();
     });
 
     //teacher dialogue with second wrong attempt
-    loadSound('NotSeatTwo.ogg', 0.4, false, false, function(){
+    loadSound('NotSeatTwo.ogg', 0.4, false, false, () => {
         lookAtCenter();
+        endCutScene();
     });
 
     //teacher dialogue showing to right table
@@ -517,6 +572,7 @@ function init() {
     //teacher dialogue about coloring
     loadSound('HowToDraw.ogg', 0.4, false, false, function(){
         new TWEEN.Tween(camera.rotation).to({x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 1300).start();
+        endCutScene();
     });
 
     //teacher dialogue when coloring is finished
@@ -527,6 +583,10 @@ function init() {
             camera.position.set(0.11333127647429019, 1.5369136371003131, -2.028078509213737);
             camera.rotation.set(0.490486809597034, 0.0016298261023861107, 0);
         }, 1000)
+
+        setTimeout(() => {
+            endCutScene();
+        }, 2000);
     });
 
     //kids mocking the bad painting
@@ -549,9 +609,9 @@ function init() {
     renderer.setSize( window.innerWidth, window.innerHeight );
     container.appendChild( renderer.domElement );
 
-    //controls, camera
+    // controls, camera
     // controls = new THREE.OrbitControls( camera, renderer.domElement );
-    // controls.update();
+    //controls.update();
 
     // set the initial camera position
     camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
@@ -568,7 +628,7 @@ function init() {
             fade();
         }
         else if(String.fromCharCode(event.keyCode) === "t"){
-
+            startCutScene();
         }
         else{
             nextPosition();
@@ -595,18 +655,19 @@ function init() {
     window.addEventListener("mousemove", onMouseMove);
 
     window.addEventListener("mousedown", () => {
-        switch(cameraPosition) {
-            case 1:
-                selectTable();
-
-                playSound("Click.mp3");
-                break;
-            case 2:
-                colorPaper();
-                break;
-            case 3:
-                postPaper();
-                break;
+        if(controlsEnabled) {
+            switch(cameraPosition) {
+                case 1:
+                    selectTable();
+                    playSound("Click.mp3");
+                    break;
+                case 2:
+                    colorPaper();
+                    break;
+                case 3:
+                    postPaper();
+                    break;
+            }
         }
     });
 
@@ -666,9 +727,13 @@ function init() {
     // scene.add(light);
 
     animate();
+    startCutScene();
+    setTimeout(() => {
+        playSound('TakeSeats.ogg');
+    }, 3000)
 }
 
-window.onload = changeColorVision();
+//window.onload = changeColorVision();
 
 function nextPosition(){
     switch(cameraPosition){
@@ -720,8 +785,6 @@ function onWindowResize() {
     renderer.setSize( window.innerWidth, window.innerHeight );
 
 }
-
-//
 
 function animate() {
 
