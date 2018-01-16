@@ -32,13 +32,11 @@ var paper = new THREE.Group();
 var posted = false;
 
 var paths = [];
-var splines = [];
 var splineTargets = [];
 splineTargets.push({x: 2.45540189743042, y: 1.3381956815719604, z: 1.428936243057251});
 splineTargets.push({x: 8.0117347240448, y: 1.3381956815719604, z: 2.7985452115535736});
 splineTargets.push({x: 8.132792711257935, y: 1.3381957411766052, z: 8.569308996200562});
 splineTargets.push({x: 2.9254701137542725, y: 1.3381956815719604, z: 11.149720668792725});
-var activeSpline = null;
 
 var camPosIndex;
 var direction;
@@ -543,13 +541,14 @@ function nextPosition(){
     switch(cameraPosition){
         case 1:
             cameraPosition = 2;
-            moveAlongSpline(1, -1);
-            setTimeout(function(){
-                rotSteps = [];
-                walkSteps = [];
-                addStep({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, {x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 2000);
-                beginWalk();
-            }, 4000);
+            moveAlongSpline2(1, -1, 2.500);
+            // moveAlongSpline(1, -1);
+            // setTimeout(function(){
+            //     rotSteps = [];
+            //     walkSteps = [];
+            //     addStep({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, {x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 2000);
+            //     beginWalk();
+            // }, 4000);
             break;
         case 2:
             // grab camera rotation on view of teacher
@@ -666,31 +665,7 @@ function animate() {
 }
 function render() {
     TWEEN.update();
-
-    //TODO: move this out of the render function, create new function
-    //TODO: make it work with time instead of frames, use a clock
-    if(activeSpline !== null){
-        var camPos = splines[activeSpline].getPoint(camPosIndex / 200);
-
-        camera.position.x = camPos.x;
-        camera.position.y = camPos.y+.5;
-        camera.position.z = camPos.z;
-
-        //make the camera look at the table while walking towards it
-        if(direction === -1){
-            console.log(activeSpline);
-            camera.lookAt(splineTargets[activeSpline].x, splineTargets[activeSpline].y, splineTargets[activeSpline].z);
-        }
-        else{
-
-        }
-
-        camPosIndex += direction;
-        //stop moving the camera once it reaches the end of the spline
-        if (camPosIndex < 0 || camPosIndex > 200) {
-            activeSpline = null;
-        }
-    }
+    updateSpline();
 
     renderer.render( scene, camera );
 }
