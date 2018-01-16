@@ -135,6 +135,7 @@ function onMouseMove() {
                 break;
             case 3:
                 if(posted === false) {
+                    document.body.style.cursor = 'pointer'
                     var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
                     vector.unproject(camera);
                     var dir = vector.sub( camera.position ).normalize();
@@ -182,6 +183,7 @@ function colorPaper() {
             playSound('Writing.wav');
 
             if(coloredObjects.length === 2) {
+                document.body.style.cursor = 'default';
                 setTimeout(() => {
                     nextPosition();
                 }, 750);
@@ -262,7 +264,6 @@ function postPaper() {
         });
 
         if(whiteBoardIndex >= 0) {
-
             if(!posted) {
                 var currentZoom = {
                     value: camera.zoom
@@ -281,7 +282,9 @@ function postPaper() {
                     playSound('HackJob.ogg');
                 })
             }
-            posted = true
+            posted = true;
+            document.body.style.cursor = 'default';
+
         }
     }
 }
