@@ -196,7 +196,7 @@ function colorPaper() {
             playSound('Writing.wav');
 
             if(coloredObjects.length === 2) {
-                document.body.style.cursor = 'default';
+                disableControls();
                 setTimeout(() => {
                     nextPosition();
                 }, 750);
@@ -424,6 +424,10 @@ function init() {
             camera.position.set(0.11333127647429019, 1.5369136371003131, -2.028078509213737);
             camera.rotation.set(0.490486809597034, 0.0016298261023861107, 0);
         }, 1000)
+
+        setTimeout(() => {
+            enableControls();
+        }, 2000);
     });
 
     //kids mocking the bad painting
