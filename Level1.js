@@ -265,8 +265,6 @@ function selectTable() {
                     moveAlongSpline2(8, 1, 4);
                 }
                 else if(intersected.name.includes("Red")){
-                    currentTable = "Red";
-                    moveAlongSpline2(6, -1, 2.5);
                 }
                 else if(intersected.name.includes("Blue")){
                     currentTable = "Blue";
@@ -289,13 +287,13 @@ function selectTable() {
                 }
             }
 
-            //TODO: this sometimes ends up getting called at the wrong time
+            //tell the player that they selected the wrong table
             if(currentTable !== "Red") {
                 setTimeout(function () {
 
                     if (attempts === 2) {
                         playSound('ShowToSeat.ogg');
-                        nextPosition()
+                        nextPosition();
                     }
 
                     attempts++;
@@ -454,7 +452,21 @@ function init() {
     });
 
     //teacher dialogue showing to right table
-    loadSound('ShowToSeat.ogg', 0.4);
+    loadSound('ShowToSeat.ogg', 0.4, false, false, function(){
+        if(currentTable === "Green"){
+            currentTable = "Red";
+            moveAlongSpline2(5, -1, 3);
+        }
+        else if(currentTable === "Yellow"){
+            currentTable = "Red";
+            moveAlongSpline2(6, -1, 2.5);
+        }
+        else if(currentTable === "Blue"){
+            currentTable = "Red";
+            moveAlongSpline2(4, -1, 3);
+
+        }
+    });
 
     //teacher dialogue about coloring
     loadSound('HowToDraw.ogg', 0.4);
