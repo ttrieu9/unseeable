@@ -541,7 +541,7 @@ function nextPosition(){
     switch(cameraPosition){
         case 1:
             cameraPosition = 2;
-            moveAlongSpline2(1, -1, 2.500);
+            moveAlongSpline2(1, -1, 4, function(){console.log("DONE WITH THIS")});
             // moveAlongSpline(1, -1);
             // setTimeout(function(){
             //     rotSteps = [];
