@@ -495,6 +495,22 @@ function init() {
     audioListener = new THREE.AudioListener();
     camera.add(audioListener);
 
+    // renderer
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+
+    //initial camera position
+    camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
+    camera.rotation.set(-0.09963408823470919, -1.5005061696940256, 2.0920433907298925e-17);
+
+    //camera controls, mostly for debugging purposes
+    controls = new THREE.OrbitControls( camera );
+    controls.enabled = true; //set to false to turn off controls
+
     //
     // LOADING
     //
@@ -600,22 +616,6 @@ function init() {
     // stats
     stats = new Stats();
     container.appendChild( stats.dom );
-
-    // renderer
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.setPixelRatio( window.devicePixelRatio );
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    container.appendChild( renderer.domElement );
-
-    // controls, camera
-    // controls = new THREE.OrbitControls( camera, renderer.domElement );
-    //controls.update();
-
-    // set the initial camera position
-    camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
-    camera.rotation.set(-0.09963408823470919, -1.5005061696940256, 2.0920433907298925e-17);
 
     var element = document.body;
 
@@ -800,6 +800,7 @@ function animate() {
     }
 
     stats.update();
+    controls.update();
 
     render();
 
