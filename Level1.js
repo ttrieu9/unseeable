@@ -503,13 +503,13 @@ function init() {
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
 
+    //camera controls, mostly for debugging purposes
+    controls = new THREE.OrbitControls( camera );
+    controls.enabled = false; //set to false to turn off controls
+
     //initial camera position
     camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
     camera.rotation.set(-0.09963408823470919, -1.5005061696940256, 2.0920433907298925e-17);
-
-    //camera controls, mostly for debugging purposes
-    controls = new THREE.OrbitControls( camera );
-    controls.enabled = true; //set to false to turn off controls
 
     //
     // LOADING
@@ -800,7 +800,10 @@ function animate() {
     }
 
     stats.update();
-    controls.update();
+    //if controls are enabled
+    if(controls.enabled) {
+        controls.update();
+    }
 
     render();
 
