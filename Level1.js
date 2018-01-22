@@ -9,10 +9,6 @@ var sounds = [];
 
 var cameraPosition = 1;
 
-//TODO: remove these as they will no longer be necessary
-var walkSteps;
-var rotSteps;
-
 var clock = new THREE.Clock();
 
 var mixers = [];
@@ -33,16 +29,17 @@ var posted = false;
 var controlsEnabled = true;
 
 var paths = [];
-var splines = [];
 var splineTargets = [];
 splineTargets.push({x: 2.45540189743042, y: 1.3381956815719604, z: 1.428936243057251});
 splineTargets.push({x: 8.0117347240448, y: 1.3381956815719604, z: 2.7985452115535736});
 splineTargets.push({x: 8.132792711257935, y: 1.3381957411766052, z: 8.569308996200562});
 splineTargets.push({x: 2.9254701137542725, y: 1.3381956815719604, z: 11.149720668792725});
-var activeSpline = null;
+var currentTable = null;
+
+var lookatPosition = {x: 5, y: 2, z: 6};
+var lookatRotation;
 
 var camPosIndex;
-var direction;
 
 init();
 
@@ -215,6 +212,51 @@ function colorPaper() {
     }
 }
 
+/**
+ * function to be called whenever the camera needs to look at the center of all of the tables
+ */
+function lookAtCenter(){
+    let originalRot = {x: camera.rotation.x, y: camera.rotation.y, z: camera.rotation.z};
+    camera.lookAt(lookatPosition.x, lookatPosition.y, lookatPosition.z);
+    lookatRotation = {x: camera.rotation.x, y: camera.rotation.y, z: camera.rotation.z};
+    camera.rotation.x = originalRot.x;
+    camera.rotation.y = originalRot.y;
+    camera.rotation.z = originalRot.z;
+    new TWEEN.Tween(camera.rotation).to(lookatRotation, 1500).interpolation( TWEEN.Interpolation.CatmullRom ).start();
+}
+
+function lookAtTeacher(){
+    // grab camera rotation on view of teacher
+    let rot = {x: camera.rotation.x, y: camera.rotation.y, z: camera.rotation.z};
+    camera.lookAt(new THREE.Vector3(4, 3.55, -1));
+    var teacherView = {
+        x: camera.rotation.x,
+        y: camera.rotation.y,
+        z: camera.rotation.z
+    };
+    camera.rotation.set(rot.x, rot.y, rot.z);
+    //-1.0581080584316573, -0.5617291507874522, 0
+
+    // Tween camera to view teacher
+    var lookAtTeacher = new TWEEN.Tween(camera.rotation).to(teacherView, 2000);
+    lookAtTeacher.start();
+
+}
+
+/**
+ * makes the camera appear to sit down at the table
+ */
+function sitAtTable(){
+    setTimeout(function(){
+        new TWEEN.Tween(camera.position).to({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, 2000).onComplete(function(){
+            lookAtTeacher();
+            playSound('HowToDraw.ogg');
+        }).start();
+    }, 500);
+    // {x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}
+    // {x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 2000
+}
+
 function selectTable() {
     raycaster.setFromCamera(mouse, camera);
 
@@ -225,44 +267,109 @@ function selectTable() {
         if(intersected.name.includes("Table") && !intersected.name.includes("Path")){
             startCutScene();
             console.log(intersected);
-            if(intersected.name.includes("Table_Red")) {
-                if(currentHover) {
-                    currentHover.material = previousMaterial;
-                    currentHover = null
-                }
-                nextPosition()
+            if(currentHover) {
+                currentHover.material = previousMaterial;
+                currentHover = null
             }
-            else {
-                //get what table you selected
-                var table;
-                if(intersected.name.includes("Table_Green")){
-                    table = 0;
+            //TODO: find a less ugly of selecting which spline to traverse besides all these ifs
+            //select the correct spline to move along, depending on the current table you are at
+            //starting position
+            if(currentTable === null){
+                if(intersected.name.includes("Green")){
+                    currentTable = "Green";
+                    console.log(currentTable);
+                    moveAlongSpline(0, -1, 3);
                 }
-                else if(intersected.name.includes("Table_Yellow")){
-                    table = 2;
+                else if(intersected.name.includes("Red")){
+                    currentTable = "Red";
+                    moveAlongSpline(1, -1, 4, function(){
+                        sitAtTable();
+                    });
                 }
-                else if(intersected.name.includes("Table_Blue")){
-                    table = 3;
+                else if(intersected.name.includes("Yellow")){
+                    currentTable = "Yellow";
+                    moveAlongSpline(2, -1, 4);
                 }
-                moveAlongSpline(table, -1);
+                else if(intersected.name.includes("Blue")){
+                    currentTable = "Blue";
+                    moveAlongSpline(3, -1, 3);
+                }
+            }
+            //green table
+            else if(currentTable === "Green"){
+                if(intersected.name.includes("Red")){
+                    currentTable = "Red";
+                    moveAlongSpline(5, -1, 3, function(){
+                        sitAtTable();
+                    });
+                }
+                else if(intersected.name.includes("Yellow")){
+                    currentTable = "Yellow";
+                    moveAlongSpline(8, -1, 4);
+                }
+                else if(intersected.name.includes("Blue")){
+                    currentTable = "Blue";
+                    moveAlongSpline(9, 1, 3);
+                }
+            }
+            //yellow table
+            else if(currentTable === "Yellow"){
+                if(intersected.name.includes("Green")){
+                    currentTable = "Green";
+                    moveAlongSpline(8, 1, 4);
+                }
+                else if(intersected.name.includes("Red")){
+                    currentTable = "Red";
+                    moveAlongSpline(6, -1, 2, function(){
+                        sitAtTable();
+                    });
+                }
+                else if(intersected.name.includes("Blue")){
+                    currentTable = "Blue";
+                    moveAlongSpline(7, 1, 3);
+                }
+            }
+            //blue table
+            else if(currentTable === "Blue"){
+                if(intersected.name.includes("Green")){
+                    currentTable = "Green";
+                    moveAlongSpline(9, -1, 3);
+                }
+                else if(intersected.name.includes("Red")){
+                    currentTable = "Red";
+                    moveAlongSpline(4, -1, 3, function(){
+                        sitAtTable();
+                    });
+                }
+                else if(intersected.name.includes("Yellow")){
+                    currentTable = "Yellow";
+                    moveAlongSpline(7, -1, 3);
+                }
+            }
 
-                setTimeout(function(){
+            //tell the player that they selected the wrong table
+            if(currentTable !== "Red") {
+                setTimeout(function () {
 
-                    if(attempts === 2) {
+                    //move them to the correct table
+                    if (attempts === 2) {
                         playSound('ShowToSeat.ogg');
                         nextPosition();
                     }
 
                     attempts++;
-                    if(attempts === 1){
+                    if (attempts === 1) {
                         playSound('NotSeatOne.ogg');
-                    } else if(attempts === 2){
+                    } else if (attempts === 2) {
                         playSound('NotSeatTwo.ogg');
                     }
 
-                }, 3500)
-
+                }, 3500);
             }
+            else{
+                nextPosition();
+            }
+
         }
     }
 }
@@ -388,6 +495,22 @@ function init() {
     audioListener = new THREE.AudioListener();
     camera.add(audioListener);
 
+    // renderer
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+
+    //camera controls, mostly for debugging purposes
+    controls = new THREE.OrbitControls( camera );
+    controls.enabled = false; //set to false to turn off controls
+
+    //initial camera position
+    camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
+    camera.rotation.set(-0.09963408823470919, -1.5005061696940256, 2.0920433907298925e-17);
+
     //
     // LOADING
     //
@@ -435,19 +558,36 @@ function init() {
     //TODO: add onEnd() functions to these, which will turn camera to look at the rest of the tables
     //teacher dialogue with first wrong attempt
     loadSound('NotSeatOne.ogg', 0.4, false, false, () => {
+        lookAtCenter();
         endCutScene();
     });
 
     //teacher dialogue with second wrong attempt
     loadSound('NotSeatTwo.ogg', 0.4, false, false, () => {
+        lookAtCenter();
         endCutScene();
     });
 
     //teacher dialogue showing to right table
-    loadSound('ShowToSeat.ogg', 0.4);
+    loadSound('ShowToSeat.ogg', 0.4, false, false, function(){
+        if(currentTable === "Green"){
+            currentTable = "Red";
+            moveAlongSpline(5, -1, 3);
+        }
+        else if(currentTable === "Yellow"){
+            currentTable = "Red";
+            moveAlongSpline(6, -1, 2.5);
+        }
+        else if(currentTable === "Blue"){
+            currentTable = "Red";
+            moveAlongSpline(4, -1, 3);
+
+        }
+    });
 
     //teacher dialogue about coloring
-    loadSound('HowToDraw.ogg', 0.4, false, false, () => {
+    loadSound('HowToDraw.ogg', 0.4, false, false, function(){
+        new TWEEN.Tween(camera.rotation).to({x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 1300).start();
         endCutScene();
     });
 
@@ -476,22 +616,6 @@ function init() {
     // stats
     stats = new Stats();
     container.appendChild( stats.dom );
-
-    // renderer
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.setPixelRatio( window.devicePixelRatio );
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    container.appendChild( renderer.domElement );
-
-    // controls, camera
-    // controls = new THREE.OrbitControls( camera, renderer.domElement );
-    //controls.update();
-
-    // set the initial camera position
-    camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
-    camera.rotation.set(-0.09963408823470919, -1.5005061696940256, 2.0920433907298925e-17);
 
     var element = document.body;
 
@@ -609,19 +733,19 @@ function init() {
     }, 3000)
 }
 
-//window.onload = changeColorVision();
+window.onload = changeColorVision();
 
 function nextPosition(){
     switch(cameraPosition){
         case 1:
             cameraPosition = 2;
-            moveAlongSpline(1, -1);
-            setTimeout(function(){
-                rotSteps = [];
-                walkSteps = [];
-                addStep({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, {x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 2000);
-                beginWalk();
-            }, 4000);
+            //TODO make the following the onEnded function of the above spline
+            // setTimeout(function(){
+            //     rotSteps = [];
+            //     walkSteps = [];
+            //     addStep({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, {x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 2000);
+            //     beginWalk();
+            // }, 4000);
             break;
         case 2:
             // grab camera rotation on view of teacher
@@ -653,60 +777,6 @@ function nextPosition(){
     }
 }
 
-//TODO: tweens won't be used as often as planned so this method should be removed
-/**
- * Begin the walk specified in the walkSteps variable
- */
-function beginWalk(){
-    walkSteps[0].start();
-    rotSteps[0].start();
-
-    //TODO: move this audio somewhere else so that this function can be removed
-    walkSteps[0].onComplete(() => {
-        playSound('HowToDraw.ogg');
-    })
-}
-
-//TODO: remove this function
-/**
- * Add step to the list of tweens
- * /@argument position position to go to
- * /@argument rotation rotation to go to
- * /@argument time how long to transition
- **/
-function addStep(position, rotation, time){
-    //add tweens to lists of tweens
-    let walkLen = walkSteps.push(new TWEEN.Tween(camera.position).to(position, time));
-    let rotLen = rotSteps.push(new TWEEN.Tween(camera.rotation).to(rotation, time));
-
-    //chain the tweens so that they happen consecutively
-    if(walkLen > 1){
-        walkSteps[walkLen-2].chain(walkSteps[walkLen-1]);
-    }
-    if(rotLen > 1){
-        rotSteps[rotLen-2].chain(rotSteps[rotLen-1]);
-    }
-
-}
-
-/**
- * Function to move the camera along the designated spline
- * /@argument spline spline to move along
- * /@argument dir 1 is forward, -1 is backwards
- **/
-function moveAlongSpline(spline, dir){
-    //go in direction of spline
-    if(dir === 1){
-        direction = 1;
-        camPosIndex = 0;
-    }
-    else{
-        direction = -1;
-        camPosIndex = 200;
-    }
-    activeSpline = spline;
-}
-
 function onWindowResize() {
 
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -730,38 +800,17 @@ function animate() {
     }
 
     stats.update();
+    //if controls are enabled
+    if(controls.enabled) {
+        controls.update();
+    }
 
     render();
 
 }
 function render() {
     TWEEN.update();
-
-    //TODO: move this out of the render function, create new function
-    //TODO: make it work with time instead of frames, use a clock
-    if(activeSpline !== null){
-        disableControls();
-        var camPos = splines[activeSpline].getPoint(camPosIndex / 200);
-
-        camera.position.x = camPos.x;
-        camera.position.y = camPos.y+.5;
-        camera.position.z = camPos.z;
-
-        //make the camera look at the table while walking towards it
-        if(direction === -1){
-            console.log(activeSpline);
-            camera.lookAt(splineTargets[activeSpline].x, splineTargets[activeSpline].y, splineTargets[activeSpline].z);
-        }
-        else{
-
-        }
-
-        camPosIndex += direction;
-        //stop moving the camera once it reaches the end of the spline
-        if (camPosIndex < 0 || camPosIndex > 200) {
-            activeSpline = null;
-        }
-    }
+    updateSpline();
 
     renderer.render( scene, camera );
 }
