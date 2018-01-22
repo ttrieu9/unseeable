@@ -739,13 +739,8 @@ function nextPosition(){
     switch(cameraPosition){
         case 1:
             cameraPosition = 2;
-            //TODO make the following the onEnded function of the above spline
-            // setTimeout(function(){
-            //     rotSteps = [];
-            //     walkSteps = [];
-            //     addStep({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, {x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 2000);
-            //     beginWalk();
-            // }, 4000);
+            camera.rotation.set(-1.0581080584316573, -0.5617291507874522, 0);
+            camera.position.set(6.962359430337607, 2.121043760351845, 4.453431362994369);
             break;
         case 2:
             // grab camera rotation on view of teacher
