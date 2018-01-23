@@ -27,6 +27,7 @@ var paperGroup = [];
 var paper = new THREE.Group();
 var posted = false;
 var controlsEnabled = true;
+var lookingAround = false;
 
 var paths = [];
 var splineTargets = [];
@@ -374,6 +375,20 @@ function selectTable() {
     }
 }
 
+/**
+ * Function that is used to turn the camera when looking at the tables around the classroom
+ */
+function lookAround(){
+    if(controlsEnabled === true && cameraPosition === 1){
+        if(mouse.x > .85){
+            camera.rotation.y -= .005;
+        }
+        else if(mouse.x <-.85){
+            camera.rotation.y += .005;
+        }
+    }
+}
+
 function postPaper() { 
     raycaster.setFromCamera(mouse, camera);
 
@@ -572,15 +587,21 @@ function init() {
     loadSound('ShowToSeat.ogg', 0.4, false, false, function(){
         if(currentTable === "Green"){
             currentTable = "Red";
-            moveAlongSpline(5, -1, 3);
+            moveAlongSpline(5, -1, 3, function(){
+                sitAtTable();
+            });
         }
         else if(currentTable === "Yellow"){
             currentTable = "Red";
-            moveAlongSpline(6, -1, 2.5);
+            moveAlongSpline(6, -1, 2.5, function(){
+                sitAtTable();
+            });
         }
         else if(currentTable === "Blue"){
             currentTable = "Red";
-            moveAlongSpline(4, -1, 3);
+            moveAlongSpline(4, -1, 3, function(){
+                sitAtTable();
+            });
 
         }
     });
@@ -630,7 +651,7 @@ function init() {
         else if(String.fromCharCode(event.keyCode) === "t"){
             startCutScene();
         }
-        else{
+        else if(String.fromCharCode(event.keyCode) === " "){
             nextPosition();
         }
     }, false);
@@ -738,9 +759,10 @@ window.onload = changeColorVision();
 function nextPosition(){
     switch(cameraPosition){
         case 1:
+            //move to looking at the paper
+            // camera.rotation.set(-1.0581080584316573, -0.5617291507874522, 0);
+            // camera.position.set(6.962359430337607, 2.121043760351845, 4.453431362994369);
             cameraPosition = 2;
-            camera.rotation.set(-1.0581080584316573, -0.5617291507874522, 0);
-            camera.position.set(6.962359430337607, 2.121043760351845, 4.453431362994369);
             break;
         case 2:
             // grab camera rotation on view of teacher
@@ -806,6 +828,8 @@ function animate() {
 function render() {
     TWEEN.update();
     updateSpline();
+
+    lookAround();
 
     renderer.render( scene, camera );
 }
