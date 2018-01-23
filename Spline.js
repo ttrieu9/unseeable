@@ -24,6 +24,8 @@ function moveAlongSpline(spline, direction, duration, onEnded){
     }
 }
 
+
+
 /**
  * Function to update the position of the camera along the currently active spline, should be called within render()
  */
@@ -43,7 +45,10 @@ function updateSpline(){
             else{
                 newPos = spline.getPointAt(1-elapsed/splineDuration);
             }
-            camera.position.set(newPos.x, 2.3, newPos.z);
+
+            //amplitude*sin(frequency*x)
+            let height = 2.3 + .04*Math.sin(6*elapsed);
+            camera.position.set(newPos.x, height, newPos.z);
 
             //look at the table that you are walking towards
             let target;
