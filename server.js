@@ -7,7 +7,7 @@ var mongoUrl = 'mongodb://ttrieu:unseeable@ds239587.mlab.com:39587/unseeable-log
 // Import routes
 var logger = require('./routes/logger');
 
-app.use(logger);
+app.use('/logger', logger);
 
 // Set up mongo connection
 mongoose.connect(mongoUrl, () => {
