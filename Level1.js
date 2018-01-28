@@ -455,6 +455,7 @@ function fade() {
  * Play the given sound
  * @param name String name of the sound to be played
  */
+//TODO: use array.find method would be neater
 function playSound(name) {
     if(name !== null){
         //search the array of sounds for a sound with the given name and play it
@@ -466,23 +467,6 @@ function playSound(name) {
         }
     }
 }
-
-function onProgress( xhr ) {
-
-    if ( xhr.lengthComputable ) {
-
-        var percentComplete = xhr.loaded / xhr.total * 100;
-        console.log( Math.round( percentComplete, 2 ) + '% downloaded' );
-
-    }
-
-};
-
-function onError( xhr ) {
-
-    console.error( xhr );
-
-};
 
 function init() {
     startCutScene();
@@ -505,7 +489,8 @@ function init() {
 
     //camera controls, mostly for debugging purposes
     controls = new THREE.OrbitControls( camera );
-    controls.enabled = false; //set to false to turn off controls
+    controls.target = new THREE.Vector3(3, 1, 5);
+    controls.enabled = true; //set to false to turn off controls
 
     //initial camera position
     camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
@@ -539,6 +524,30 @@ function init() {
             teacher.scale.set(scale, scale, scale);
         }, onProgress, onError);
 
+    //load child in T-Pose
+    fbxloader.load("T-Pose_WithSkin.fbx", function(object){
+        console.log(object);
+
+        // fbxloader.load("Sitting Yell_Bones.fbx", function(object2){
+        //     console.log(object2);
+        //
+        //     object.animations.push(object2.animations[0]);
+        //
+        //     //add the object's animation mixer
+        //     object.mixer = new THREE.AnimationMixer( object );
+        //     mixers.push( object.mixer );
+        //
+        //     //play the animation
+        //     let action = object.mixer.clipAction(object.animations[1]);
+        //     action.play();
+        //
+        // }, onProgress, onError);
+
+        object.scale.set(2.2, 2.2, 2.2);
+        object.position.set(3, 1, 5);
+        scene.add(object);
+    }, onProgress, onError);
+
     //load sounds
 
     //kids playing in background
@@ -555,7 +564,6 @@ function init() {
         endCutScene();
     });
 
-    //TODO: add onEnd() functions to these, which will turn camera to look at the rest of the tables
     //teacher dialogue with first wrong attempt
     loadSound('NotSeatOne.ogg', 0.4, false, false, () => {
         lookAtCenter();

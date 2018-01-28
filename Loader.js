@@ -1,6 +1,23 @@
 const fbxloader = new THREE.FBXLoader();
 const audioLoader = new THREE.AudioLoader();
 
+function onProgress( xhr ) {
+
+    if ( xhr.lengthComputable ) {
+
+        var percentComplete = xhr.loaded / xhr.total * 100;
+        console.log( Math.round( percentComplete, 2 ) + '% downloaded' );
+
+    }
+
+};
+
+function onError( xhr ) {
+
+    console.error( xhr );
+
+};
+
 /**
  * Load Static FBX asset and add it to the scene
  * @param fileName String name of the file to be loaded
