@@ -106,7 +106,15 @@ class Logger {
   endLog(endTime) {
     this.log.levelDuration = endTime - this.log.startTime;
 
-    // log is send to DB
+    // log is sent to DB
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("demo").innerHTML = this.responseText;
+      }
+    };
+    xhttp.open("POST", "/logger/create", true);
+    xhttp.send(JSON.stringify(this.log));
   }
 
   /**
