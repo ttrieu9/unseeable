@@ -7,8 +7,6 @@ var mongoUrl = 'mongodb://ttrieu:unseeable@ds239587.mlab.com:39587/unseeable-log
 // Import routes
 var logger = require('./routes/logger');
 
-app.use('/logger', logger);
-
 // Set up mongo connection
 mongoose.connect(mongoUrl, () => {
   console.log('Connected to MongoDB.')
@@ -23,8 +21,11 @@ var db = mongoose.connection;
 // Print error if one occurs
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+// Route handling
 app.use(express.static(__dirname));
+app.use('/logger', logger);
 
+// Load game
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/index.html'));
 })
