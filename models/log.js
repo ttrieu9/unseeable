@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+var EventSchema = require('./event');
+var TaskSchema = require('./task');
 var Schema = mongoose.Schema;
 
 var LogSchema = new Schema({
@@ -21,8 +23,17 @@ var LogSchema = new Schema({
   levelDuration: {
     type: Number
   },
-  events: [{type: Schema.Types.ObjectId, ref: 'EventModel'}],
-  tasks: [{type: Schema.Types.ObjectId, ref: 'TaskModel'}]
+  events: {
+    type: [EventSchema]
+  },
+  tasks: {
+    type: [TaskSchema]
+  }
 });
 
-module.exports = mongoose.model('LogModel', LogSchema);
+LogSchema.methods.createLog = (cb) => {
+  //console.log('Create log working.')
+  return this.save(cb);
+}
+
+module.exports = mongoose.model('Log', LogSchema);
