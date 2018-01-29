@@ -31,9 +31,4 @@ var LogSchema = new Schema({
   }
 });
 
-LogSchema.methods.createLog = (cb) => {
-  //console.log('Create log working.')
-  return this.save(cb);
-}
-
 module.exports = mongoose.model('Log', LogSchema);
