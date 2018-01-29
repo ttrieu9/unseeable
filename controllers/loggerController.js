@@ -9,5 +9,14 @@ exports.read_logs = (req, res) => {
 // Create a log
 exports.create_log = (req, res) => {
   console.log('Make a log.');
-  res.send('NOT IMPLEMENTED: create_log')
+
+  var log;
+  req.on('data', (data) => {
+    log = JSON.parse(data);
+  });
+
+  req.on('end', (data) => {
+    res.json(log).end();
+  });
+
 };
