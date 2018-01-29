@@ -8,15 +8,23 @@ exports.read_logs = (req, res) => {
 
 // Create a log
 exports.create_log = (req, res) => {
-  console.log('Make a log.');
-
-  var log;
+  var logData;
   req.on('data', (data) => {
-    log = JSON.parse(data);
+    logData = JSON.parse(data);
   });
 
   req.on('end', (data) => {
-    res.json(log).end();
+    var log = new Log(logData);
+    log.save((err, result) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+
+      console.log(result);
+    })
+
+    res.json(logData).end();
   });
 
 };
