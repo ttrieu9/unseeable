@@ -2,8 +2,18 @@ var Log = require('../models/log');
 
 // Display all logs in database
 exports.read_logs = (req, res) => {
-  console.log('Read all existing logs.');
-  res.send('NOT IMPLEMENTED: create_log')
+  req.on('data', (data) => {
+    console.log(data)
+  });
+
+  req.on('end', (data) => {
+    Log.read_logs((err, result) => {
+      if (err) throw err;
+
+      res.json(result).end();
+    });
+  });
+  console.log('Read all logs.');
 };
 
 // Create a log
@@ -16,15 +26,10 @@ exports.create_log = (req, res) => {
   req.on('end', (data) => {
     var log = new Log(logData);
     log.save((err, result) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
+      if (err) throw err;
 
-      console.log('Log posted.');
+      res.json(result).end();
     })
-
-    res.json(logData).end();
   });
-
+  console.log('Log Created.')
 };

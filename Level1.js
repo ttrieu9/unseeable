@@ -638,7 +638,7 @@ function init() {
             console.log(camera);
         }
         else if(String.fromCharCode(event.keyCode) === "f"){
-            logger.printLog();
+            logger.getLogs();
         }
         else if(String.fromCharCode(event.keyCode) === "t"){
             logger.endLog();

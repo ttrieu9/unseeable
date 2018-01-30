@@ -27,4 +27,8 @@ var LogSchema = new Schema({
   }
 });
 
+LogSchema.statics.read_logs = function(cb) {
+  return this.find({}, cb);
+};
+
 module.exports = mongoose.model('Log', LogSchema);
