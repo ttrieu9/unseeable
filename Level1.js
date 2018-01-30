@@ -196,7 +196,7 @@ function colorPaper() {
 
             if(coloredObjects.length === 2) {
                 startCutScene();
-                logger.logTask("Color paper", new Date().getTime(), "Grading Criteria", 1);
+                logger.logTask("Color paper", new Date().getTime(), 1);
                 setTimeout(() => {
                     nextPosition();
                 }, 750);
@@ -288,7 +288,7 @@ function selectTable() {
                     moveAlongSpline(1, -1, 4, function(){
                         sitAtTable();
                     });
-                    logger.logTask("Select Table", new Date().getTime(), "Criteria", 1)
+                    logger.logTask("Select Table", new Date().getTime(), 1)
                 }
                 else if(intersected.name.includes("Yellow")){
                     currentTable = "Yellow";
@@ -390,7 +390,7 @@ function postPaper() {
 
         if(whiteBoardIndex >= 0) {
             if(!posted) {
-                logger.logTask("Post paper", new Date().getTime(), "Grading Criteria", 1);
+                logger.logTask("Post paper", new Date().getTime(), 1);
 
                 var currentZoom = {
                     value: camera.zoom

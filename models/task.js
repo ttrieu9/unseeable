@@ -10,10 +10,6 @@ var TaskSchema = new Schema({
     type: Number,
     required: [true, 'Required field missing: task "duration".']
   },
-  gradingCriteria: {
-    type: String,
-    required: [true, 'Required field missing: task "gradingCriteria".']
-  },
   grade: {
     type: Number,
     required: [true, 'Required field missing: task "grade".']

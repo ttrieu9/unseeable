@@ -93,7 +93,6 @@ class Logger {
       {
         name: name,
         duration: taskEndTime - this.taskStartTime,
-        gradingCriteria: gradingCriteria,
         grade: grade
       });
   }
