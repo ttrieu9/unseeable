@@ -1,6 +1,10 @@
 const fbxloader = new THREE.FBXLoader();
 const audioLoader = new THREE.AudioLoader();
 
+/**
+ * Prints percentage that the file has been loaded
+ * @param xhr
+ */
 function onProgress( xhr ) {
 
     if ( xhr.lengthComputable ) {
@@ -12,6 +16,10 @@ function onProgress( xhr ) {
 
 }
 
+/**
+ * Prints out error message if there is an error loading
+ * @param xhr
+ */
 function onError( xhr ) {
 
     console.error( xhr );
@@ -48,7 +56,9 @@ function loadAnimationFBX(fileName, onLoad){
 
         scene.add( object );
 
-    }, onProgress, onError );
+        },
+        null, onError
+    );
 }
 
 /**
@@ -58,7 +68,11 @@ function loadAnimationFBX(fileName, onLoad){
  * @param onLoad function to perform once the model is loaded
  */
 function loadAnimationFBX2(filename, animations, onLoad){
+    fbxloader.load(filename, function(object){
 
+        },
+        null, onError
+    );
 }
 
 /**
@@ -136,6 +150,7 @@ function loadSound(filename, volume, playImmediately, loop, onEnded){
                 song.onEnded = onEnded;
             }
             song.name = filename;
-        }, onProgress, onError
-    )
+        },
+        null, onError
+    );
 }
