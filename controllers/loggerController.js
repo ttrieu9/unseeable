@@ -3,7 +3,6 @@ var Log = require('../models/log');
 // Display all logs in database
 exports.read_logs = (req, res) => {
   req.on('data', (data) => {
-    console.log(data)
   });
 
   req.on('end', (data) => {
