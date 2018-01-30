@@ -31,4 +31,8 @@ LogSchema.statics.read_logs = function(cb) {
   return this.find({}, cb);
 };
 
+LogSchema.methods.create_log = function(cb) {
+  return this.save(cb);
+};
+
 module.exports = mongoose.model('Log', LogSchema);
