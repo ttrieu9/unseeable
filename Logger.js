@@ -5,8 +5,7 @@
  *  {
  *    playerId: uuid for player,
  *    levelId: int representing level,
- *    date: date player played level,
- *    startTime: time player started level,
+ *    date: date player started level,
  *    levelDuration: time in milliseconds player took to complete level,
  *    events: [
  *      {
@@ -23,7 +22,6 @@
  *      {
  *        name: name of task,
  *        duration: time in milliseconds relative to the start of the level when task was completed,
- *        gradingCriteria: how to measure how well the user did on this task,
  *        grade: float indicating the amount of success achieved for this task by the user
  *      },
  *      ...
@@ -62,7 +60,7 @@ class Logger {
     this.log.events.push(
       {
         type: type,
-        time: new Date().getTime(),
+        time: new Date().getTime() - this.log.date.getTime(),
         mouseCoordinate: {
           x: x,
           y: y
@@ -89,7 +87,7 @@ class Logger {
     this.log.tasks.push(
       {
         name: name,
-        duration: new Date().getTime() - this.taskStartTime,
+        duration: new Date().getTime() - this.log.date.getTime(),
         grade: grade
       });
   }
@@ -99,7 +97,7 @@ class Logger {
    * 
    */
   endLog() {
-    this.log.levelDuration = new Date().getTime() - this.log.startTime;
+    this.log.levelDuration = new Date().getTime() - this.log.date.getTime();
 
     // log is sent to DB
     var xhttp = new XMLHttpRequest();
