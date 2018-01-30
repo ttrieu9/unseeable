@@ -10,32 +10,28 @@ function onProgress( xhr ) {
 
     }
 
-};
+}
 
 function onError( xhr ) {
 
     console.error( xhr );
 
-};
+}
 
 /**
  * Load Static FBX asset and add it to the scene
  * @param fileName String name of the file to be loaded
  * @param onLoad function to be executed on file load
- * @param onProgress function to be executed on load progress
- * @param onError function to be executed on error
  */
-function loadStaticFBX(fileName, onLoad, onProgress, onError){
+function loadStaticFBX(fileName, onLoad){
 }
 
 /**
  * Load animated FBX asset and add it to the scene
  * @param fileName String name of the file to be loaded
  * @param onLoad function to be executed on file load. It can take the loaded object as a parameter.
- * @param onProgress function to be executed on load progress
- * @param onError function to be executed on error
  */
-function loadAnimationFBX(fileName, onLoad, onProgress, onError){
+function loadAnimationFBX(fileName, onLoad){
     fbxloader.load(fileName, function( object ) {
         //execute onLoad function if there is one
         if(onLoad !== null){
@@ -56,13 +52,21 @@ function loadAnimationFBX(fileName, onLoad, onProgress, onError){
 }
 
 /**
+ * Load T-Pose fbx with animation fbx
+ * @param filename name of the T-Pose model file
+ * @param animations filenames of the animations that the model will have
+ * @param onLoad function to perform once the model is loaded
+ */
+function loadAnimationFBX2(filename, animations, onLoad){
+
+}
+
+/**
  * Load Fbx file that contains the world
  * @param fileName String name of the file to be loaded
  * @param onLoad optional function to be executed on all children of the scene
- * @param onProgress optional function to be executed on load progress instead of default
- * @param onError optional function to be executed on error instead of default
  */
-function loadWorldFBX(fileName, onLoad, onProgress, onError){
+function loadWorldFBX(fileName, onLoad){
 
     fbxloader.load( fileName, function( object ) {
         //add shadow casting and receiving for all of the child objects loaded
@@ -100,7 +104,7 @@ function loadWorldFBX(fileName, onLoad, onProgress, onError){
 
         scene.add( object );
 
-    }, onProgress, onError );
+    });
 }
 
 /**

@@ -513,7 +513,7 @@ function init() {
                     }
                 }
             }
-        }, onProgress, onError);
+        });
 
     //load and place the teacher
     loadAnimationFBX('Idle.fbx',
@@ -522,14 +522,12 @@ function init() {
             teacher.position.set(4, -.05, -1);
             let scale = 2.2;
             teacher.scale.set(scale, scale, scale);
-        }, onProgress, onError);
+        });
 
     //load child in T-Pose
     fbxloader.load("T-Pose_WithSkin.fbx", function(object){
-        console.log(object);
 
         // fbxloader.load("Sitting Yell_Bones.fbx", function(object2){
-        //     console.log(object2);
         //
         //     object.animations.push(object2.animations[0]);
         //
@@ -546,7 +544,7 @@ function init() {
         object.scale.set(2.2, 2.2, 2.2);
         object.position.set(3, 1, 5);
         scene.add(object);
-    }, onProgress, onError);
+    });
 
     //load sounds
 
