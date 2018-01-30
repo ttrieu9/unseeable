@@ -21,7 +21,7 @@ exports.create_log = (req, res) => {
         return;
       }
 
-      console.log(result);
+      console.log('Log posted.');
     })
 
     res.json(logData).end();
