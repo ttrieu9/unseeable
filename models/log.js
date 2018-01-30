@@ -31,6 +31,10 @@ LogSchema.statics.read_logs = function(cb) {
   return this.find({}, cb);
 };
 
+LogSchema.statics.find_log = function(target, cb) {
+  return this.find(target, cb);
+};
+
 LogSchema.methods.create_log = function(cb) {
   return this.save(cb);
 };
