@@ -124,6 +124,38 @@ class Logger {
   }
 
   /**
+   * Retrieves logs for a specific level.
+   * 
+   * @param {Number} levelId - Number representing the requested level (e.g. 1, 2, 3...)
+   */
+  getLevelLogs(levelId) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        console.log(JSON.parse(this.responseText));
+      }
+    };
+    xhttp.open("GET", `/logger/levels/${levelId}`, true);
+    xhttp.send();
+  }
+
+  /**
+   * Retrieves logs for a specific player
+   * 
+   * @param {String} playerId - UUID representing a specific palyer
+   */
+  getPlayerLogs(playerId) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        console.log(JSON.parse(this.responseText));
+      }
+    };
+    xhttp.open("GET", `/logger/players/${playerId}`, true);
+    xhttp.send();
+  }
+
+  /**
    * Prints the current Log to the console.
    */
   printLog() {
