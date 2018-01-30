@@ -525,26 +525,34 @@ function init() {
         });
 
     //load child in T-Pose
-    fbxloader.load("T-Pose_WithSkin.fbx", function(object){
-
-        // fbxloader.load("Sitting Yell_Bones.fbx", function(object2){
-        //
-        //     object.animations.push(object2.animations[0]);
-        //
-        //     //add the object's animation mixer
-        //     object.mixer = new THREE.AnimationMixer( object );
-        //     mixers.push( object.mixer );
-        //
-        //     //play the animation
-        //     let action = object.mixer.clipAction(object.animations[1]);
-        //     action.play();
-        //
-        // }, onProgress, onError);
-
-        object.scale.set(2.2, 2.2, 2.2);
-        object.position.set(3, 1, 5);
-        scene.add(object);
-    });
+    // fbxloader.load("T-Pose_WithSkin.fbx", function(object){
+    //
+    //     // fbxloader.load("Sitting Yell_Bones.fbx", function(object2){
+    //     //
+    //     //     object.animations.push(object2.animations[0]);
+    //     //
+    //     //     //add the object's animation mixer
+    //     //     object.mixer = new THREE.AnimationMixer( object );
+    //     //     mixers.push( object.mixer );
+    //     //
+    //     //     //play the animation
+    //     //     let action = object.mixer.clipAction(object.animations[1]);
+    //     //     action.play();
+    //     //
+    //     // }, onProgress, onError);
+    //
+    //     object.scale.set(2.2, 2.2, 2.2);
+    //     object.position.set(3, 1, 5);
+    //     scene.add(object);
+    // });
+    loadAnimationFBX2("T-Pose_WithSkin.fbx",
+        ["Sitting_Bones.fbx", "Sitting2_Bones.fbx", "Sitting Yell_Bones.fbx"],
+        function(object){
+            let scale = 2.2;
+            object.scale.set(scale, scale, scale);
+            object.position.set(3, 1, 5);
+            console.log(object);
+        });
 
     //load sounds
 

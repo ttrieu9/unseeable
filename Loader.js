@@ -71,10 +71,26 @@ function loadAnimationFBX2(filename, animations, onLoad){
     //load the T-Pose model
     fbxloader.load(filename,
         function(object){
-            //perform
+            //perform the onLoad function, if one is specified
             if(onLoad){
                 onLoad(object);
             }
+
+            //load in the animations
+            for(let i in animations){
+                fbxloader.load(animations[i],
+                    function(animation){
+                        object.animations.push(animation.animations[0]);
+                    },
+                    null, onError
+                );
+            }
+
+            //add the object's animation mixer
+            object.mixer = new THREE.AnimationMixer( object );
+            mixers.push( object.mixer );
+
+            scene.add(object);
         },
         null, onError
     );
