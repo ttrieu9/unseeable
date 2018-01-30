@@ -41,7 +41,7 @@ var lookatRotation;
 
 var camPosIndex;
 
-var logger = new Logger('player id', 1, new Date());
+var logger = new Logger('player id', 1);
 
 init();
 
@@ -196,7 +196,7 @@ function colorPaper() {
 
             if(coloredObjects.length === 2) {
                 startCutScene();
-                logger.logTask("Color paper", new Date().getTime(), 1);
+                logger.logTask("Color paper", 1);
                 setTimeout(() => {
                     nextPosition();
                 }, 750);
@@ -288,7 +288,7 @@ function selectTable() {
                     moveAlongSpline(1, -1, 4, function(){
                         sitAtTable();
                     });
-                    logger.logTask("Select Table", new Date().getTime(), 1)
+                    logger.logTask("Select Table", 1)
                 }
                 else if(intersected.name.includes("Yellow")){
                     currentTable = "Yellow";
@@ -390,7 +390,7 @@ function postPaper() {
 
         if(whiteBoardIndex >= 0) {
             if(!posted) {
-                logger.logTask("Post paper", new Date().getTime(), 1);
+                logger.logTask("Post paper", 1);
 
                 var currentZoom = {
                     value: camera.zoom
@@ -560,7 +560,7 @@ function init() {
     loadSound('TakeSeats.ogg', 0.4, false, false, () => {
         endCutScene();
         setTimeout(() => {
-            logger.recordTaskStartTime(new Date().getTime());
+            logger.recordTaskStartTime();
         }, 950);
     });
 
@@ -598,7 +598,7 @@ function init() {
     loadSound('HowToDraw.ogg', 0.4, false, false, function(){
         new TWEEN.Tween(camera.rotation).to({x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 1300).start();
         endCutScene();
-        logger.recordTaskStartTime(new Date().getTime());
+        logger.recordTaskStartTime();
     });
 
     //teacher dialogue when coloring is finished
@@ -612,13 +612,13 @@ function init() {
 
         setTimeout(() => {
             endCutScene();
-            logger.recordTaskStartTime(new Date().getTime())
+            logger.recordTaskStartTime()
         }, 2000);
     });
 
     //kids mocking the bad painting
     loadSound('HackJob.ogg', 0.4, false, false, () => {
-        logger.endLog(new Date().getTime());
+        logger.endLog();
     });
 
     //create raycaster for object selection
@@ -641,7 +641,7 @@ function init() {
             logger.printLog();
         }
         else if(String.fromCharCode(event.keyCode) === "t"){
-            logger.endLog(new Date().getTime());
+            logger.endLog();
         }
         else{
             nextPosition();
@@ -673,15 +673,15 @@ function init() {
                 case 1:
                     selectTable();
                     playSound("Click.mp3");
-                    logger.logEvent("mousedown", new Date().getTime(), mouse.x, mouse.y);
+                    logger.logEvent("mousedown", mouse.x, mouse.y);
                     break;
                 case 2:
                     colorPaper();
-                    logger.logEvent("mousedown", new Date().getTime(), mouse.x, mouse.y);
+                    logger.logEvent("mousedown", mouse.x, mouse.y);
                     break;
                 case 3:
                     postPaper();
-                    logger.logEvent("mousedown", new Date().getTime(), mouse.x, mouse.y);
+                    logger.logEvent("mousedown", mouse.x, mouse.y);
                     break;
             }
         }
