@@ -97,8 +97,13 @@ class Logger {
    */
   endLog() {
     this.log.levelDuration = new Date().getTime() - this.log.date.getTime();
+    this.sendLog();
+  }
 
-    // log is sent to DB
+  /**
+   * Sends current instance of log to DB.
+   */
+  sendLog() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
