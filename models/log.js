@@ -16,10 +16,6 @@ var LogSchema = new Schema({
     type: Date,
     required: [true, 'Required field missing: "date".']
   },
-  startTime: {
-    type: Number,
-    required: [true, 'Required field missing: "startTime".']
-  },
   levelDuration: {
     type: Number
   },

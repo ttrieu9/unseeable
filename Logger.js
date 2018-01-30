@@ -71,7 +71,6 @@ class Logger {
   /**
    * Records the start time of the current task.
    * 
-   * @param {Number} taskStartTime - The time that the task started (in milliseconds).
    */
   recordTaskStartTime() {
     this.taskStartTime = new Date().getTime();
