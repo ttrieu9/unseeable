@@ -85,10 +85,9 @@ class Logger {
    * 
    * @param {String} name - The name of the task.
    * @param {Milliseconds} duration - The time it took to complete the task (in milliseconds).
-   * @param {String} gradingCriteria - The criteria success is based on.
    * @param {Number} grade - The amount of success achieved by the player in doing the task.
    */
-  logTask(name, taskEndTime, gradingCriteria, grade) {
+  logTask(name, taskEndTime, grade) {
     this.log.tasks.push(
       {
         name: name,
