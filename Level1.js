@@ -641,7 +641,7 @@ function init() {
             logger.getLogs();
         }
         else if(String.fromCharCode(event.keyCode) === "t"){
-            logger.endLog();
+            logger.getPlayerLogs('player1');
         }
         else{
             nextPosition();
