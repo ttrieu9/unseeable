@@ -15,6 +15,21 @@ exports.read_logs = (req, res) => {
   console.log('Read all logs.');
 };
 
+// Find logs for a specific level
+exports.find_logs = (req, res) => {
+  req.on('data', (data) => {
+  });
+
+  req.on('end', (data) => {
+    Log.find_log(req.params, (err, result) => {
+      if (err) throw err;
+
+      res.json(result).end();
+    })
+  });
+  console.log('Found log(s).')
+};
+
 // Create a log
 exports.create_log = (req, res) => {
   var logData;
