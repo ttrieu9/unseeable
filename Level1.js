@@ -627,9 +627,8 @@ function init() {
             startCutScene();
         }
         else if(String.fromCharCode(event.keyCode) === "n"){
-            child.mixer.clipAction(child.animations[childanimation]).stop();
             childanimation = (childanimation + 1)%child.animations.length;
-            child.mixer.clipAction(child.animations[childanimation]).play();
+            child.playAnimation(childanimation);
         }
         else{
             nextPosition();
