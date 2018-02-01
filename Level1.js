@@ -533,7 +533,6 @@ function init() {
             let scale = 2.2;
             object.scale.set(scale, scale, scale);
             object.position.set(3, 1, 5);
-            console.log(object);
         });
 
     //load sounds
