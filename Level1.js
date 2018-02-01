@@ -522,7 +522,7 @@ function init() {
     //
 
     //load the classroom
-    loadWorldFBX('Progress_1.11.2018.fbx',
+    loadWorldFBX('Preschool_New_1.31.fbx',
         function(object){
             for(let i in object.children) {
                 let child = object.children[i];
