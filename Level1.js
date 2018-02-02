@@ -627,7 +627,11 @@ function init() {
         }
         else if(String.fromCharCode(event.keyCode) === "n"){
             childanimation = (childanimation + 1)%child.animations.length;
-            child.playAnimation(childanimation);
+            playAnimation(child, childanimation);
+        }
+        else if(String.fromCharCode(event.keyCode) === "m"){
+            childanimation = (childanimation + 1)%child.animations.length;
+            blendIntoAnimation(child, childanimation);
         }
         else{
             nextPosition();

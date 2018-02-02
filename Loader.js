@@ -82,11 +82,7 @@ function loadAnimationFBX2(filename, animations, onLoad){
                 );
             }
 
-            //give the object a function for playing animations
-            object.playAnimation = function(animation){
-                this.mixer.stopAllAction();
-                this.mixer.clipAction(this.animations[animation]).play();
-            };
+            object.currentAnimation = 0;
 
             //add the object's animation mixer
             object.mixer = new THREE.AnimationMixer( object );
