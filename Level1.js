@@ -182,7 +182,7 @@ function colorPaper() {
                 currentObject.visible = false;
             }
 
-            playSound("Click.mp3");
+            playSound("Click");
         }
         else if(intersected.name.includes('Paper') && coloredObjects.includes(intersected.name) && !intersected.name.includes("Outline") && currentObject) {
             intersected.material = currentObject.material[0];
@@ -191,7 +191,7 @@ function colorPaper() {
             });
             coloredObjects.splice(paperIndex, 1);
 
-            playSound('Writing.wav');
+            playSound("Writing");
 
             if(coloredObjects.length === 2) {
                 startCutScene();
@@ -251,7 +251,7 @@ function sitAtTable(){
     setTimeout(function(){
         new TWEEN.Tween(camera.position).to({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, 2000).onComplete(function(){
             lookAtTeacher();
-            playSound('HowToDraw.ogg');
+            playSound("HowToDraw");
         }).start();
     }, 500);
     // {x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}
@@ -354,15 +354,15 @@ function selectTable() {
 
                     //move them to the correct table
                     if (attempts === 2) {
-                        playSound('ShowToSeat.ogg');
+                        playSound("ShowToSeat");
                         nextPosition();
                     }
 
                     attempts++;
                     if (attempts === 1) {
-                        playSound('NotSeatOne.ogg');
+                        playSound("NotSeatOne");
                     } else if (attempts === 2) {
-                        playSound('NotSeatTwo.ogg');
+                        playSound("NotSeatTwo");
                     }
 
                 }, 3500);
@@ -415,7 +415,7 @@ function postPaper() {
                 });
                 zoomOut.start();
                 zoomOut.onComplete(() => {
-                    playSound('HackJob.ogg');
+                    playSound("HackJob");
                 })
             }
             posted = true;
@@ -471,15 +471,11 @@ function fade() {
  * @param name String name of the sound to be played
  */
 function playSound(name) {
-    if(name !== null){
-        //search the array of sounds for a sound with the given name and play it
-        for(let i in sounds){
-            if(sounds[i].name === name){
-                sounds[i].play();
-                return;
-            }
-        }
-    }
+    //fins the sound whose name includes the given string
+    let sound = sounds.find(function(element){
+        return element.name.includes(name);
+    });
+    sound.play();
 }
 
 function onProgress( xhr ) {
@@ -531,7 +527,7 @@ function init() {
     //
 
     //load the classroom
-    loadWorldFBX('Progress_1.11.2018.fbx',
+    loadWorldFBX('Preschool_New_1.31.fbx',
         function(object){
             for(let i in object.children) {
                 let child = object.children[i];
@@ -557,34 +553,34 @@ function init() {
     //load sounds
 
     //kids playing in background
-    loadSound('kids-playing-1.mp3', 0.025, true, true);
+    loadSound('audio/kids-playing-1.mp3', 0.025, true, true);
 
     //click sound
-    loadSound('Click.mp3', 0.15);
+    loadSound('audio/Click.mp3', 0.15);
 
     //drawing sound
-    loadSound('Writing.wav', 0.15);
+    loadSound('audio/Writing.wav', 0.15);
 
     //teacher dialogue to sit
-    loadSound('TakeSeats.ogg', 0.4, false, false, () => {
+    loadSound('audio/TakeSeats.ogg', 0.4, false, false, () => {
         endCutScene();
     });
 
     //TODO: add onEnd() functions to these, which will turn camera to look at the rest of the tables
     //teacher dialogue with first wrong attempt
-    loadSound('NotSeatOne.ogg', 0.4, false, false, () => {
+    loadSound('audio/NotSeatOne.ogg', 0.4, false, false, () => {
         lookAtCenter();
         endCutScene();
     });
 
     //teacher dialogue with second wrong attempt
-    loadSound('NotSeatTwo.ogg', 0.4, false, false, () => {
+    loadSound('audio/NotSeatTwo.ogg', 0.4, false, false, () => {
         lookAtCenter();
         endCutScene();
     });
 
     //teacher dialogue showing to right table
-    loadSound('ShowToSeat.ogg', 0.4, false, false, function(){
+    loadSound('audio/ShowToSeat.ogg', 0.4, false, false, function(){
         if(currentTable === "Green"){
             currentTable = "Red";
             moveAlongSpline(5, -1, 3, function(){
@@ -607,13 +603,13 @@ function init() {
     });
 
     //teacher dialogue about coloring
-    loadSound('HowToDraw.ogg', 0.4, false, false, function(){
+    loadSound('audio/HowToDraw.ogg', 0.4, false, false, function(){
         new TWEEN.Tween(camera.rotation).to({x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 1300).start();
         endCutScene();
     });
 
     //teacher dialogue when coloring is finished
-    loadSound('FinishColoring.ogg', 0.3, false, false, () => {
+    loadSound('audio/FinishColoring.ogg', 0.3, false, false, () => {
         // fade to view of whiteboard after audio ends
         fade();
         setTimeout(() => {
@@ -627,7 +623,7 @@ function init() {
     });
 
     //kids mocking the bad painting
-    loadSound('HackJob.ogg', 0.4);
+    loadSound('audio/HackJob.ogg', 0.4);
 
     //create raycaster for object selection
     raycaster = new THREE.Raycaster();
@@ -750,7 +746,7 @@ function init() {
     animate();
     startCutScene();
     setTimeout(() => {
-        playSound('TakeSeats.ogg');
+        playSound("TakeSeats");
     }, 3000)
 }
 
@@ -777,7 +773,7 @@ function nextPosition(){
             // Tween camera to view teacher
             var lookAtTeacher = new TWEEN.Tween(camera.rotation).to(teacherView, 1000).onComplete(() => {
                 // teacher makes announcement to place art on board
-                playSound('FinishColoring.ogg');
+                playSound("FinishColoring");
             }, 2000);
             lookAtTeacher.start();
 
