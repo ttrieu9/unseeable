@@ -183,7 +183,7 @@ function colorPaper() {
                 currentObject.visible = false;
             }
 
-            playSound("Click.mp3");
+            playSound("Click");
         }
         else if(intersected.name.includes('Paper') && coloredObjects.includes(intersected.name) && !intersected.name.includes("Outline") && currentObject) {
             intersected.material = currentObject.material[0];
@@ -192,7 +192,7 @@ function colorPaper() {
             });
             coloredObjects.splice(paperIndex, 1);
 
-            playSound('Writing.wav');
+            playSound("Writing");
 
             if(coloredObjects.length === 2) {
                 startCutScene();
@@ -252,7 +252,7 @@ function sitAtTable(){
     setTimeout(function(){
         new TWEEN.Tween(camera.position).to({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, 2000).onComplete(function(){
             lookAtTeacher();
-            playSound('HowToDraw.ogg');
+            playSound("HowToDraw");
         }).start();
     }, 500);
     // {x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}
@@ -355,15 +355,15 @@ function selectTable() {
 
                     //move them to the correct table
                     if (attempts === 2) {
-                        playSound('ShowToSeat.ogg');
+                        playSound("ShowToSeat");
                         nextPosition();
                     }
 
                     attempts++;
                     if (attempts === 1) {
-                        playSound('NotSeatOne.ogg');
+                        playSound("NotSeatOne");
                     } else if (attempts === 2) {
-                        playSound('NotSeatTwo.ogg');
+                        playSound("NotSeatTwo");
                     }
 
                 }, 3500);
@@ -372,6 +372,20 @@ function selectTable() {
                 nextPosition();
             }
 
+        }
+    }
+}
+
+/**
+ * Function that is used to turn the camera when looking at the tables around the classroom
+ */
+function lookAround(){
+    if(controlsEnabled === true && cameraPosition === 1){
+        if(mouse.x > .85){
+            camera.rotation.y -= .005;
+        }
+        else if(mouse.x <-.85){
+            camera.rotation.y += .005;
         }
     }
 }
@@ -402,7 +416,7 @@ function postPaper() {
                 });
                 zoomOut.start();
                 zoomOut.onComplete(() => {
-                    playSound('HackJob.ogg');
+                    playSound("HackJob");
                 })
             }
             posted = true;
@@ -459,15 +473,11 @@ function fade() {
  */
 //TODO: use array.find method would be neater
 function playSound(name) {
-    if(name !== null){
-        //search the array of sounds for a sound with the given name and play it
-        for(let i in sounds){
-            if(sounds[i].name === name){
-                sounds[i].play();
-                return;
-            }
-        }
-    }
+    //fins the sound whose name includes the given string
+    let sound = sounds.find(function(element){
+        return element.name.includes(name);
+    });
+    sound.play();
 }
 
 function init() {
@@ -503,7 +513,7 @@ function init() {
     //
 
     //load the classroom
-    loadWorldFBX('Progress_1.11.2018.fbx',
+    loadWorldFBX('3dmodels/Preschool_New_1.31.fbx',
         function(object){
             for(let i in object.children) {
                 let child = object.children[i];
@@ -518,7 +528,7 @@ function init() {
         });
 
     //load and place the teacher
-    loadAnimationFBX('Idle.fbx',
+    loadAnimationFBX('3dmodels/Idle.fbx',
         function(object){
             teacher = object;
             teacher.position.set(4, -.05, -1);
@@ -538,56 +548,62 @@ function init() {
     //load sounds
 
     //kids playing in background
-    loadSound('kids-playing-1.mp3', 0.025, true, true);
+    loadSound('audio/kids-playing-1.mp3', 0.025, true, true);
 
     //click sound
-    loadSound('Click.mp3', 0.15);
+    loadSound('audio/Click.mp3', 0.15);
 
     //drawing sound
-    loadSound('Writing.wav', 0.15);
+    loadSound('audio/Writing.wav', 0.15);
 
     //teacher dialogue to sit
-    loadSound('TakeSeats.ogg', 0.4, false, false, () => {
+    loadSound('audio/TakeSeats.ogg', 0.4, false, false, () => {
         endCutScene();
     });
 
     //teacher dialogue with first wrong attempt
-    loadSound('NotSeatOne.ogg', 0.4, false, false, () => {
+    loadSound('audio/NotSeatOne.ogg', 0.4, false, false, () => {
         lookAtCenter();
         endCutScene();
     });
 
     //teacher dialogue with second wrong attempt
-    loadSound('NotSeatTwo.ogg', 0.4, false, false, () => {
+    loadSound('audio/NotSeatTwo.ogg', 0.4, false, false, () => {
         lookAtCenter();
         endCutScene();
     });
 
     //teacher dialogue showing to right table
-    loadSound('ShowToSeat.ogg', 0.4, false, false, function(){
+    loadSound('audio/ShowToSeat.ogg', 0.4, false, false, function(){
         if(currentTable === "Green"){
             currentTable = "Red";
-            moveAlongSpline(5, -1, 3);
+            moveAlongSpline(5, -1, 3, function(){
+                sitAtTable();
+            });
         }
         else if(currentTable === "Yellow"){
             currentTable = "Red";
-            moveAlongSpline(6, -1, 2.5);
+            moveAlongSpline(6, -1, 2.5, function(){
+                sitAtTable();
+            });
         }
         else if(currentTable === "Blue"){
             currentTable = "Red";
-            moveAlongSpline(4, -1, 3);
+            moveAlongSpline(4, -1, 3, function(){
+                sitAtTable();
+            });
 
         }
     });
 
     //teacher dialogue about coloring
-    loadSound('HowToDraw.ogg', 0.4, false, false, function(){
+    loadSound('audio/HowToDraw.ogg', 0.4, false, false, function(){
         new TWEEN.Tween(camera.rotation).to({x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 1300).start();
         endCutScene();
     });
 
     //teacher dialogue when coloring is finished
-    loadSound('FinishColoring.ogg', 0.3, false, false, () => {
+    loadSound('audio/FinishColoring.ogg', 0.3, false, false, () => {
         // fade to view of whiteboard after audio ends
         fade();
         setTimeout(() => {
@@ -601,7 +617,7 @@ function init() {
     });
 
     //kids mocking the bad painting
-    loadSound('HackJob.ogg', 0.4);
+    loadSound('audio/HackJob.ogg', 0.4);
 
     //create raycaster for object selection
     raycaster = new THREE.Raycaster();
@@ -633,7 +649,7 @@ function init() {
             childanimation = (childanimation + 1)%child.animations.length;
             blendIntoAnimation(child, childanimation);
         }
-        else{
+        else if(String.fromCharCode(event.keyCode) === " "){
             nextPosition();
         }
     }, false);
@@ -732,7 +748,7 @@ function init() {
     animate();
     startCutScene();
     setTimeout(() => {
-        playSound('TakeSeats.ogg');
+        playSound("TakeSeats");
     }, 3000)
 }
 
@@ -741,14 +757,10 @@ window.onload = changeColorVision();
 function nextPosition(){
     switch(cameraPosition){
         case 1:
+            //move to looking at the paper
+            // camera.rotation.set(-1.0581080584316573, -0.5617291507874522, 0);
+            // camera.position.set(6.962359430337607, 2.121043760351845, 4.453431362994369);
             cameraPosition = 2;
-            //TODO make the following the onEnded function of the above spline
-            // setTimeout(function(){
-            //     rotSteps = [];
-            //     walkSteps = [];
-            //     addStep({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, {x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 2000);
-            //     beginWalk();
-            // }, 4000);
             break;
         case 2:
             // grab camera rotation on view of teacher
@@ -763,7 +775,7 @@ function nextPosition(){
             // Tween camera to view teacher
             var lookAtTeacher = new TWEEN.Tween(camera.rotation).to(teacherView, 1000).onComplete(() => {
                 // teacher makes announcement to place art on board
-                playSound('FinishColoring.ogg');
+                playSound("FinishColoring");
             }, 2000);
             lookAtTeacher.start();
 
@@ -814,6 +826,8 @@ function animate() {
 function render() {
     TWEEN.update();
     updateSpline();
+
+    lookAround();
 
     renderer.render( scene, camera );
 }
