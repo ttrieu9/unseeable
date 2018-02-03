@@ -536,8 +536,10 @@ function init() {
             teacher.scale.set(scale, scale, scale);
         });
 
-    loadAnimationFBX2("T-Pose_WithSkin.fbx",
-        ["Sitting_Bones.fbx", "Sitting2_Bones.fbx", "Sitting Yell_Bones.fbx"],
+    loadAnimationFBX2("3dmodels/T-Pose_WithSkin.fbx",
+        ["3dmodels/animations/Sitting_Bones.fbx",
+            "3dmodels/animations/Sitting2_Bones.fbx",
+            "3dmodels/animations/Sitting Yell_Bones.fbx"],
         function(object){
             child = object;
             let scale = 2.2;
