@@ -527,7 +527,7 @@ function init() {
     //
 
     //load the classroom
-    loadWorldFBX('Preschool_New_1.31.fbx',
+    loadWorldFBX('3dmodels/Preschool_New_1.31.fbx',
         function(object){
             for(let i in object.children) {
                 let child = object.children[i];
@@ -542,7 +542,7 @@ function init() {
         }, onProgress, onError);
 
     //load and place the teacher
-    loadAnimationFBX('Idle.fbx',
+    loadAnimationFBX('3dmodels/Idle.fbx',
         function(object){
             teacher = object;
             teacher.position.set(4, -.05, -1);
