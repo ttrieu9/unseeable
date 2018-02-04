@@ -528,7 +528,7 @@ function init() {
         });
 
     //load and place the teacher
-    loadAnimationFBX('3dmodels/Idle.fbx',
+    loadAnimationFBX('Idle.fbx',
         function(object){
             teacher = object;
             teacher.position.set(4, -.05, -1);
@@ -536,10 +536,8 @@ function init() {
             teacher.scale.set(scale, scale, scale);
         });
 
-    loadAnimationFBX2("3dmodels/T-Pose_WithSkin.fbx",
-        ["3dmodels/animations/Sitting_Bones.fbx",
-            "3dmodels/animations/Sitting2_Bones.fbx",
-            "3dmodels/animations/Sitting Yell_Bones.fbx"],
+    loadAnimationFBX2("T-Pose_WithSkin.fbx",
+        ["Sitting_Bones.fbx", "Sitting2_Bones.fbx", "Sitting Yell_Bones.fbx"],
         function(object){
             child = object;
             let scale = 2.2;
@@ -550,33 +548,33 @@ function init() {
     //load sounds
 
     //kids playing in background
-    loadSound('audio/kids-playing-1.mp3', 0.025, true, true);
+    loadSound('kids-playing-1.mp3', 0.025, true, true);
 
     //click sound
-    loadSound('audio/Click.mp3', 0.15);
+    loadSound('Click.mp3', 0.15);
 
     //drawing sound
-    loadSound('audio/Writing.wav', 0.15);
+    loadSound('Writing.wav', 0.15);
 
     //teacher dialogue to sit
-    loadSound('audio/TakeSeats.ogg', 0.4, false, false, () => {
+    loadSound('TakeSeats.ogg', 0.4, false, false, () => {
         endCutScene();
     });
 
     //teacher dialogue with first wrong attempt
-    loadSound('audio/NotSeatOne.ogg', 0.4, false, false, () => {
+    loadSound('NotSeatOne.ogg', 0.4, false, false, () => {
         lookAtCenter();
         endCutScene();
     });
 
     //teacher dialogue with second wrong attempt
-    loadSound('audio/NotSeatTwo.ogg', 0.4, false, false, () => {
+    loadSound('NotSeatTwo.ogg', 0.4, false, false, () => {
         lookAtCenter();
         endCutScene();
     });
 
     //teacher dialogue showing to right table
-    loadSound('audio/ShowToSeat.ogg', 0.4, false, false, function(){
+    loadSound('ShowToSeat.ogg', 0.4, false, false, function(){
         if(currentTable === "Green"){
             currentTable = "Red";
             moveAlongSpline(5, -1, 3, function(){
@@ -599,13 +597,13 @@ function init() {
     });
 
     //teacher dialogue about coloring
-    loadSound('audio/HowToDraw.ogg', 0.4, false, false, function(){
+    loadSound('HowToDraw.ogg', 0.4, false, false, function(){
         new TWEEN.Tween(camera.rotation).to({x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 1300).start();
         endCutScene();
     });
 
     //teacher dialogue when coloring is finished
-    loadSound('audio/FinishColoring.ogg', 0.3, false, false, () => {
+    loadSound('FinishColoring.ogg', 0.3, false, false, () => {
         // fade to view of whiteboard after audio ends
         fade();
         setTimeout(() => {
@@ -619,7 +617,7 @@ function init() {
     });
 
     //kids mocking the bad painting
-    loadSound('audio/HackJob.ogg', 0.4);
+    loadSound('HackJob.ogg', 0.4);
 
     //create raycaster for object selection
     raycaster = new THREE.Raycaster();

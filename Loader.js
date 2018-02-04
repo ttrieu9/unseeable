@@ -40,7 +40,8 @@ function loadStaticFBX(fileName, onLoad){
  * @param onLoad function to be executed on file load. It can take the loaded object as a parameter.
  */
 function loadAnimationFBX(fileName, onLoad){
-    fbxloader.load(fileName,
+    fbxloader.load(
+        "3dmodels/" + fileName,
         function( object ) {
             //execute onLoad function if there is one
             if(onLoad){
@@ -69,12 +70,14 @@ function loadAnimationFBX(fileName, onLoad){
  */
 function loadAnimationFBX2(filename, animations, onLoad){
     //load the T-Pose model
-    fbxloader.load(filename,
+    fbxloader.load(
+        "3dmodels/" + filename,
         function(object){
 
             //load in the animations
             for(let i in animations){
-                fbxloader.load(animations[i],
+                fbxloader.load(
+                    "3dmodels/animations/" + animations[i],
                     function(animation){
                         object.animations.push(animation.animations[0]);
                     },
@@ -106,8 +109,8 @@ function loadAnimationFBX2(filename, animations, onLoad){
  */
 function loadWorldFBX(fileName, onLoad){
 
-    fbxloader.load( fileName,
-
+    fbxloader.load(
+        fileName,
         function( object ) {
             //add shadow casting and receiving for all of the child objects loaded
             for(let i in object.children){
@@ -158,7 +161,7 @@ function loadWorldFBX(fileName, onLoad){
  */
 function loadSound(filename, volume, playImmediately, loop, onEnded){
     audioLoader.load(
-        filename,
+        "audio/" + filename,
         (audioBuffer) => {
             let song = new THREE.Audio(audioListener);
             scene.add(song);
