@@ -540,9 +540,13 @@ function init() {
         ["Sitting_Bones.fbx", "Sitting2_Bones.fbx", "Sitting Yell_Bones.fbx"],
         function(object){
             child = object;
-            let scale = 2.2;
+            let scale = 2.4;
             object.scale.set(scale, scale, scale);
-            object.position.set(3, 1, 5);
+            object.position.set(2, .5, 3.4);
+            object.rotation.y = Math.PI;
+            setTimeout(function(){
+                playAnimation(object, 1);
+            }, 1000);
         });
 
     //load sounds
