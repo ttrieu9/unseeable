@@ -52,6 +52,26 @@
 				opacity: 0;
 			}
 
+			#left_bar {
+				background-color: black;
+				left: 0;
+				width: 7.5%;
+				height: 100%;
+				position: absolute;
+				z-index: 0;
+				opacity: .5;
+			}
+
+			#right_bar {
+				background-color: black;
+				right: 0;
+				width: 7.5%;
+				height: 100%;
+				position: absolute;
+				z-index: 0;
+				opacity: .5;
+			}
+
 			.fade-in {
 				animation-name: fade-in;
 				animation-duration: 1s;
@@ -93,8 +113,11 @@
 		<div id="top_bar"></div>
 		<div id="bottom_bar"></div>
 
-    <script src="three.min.js"></script>
-    <script src="inflate.min.js"></script>
+		<div id="left_bar"></div>
+		<div id="right_bar"></div>
+
+		<script src="three.min.js"></script>
+		<script src="inflate.min.js"></script>
 
 		<script src="OrbitControls.js"></script>
 		<script src="NURBSCurve.js"></script>

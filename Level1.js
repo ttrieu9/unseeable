@@ -10,6 +10,7 @@ var audioListener;
 var sounds = [];
 
 var cameraPosition = 1;
+var cameraDirection = null;
 
 var clock = new THREE.Clock();
 
@@ -381,10 +382,10 @@ function selectTable() {
  */
 function lookAround(){
     if(controlsEnabled === true && cameraPosition === 1){
-        if(mouse.x > .85){
+        if(cameraDirection === "right"){
             camera.rotation.y -= .005;
         }
-        else if(mouse.x <-.85){
+        else if(cameraDirection === "left"){
             camera.rotation.y += .005;
         }
     }
@@ -502,7 +503,7 @@ function init() {
     //camera controls, mostly for debugging purposes
     controls = new THREE.OrbitControls( camera );
     controls.target = new THREE.Vector3(3, 1, 5);
-    controls.enabled = true; //set to false to turn off controls
+    controls.enabled = false; //set to false to turn off controls
 
     //initial camera position
     camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
@@ -634,6 +635,27 @@ function init() {
 
     var element = document.body;
 
+    //
+    // EVENT LISTENERS
+    //
+
+    //event listeners for turning the camera left when looking at tables
+    let leftBar = document.getElementById("left_bar");
+    leftBar.addEventListener("mouseenter", function(){
+        cameraDirection = "left";
+    });
+    leftBar.addEventListener("mouseleave", function(){
+        cameraDirection = null;
+    });
+
+    //event listeners for turning the camera right when looking at tables
+    let rightBar = document.getElementById("right_bar");
+    rightBar.addEventListener("mouseenter", function(){
+        cameraDirection = "right";
+    });
+    rightBar.addEventListener("mouseleave", function(){
+        cameraDirection = null;
+    });
 
     element.addEventListener("keypress", function(event){
         if(String.fromCharCode(event.keyCode) === "c"){
