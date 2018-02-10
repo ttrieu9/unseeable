@@ -545,9 +545,7 @@ function init() {
             object.scale.set(scale, scale, scale);
             object.position.set(2, .5, 3.4);
             object.rotation.y = Math.PI;
-            setTimeout(function(){
-                playAnimation(object, 1);
-            }, 1000);
+            playAnimation(object, 1);
         });
 
     //load sounds
