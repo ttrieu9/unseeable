@@ -80,6 +80,7 @@ function loadAnimationFBX2(filename, animations, onLoad){
                 fbxloader.load(
                     "3dmodels/animations/" + animations[i],
                     function(animation){
+                        animation.animations[0].name = animations[i];
                         object.animations.push(animation.animations[0]);
 
                         //perform the onLoad function when the last of the animations has been loaded
@@ -94,7 +95,7 @@ function loadAnimationFBX2(filename, animations, onLoad){
 
             object.currentAnimation = 0;
 
-            //add the object's animation mixer
+            //add the object's animation mixer to the global list of mixers
             object.mixer = new THREE.AnimationMixer( object );
             mixers.push( object.mixer );
 

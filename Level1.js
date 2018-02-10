@@ -472,7 +472,6 @@ function fade() {
  * Play the given sound
  * @param name String name of the sound to be played
  */
-//TODO: use array.find method would be neater
 function playSound(name) {
     //fins the sound whose name includes the given string
     let sound = sounds.find(function(element){
@@ -545,7 +544,7 @@ function init() {
             object.scale.set(scale, scale, scale);
             object.position.set(2, .5, 3.4);
             object.rotation.y = Math.PI;
-            playAnimation(object, 1);
+            playAnimation(object, "Sitting_Bones");
         });
 
     //load sounds
