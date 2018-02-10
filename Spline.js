@@ -20,7 +20,6 @@ function moveAlongSpline(spline, direction, duration, onEnded){
     splineClock.start();
     if(onEnded){
         splines[activeSpline].onEnded = onEnded;
-        console.log(splines[activeSpline].onEnded);
     }
 }
 

@@ -3,6 +3,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 var container, stats, controls;
 var camera, scene, renderer, light;
 var teacher = {};
+var child;
+var childanimation = 0;
 
 var audioListener;
 var sounds = [];
@@ -27,7 +29,6 @@ var paperGroup = [];
 var paper = new THREE.Group();
 var posted = false;
 var controlsEnabled = true;
-var lookingAround = false;
 
 var paths = [];
 var splineTargets = [];
@@ -470,6 +471,7 @@ function fade() {
  * Play the given sound
  * @param name String name of the sound to be played
  */
+//TODO: use array.find method would be neater
 function playSound(name) {
     //fins the sound whose name includes the given string
     let sound = sounds.find(function(element){
@@ -477,23 +479,6 @@ function playSound(name) {
     });
     sound.play();
 }
-
-function onProgress( xhr ) {
-
-    if ( xhr.lengthComputable ) {
-
-        var percentComplete = xhr.loaded / xhr.total * 100;
-        console.log( Math.round( percentComplete, 2 ) + '% downloaded' );
-
-    }
-
-};
-
-function onError( xhr ) {
-
-    console.error( xhr );
-
-};
 
 function init() {
     startCutScene();
@@ -516,7 +501,8 @@ function init() {
 
     //camera controls, mostly for debugging purposes
     controls = new THREE.OrbitControls( camera );
-    controls.enabled = false; //set to false to turn off controls
+    controls.target = new THREE.Vector3(3, 1, 5);
+    controls.enabled = true; //set to false to turn off controls
 
     //initial camera position
     camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
@@ -539,48 +525,60 @@ function init() {
                     }
                 }
             }
-        }, onProgress, onError);
+        });
 
     //load and place the teacher
-    loadAnimationFBX('3dmodels/Idle.fbx',
+    loadAnimationFBX('Idle.fbx',
         function(object){
             teacher = object;
             teacher.position.set(4, -.05, -1);
             let scale = 2.2;
             teacher.scale.set(scale, scale, scale);
-        }, onProgress, onError);
+        });
+
+    loadAnimationFBX2("T-Pose_WithSkin.fbx",
+        ["Sitting_Bones.fbx", "Sitting2_Bones.fbx", "Sitting Yell_Bones.fbx"],
+        function(object){
+            child = object;
+            let scale = 2.4;
+            object.scale.set(scale, scale, scale);
+            object.position.set(2, .5, 3.4);
+            object.rotation.y = Math.PI;
+            setTimeout(function(){
+                playAnimation(object, 1);
+            }, 1000);
+        });
 
     //load sounds
 
     //kids playing in background
-    loadSound('audio/kids-playing-1.mp3', 0.025, true, true);
+    loadSound('kids-playing-1.mp3', 0.025, true, true);
 
     //click sound
-    loadSound('audio/Click.mp3', 0.15);
+    loadSound('Click.mp3', 0.15);
 
     //drawing sound
-    loadSound('audio/Writing.wav', 0.15);
+    loadSound('Writing.wav', 0.15);
 
     //teacher dialogue to sit
-    loadSound('audio/TakeSeats.ogg', 0.4, false, false, () => {
+    loadSound('TakeSeats.ogg', 0.4, false, false, () => {
         endCutScene();
     });
 
-    //TODO: add onEnd() functions to these, which will turn camera to look at the rest of the tables
     //teacher dialogue with first wrong attempt
-    loadSound('audio/NotSeatOne.ogg', 0.4, false, false, () => {
+    loadSound('NotSeatOne.ogg', 0.4, false, false, () => {
         lookAtCenter();
         endCutScene();
     });
 
     //teacher dialogue with second wrong attempt
-    loadSound('audio/NotSeatTwo.ogg', 0.4, false, false, () => {
+    loadSound('NotSeatTwo.ogg', 0.4, false, false, () => {
         lookAtCenter();
         endCutScene();
     });
 
     //teacher dialogue showing to right table
-    loadSound('audio/ShowToSeat.ogg', 0.4, false, false, function(){
+    loadSound('ShowToSeat.ogg', 0.4, false, false, function(){
         if(currentTable === "Green"){
             currentTable = "Red";
             moveAlongSpline(5, -1, 3, function(){
@@ -603,13 +601,13 @@ function init() {
     });
 
     //teacher dialogue about coloring
-    loadSound('audio/HowToDraw.ogg', 0.4, false, false, function(){
+    loadSound('HowToDraw.ogg', 0.4, false, false, function(){
         new TWEEN.Tween(camera.rotation).to({x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 1300).start();
         endCutScene();
     });
 
     //teacher dialogue when coloring is finished
-    loadSound('audio/FinishColoring.ogg', 0.3, false, false, () => {
+    loadSound('FinishColoring.ogg', 0.3, false, false, () => {
         // fade to view of whiteboard after audio ends
         fade();
         setTimeout(() => {
@@ -623,7 +621,7 @@ function init() {
     });
 
     //kids mocking the bad painting
-    loadSound('audio/HackJob.ogg', 0.4);
+    loadSound('HackJob.ogg', 0.4);
 
     //create raycaster for object selection
     raycaster = new THREE.Raycaster();
@@ -646,6 +644,14 @@ function init() {
         }
         else if(String.fromCharCode(event.keyCode) === "t"){
             startCutScene();
+        }
+        else if(String.fromCharCode(event.keyCode) === "n"){
+            childanimation = (childanimation + 1)%child.animations.length;
+            playAnimation(child, childanimation);
+        }
+        else if(String.fromCharCode(event.keyCode) === "m"){
+            childanimation = (childanimation + 1)%child.animations.length;
+            blendIntoAnimation(child, childanimation);
         }
         else if(String.fromCharCode(event.keyCode) === " "){
             nextPosition();
