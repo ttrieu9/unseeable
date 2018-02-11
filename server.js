@@ -33,7 +33,7 @@ app.use('/logger', logger);
 //app.use(favicon(__dirname + '/favicon.png'));
 
 app.get('/favicon.ico', (req, res) => {
-  res.sendFile(favicon(__dirname + '/favicon.png'));
+  res.sendFile(path.join(__dirname + '/favicon.png'));
 })
 // Load game
 app.get('/', (req, res) => {
