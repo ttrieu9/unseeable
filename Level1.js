@@ -3,6 +3,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 var container, stats, controls;
 var camera, scene, renderer, light;
 var teacher = {};
+var child;
+var childanimation = 0;
 
 var audioListener;
 var sounds = [];
@@ -183,7 +185,7 @@ function colorPaper() {
                 currentObject.visible = false;
             }
 
-            playSound("Click.mp3");
+            playSound("Click");
         }
         else if(intersected.name.includes('Paper') && coloredObjects.includes(intersected.name) && !intersected.name.includes("Outline") && currentObject) {
             intersected.material = currentObject.material[0];
@@ -192,7 +194,7 @@ function colorPaper() {
             });
             coloredObjects.splice(paperIndex, 1);
 
-            playSound('Writing.wav');
+            playSound("Writing");
 
             if(coloredObjects.length === 2) {
                 startCutScene();
@@ -253,7 +255,7 @@ function sitAtTable(){
     setTimeout(function(){
         new TWEEN.Tween(camera.position).to({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, 2000).onComplete(function(){
             lookAtTeacher();
-            playSound('HowToDraw.ogg');
+            playSound("HowToDraw");
         }).start();
     }, 500);
     // {x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}
@@ -357,15 +359,15 @@ function selectTable() {
 
                     //move them to the correct table
                     if (attempts === 2) {
-                        playSound('ShowToSeat.ogg');
+                        playSound("ShowToSeat");
                         nextPosition();
                     }
 
                     attempts++;
                     if (attempts === 1) {
-                        playSound('NotSeatOne.ogg');
+                        playSound("NotSeatOne");
                     } else if (attempts === 2) {
-                        playSound('NotSeatTwo.ogg');
+                        playSound("NotSeatTwo");
                     }
 
                 }, 3500);
@@ -374,6 +376,20 @@ function selectTable() {
                 nextPosition();
             }
 
+        }
+    }
+}
+
+/**
+ * Function that is used to turn the camera when looking at the tables around the classroom
+ */
+function lookAround(){
+    if(controlsEnabled === true && cameraPosition === 1){
+        if(mouse.x > .85){
+            camera.rotation.y -= .005;
+        }
+        else if(mouse.x <-.85){
+            camera.rotation.y += .005;
         }
     }
 }
@@ -406,7 +422,7 @@ function postPaper() {
                 });
                 zoomOut.start();
                 zoomOut.onComplete(() => {
-                    playSound('HackJob.ogg');
+                    playSound("HackJob");
                 })
             }
             posted = true;
@@ -461,34 +477,14 @@ function fade() {
  * Play the given sound
  * @param name String name of the sound to be played
  */
+//TODO: use array.find method would be neater
 function playSound(name) {
-    if(name !== null){
-        //search the array of sounds for a sound with the given name and play it
-        for(let i in sounds){
-            if(sounds[i].name === name){
-                sounds[i].play();
-                return;
-            }
-        }
-    }
+    //fins the sound whose name includes the given string
+    let sound = sounds.find(function(element){
+        return element.name.includes(name);
+    });
+    sound.play();
 }
-
-function onProgress( xhr ) {
-
-    if ( xhr.lengthComputable ) {
-
-        var percentComplete = xhr.loaded / xhr.total * 100;
-        console.log( Math.round( percentComplete, 2 ) + '% downloaded' );
-
-    }
-
-};
-
-function onError( xhr ) {
-
-    console.error( xhr );
-
-};
 
 function init() {
     startCutScene();
@@ -511,7 +507,8 @@ function init() {
 
     //camera controls, mostly for debugging purposes
     controls = new THREE.OrbitControls( camera );
-    controls.enabled = false; //set to false to turn off controls
+    controls.target = new THREE.Vector3(3, 1, 5);
+    controls.enabled = true; //set to false to turn off controls
 
     //initial camera position
     camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
@@ -522,7 +519,7 @@ function init() {
     //
 
     //load the classroom
-    loadWorldFBX('Preschool_New_1.31.fbx',
+    loadWorldFBX('3dmodels/Preschool_New_1.31.fbx',
         function(object){
             for(let i in object.children) {
                 let child = object.children[i];
@@ -534,7 +531,7 @@ function init() {
                     }
                 }
             }
-        }, onProgress, onError);
+        });
 
     //load and place the teacher
     loadAnimationFBX('Idle.fbx',
@@ -543,7 +540,20 @@ function init() {
             teacher.position.set(4, -.05, -1);
             let scale = 2.2;
             teacher.scale.set(scale, scale, scale);
-        }, onProgress, onError);
+        });
+
+    loadAnimationFBX2("T-Pose_WithSkin.fbx",
+        ["Sitting_Bones.fbx", "Sitting2_Bones.fbx", "Sitting Yell_Bones.fbx"],
+        function(object){
+            child = object;
+            let scale = 2.4;
+            object.scale.set(scale, scale, scale);
+            object.position.set(2, .5, 3.4);
+            object.rotation.y = Math.PI;
+            setTimeout(function(){
+                playAnimation(object, 1);
+            }, 1000);
+        });
 
     //load sounds
 
@@ -564,7 +574,6 @@ function init() {
         }, 950);
     });
 
-    //TODO: add onEnd() functions to these, which will turn camera to look at the rest of the tables
     //teacher dialogue with first wrong attempt
     loadSound('NotSeatOne.ogg', 0.4, false, false, () => {
         lookAtCenter();
@@ -581,15 +590,21 @@ function init() {
     loadSound('ShowToSeat.ogg', 0.4, false, false, function(){
         if(currentTable === "Green"){
             currentTable = "Red";
-            moveAlongSpline(5, -1, 3);
+            moveAlongSpline(5, -1, 3, function(){
+                sitAtTable();
+            });
         }
         else if(currentTable === "Yellow"){
             currentTable = "Red";
-            moveAlongSpline(6, -1, 2.5);
+            moveAlongSpline(6, -1, 2.5, function(){
+                sitAtTable();
+            });
         }
         else if(currentTable === "Blue"){
             currentTable = "Red";
-            moveAlongSpline(4, -1, 3);
+            moveAlongSpline(4, -1, 3, function(){
+                sitAtTable();
+            });
 
         }
     });
@@ -643,7 +658,15 @@ function init() {
         else if(String.fromCharCode(event.keyCode) === "t"){
             logger.getPlayerLogs('player1');
         }
-        else{
+        else if(String.fromCharCode(event.keyCode) === "n"){
+            childanimation = (childanimation + 1)%child.animations.length;
+            playAnimation(child, childanimation);
+        }
+        else if(String.fromCharCode(event.keyCode) === "m"){
+            childanimation = (childanimation + 1)%child.animations.length;
+            blendIntoAnimation(child, childanimation);
+        }
+        else if(String.fromCharCode(event.keyCode) === " "){
             nextPosition();
         }
     }, false);
@@ -745,7 +768,7 @@ function init() {
     animate();
     startCutScene();
     setTimeout(() => {
-        playSound('TakeSeats.ogg');
+        playSound("TakeSeats");
     }, 3000)
 }
 
@@ -754,14 +777,10 @@ function init() {
 function nextPosition(){
     switch(cameraPosition){
         case 1:
+            //move to looking at the paper
+            // camera.rotation.set(-1.0581080584316573, -0.5617291507874522, 0);
+            // camera.position.set(6.962359430337607, 2.121043760351845, 4.453431362994369);
             cameraPosition = 2;
-            //TODO make the following the onEnded function of the above spline
-            // setTimeout(function(){
-            //     rotSteps = [];
-            //     walkSteps = [];
-            //     addStep({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, {x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 2000);
-            //     beginWalk();
-            // }, 4000);
             break;
         case 2:
             // grab camera rotation on view of teacher
@@ -776,7 +795,7 @@ function nextPosition(){
             // Tween camera to view teacher
             var lookAtTeacher = new TWEEN.Tween(camera.rotation).to(teacherView, 1000).onComplete(() => {
                 // teacher makes announcement to place art on board
-                playSound('FinishColoring.ogg');
+                playSound("FinishColoring");
             }, 2000);
             lookAtTeacher.start();
 
@@ -827,6 +846,8 @@ function animate() {
 function render() {
     TWEEN.update();
     updateSpline();
+
+    lookAround();
 
     renderer.render( scene, camera );
 }
