@@ -3,6 +3,11 @@ var app = express();
 var path = require('path');
 var mongoose = require('mongoose');
 var mongoUrl = 'mongodb://ttrieu:unseeable@ds239587.mlab.com:39587/unseeable-logger-test';
+var uuidv4 = require('uuid/v4')
+
+// Create user ID
+const USERID = uuidv4();
+console.log(USERID);
 
 // Import routes
 var logger = require('./routes/logger');
@@ -30,7 +35,11 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/index.html'));
 })
 
-var server = app.listen(8080, () => {
-  console.log('Example app listening at http://localhost:8080');
-})
+// var server = app.listen(8080, () => {
+//   console.log('Example app listening at http://localhost:8080');
+// })
+
+var port = process.env.PORT || 8080;
+app.listen(port);
+console.log('Example app listening at http://localhost:8080');
 
