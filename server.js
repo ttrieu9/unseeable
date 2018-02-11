@@ -30,18 +30,19 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // Route handling
 app.use(express.static(__dirname));
 app.use('/logger', logger);
-app.use('/favicon.ico', favicon(__dirname + '/favicon.png'));
+app.use(favicon(__dirname + '/favicon.png'));
 
 // Load game
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/index.html'));
 })
 
-// var server = app.listen(8080, () => {
-//   console.log('Example app listening at http://localhost:8080');
-// })
-
 var port = process.env.PORT || 8080;
-app.listen(port);
-console.log(`Example app listening at http://localhost:${port}`);
+
+var server = app.listen(port, () => {
+  console.log('Example app listening at http://localhost:${port}');
+})
+
+// app.listen(port);
+// console.log(`Example app listening at http://localhost:${port}`);
 
