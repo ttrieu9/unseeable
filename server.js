@@ -35,11 +35,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/index.html'));
 })
 
-// var server = app.listen(8080, () => {
-//   console.log('Example app listening at http://localhost:8080');
-// })
-
-var port = process.env.PORT || 8080;
-app.listen(port);
-console.log('Example app listening at http://localhost:8080');
+var server = app.listen(8080, () => {
+  console.log('Example app listening at http://localhost:8080');
+})
 
