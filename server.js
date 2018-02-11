@@ -30,8 +30,11 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // Route handling
 app.use(express.static(__dirname));
 app.use('/logger', logger);
-app.use(favicon(__dirname + '/favicon.png'));
+//app.use(favicon(__dirname + '/favicon.png'));
 
+app.get('/favicon.ico', (req, res) => {
+  res.sendFile(favicon(__dirname + '/favicon.png'));
+})
 // Load game
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/index.html'));
@@ -40,7 +43,7 @@ app.get('/', (req, res) => {
 var port = process.env.PORT || 8080;
 
 var server = app.listen(port, () => {
-  console.log('Example app listening at http://localhost:${port}');
+  console.log(`Example app listening at http://localhost:${port}`);
 })
 
 // app.listen(port);
