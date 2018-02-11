@@ -30,7 +30,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // Route handling
 app.use(express.static(__dirname));
 app.use('/logger', logger);
-app.use(favicon(__dirname + '/favicon.png'));
+app.use('/favicon.ico', favicon(__dirname + '/favicon.png'));
 
 // Load game
 app.get('/', (req, res) => {
