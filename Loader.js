@@ -10,12 +10,29 @@ generateUserId();
 function generateUserId() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
+      if(this.readyState == 4 && this.status == 200) {
         console.log(this.responseText);
         USERID = this.responseText;
       }
     };
     xhttp.open("GET", "/userId", true);
+    xhttp.send();
+}
+
+/**
+ * Loads JSON file by name.
+ * 
+ * @param {*} fileName - name of JSON file.
+ * @param {*} callback - function to execute after JSON file is returned.
+ */
+function loadJSON(fileName, callback) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200) {
+            callback(JSON.parse(this.responseText));
+        }
+    };
+    xhttp.open("GET", "json/" + fileName + ".json", true);
     xhttp.send();
 }
 
