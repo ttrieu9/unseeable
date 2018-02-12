@@ -1,5 +1,23 @@
 const fbxloader = new THREE.FBXLoader();
 const audioLoader = new THREE.AudioLoader();
+var USERID;
+
+generateUserId();
+
+/**
+ * Generates User ID
+ */
+function generateUserId() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        console.log(this.responseText);
+        USERID = this.responseText;
+      }
+    };
+    xhttp.open("GET", "/userId", true);
+    xhttp.send();
+}
 
 /**
  * Prints percentage that the file has been loaded

@@ -6,12 +6,9 @@ var mongoUrl = 'mongodb://ttrieu:unseeable@ds239587.mlab.com:39587/unseeable-log
 var uuidv4 = require('uuid/v4');
 var favicon = require('express-favicon');
 
-// Create user ID
-const USERID = uuidv4();
-console.log(USERID);
-
 // Import routes
 var logger = require('./routes/logger');
+var userId = require('./routes/userId')
 
 // Set up mongo connection
 mongoose.connect(mongoUrl, () => {
@@ -30,11 +27,12 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // Route handling
 app.use(express.static(__dirname));
 app.use('/logger', logger);
-//app.use(favicon(__dirname + '/favicon.png'));
+app.use('/userId', userId);
+app.use(favicon(__dirname + '/favicon.png'));
 
-app.get('/favicon.ico', (req, res) => {
-  res.sendFile(path.join(__dirname + '/favicon.png'));
-})
+// app.get('/favicon.ico', (req, res) => {
+//   res.sendFile(path.join(__dirname + '/favicon.png'));
+// })
 // Load game
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/index.html'));
