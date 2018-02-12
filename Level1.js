@@ -29,6 +29,8 @@ var paperGroup = [];
 var paper = new THREE.Group();
 var posted = false;
 var controlsEnabled = true;
+var colorPaperAnswers;
+var colorPaperScore = 0;
 
 var paths = [];
 var splineTargets = [];
@@ -46,6 +48,10 @@ var camPosIndex;
 var logger = new Logger('player id', 1);
 
 init();
+
+loadJSON("colorPaperAnswers", (result) => { 
+    colorPaperAnswers = result
+});
 
 function disableControls() {
     controlsEnabled = false;
@@ -189,6 +195,7 @@ function colorPaper() {
         }
         else if(intersected.name.includes('Paper') && coloredObjects.includes(intersected.name) && !intersected.name.includes("Outline") && currentObject) {
             intersected.material = currentObject.material[0];
+            updatePaperScore(intersected.name, currentObject.material[0].name)
             var paperIndex = coloredObjects.findIndex((object) => {
                 return object.includes(intersected.name)
             });
@@ -196,9 +203,9 @@ function colorPaper() {
 
             playSound("Writing");
 
-            if(coloredObjects.length === 2) {
+            if(coloredObjects.length === 0) {
                 startCutScene();
-                logger.logTask("Color paper", 1);
+                logger.logTask("Color paper", colorPaperScore / 14);
                 setTimeout(() => {
                     nextPosition();
                 }, 750);
@@ -215,6 +222,22 @@ function colorPaper() {
             }
         }
     }
+}
+
+/**
+ * Updates player score when coloring a piece of paper.
+ * 
+ * @param {*} intersectedName - name of piece of paper that is being colored.
+ * @param {*} crayonColor - current color of crayon, identified by name.
+ */
+function updatePaperScore(intersectedName, crayonColor) {
+    var piece = colorPaperAnswers.find((element) => {
+        return element.name == intersectedName;
+    });
+
+    if(piece.trueColor == crayonColor) {
+        colorPaperScore++;
+    };
 }
 
 /**
@@ -290,7 +313,7 @@ function selectTable() {
                     moveAlongSpline(1, -1, 4, function(){
                         sitAtTable();
                     });
-                    logger.logTask("Select Table", 1)
+                    logger.logTask("Select Table", attempts)
                 }
                 else if(intersected.name.includes("Yellow")){
                     currentTable = "Yellow";
@@ -406,8 +429,6 @@ function postPaper() {
 
         if(whiteBoardIndex >= 0) {
             if(!posted) {
-                logger.logTask("Post paper", 1);
-
                 var currentZoom = {
                     value: camera.zoom
                 };
@@ -627,7 +648,6 @@ function init() {
 
         setTimeout(() => {
             endCutScene();
-            logger.recordTaskStartTime()
         }, 2000);
     });
 
@@ -653,10 +673,10 @@ function init() {
             console.log(camera);
         }
         else if(String.fromCharCode(event.keyCode) === "f"){
-            logger.getLogs();
+            logger.printLog();
         }
         else if(String.fromCharCode(event.keyCode) === "t"){
-            logger.getPlayerLogs('player1');
+            console.log(coloredObjects)
         }
         else if(String.fromCharCode(event.keyCode) === "n"){
             childanimation = (childanimation + 1)%child.animations.length;
