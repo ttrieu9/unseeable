@@ -60,6 +60,7 @@
 				position: absolute;
 				z-index: 0;
 				opacity: .5;
+				display: table;
 			}
 
 			#right_bar {
@@ -70,6 +71,24 @@
 				position: absolute;
 				z-index: 0;
 				opacity: .5;
+				display: table;
+			}
+
+			#subtitle_box {
+				background-color: white;
+				left: 7.5%;
+				bottom: 10%;
+				width: 85%;
+				height: 10%;
+				position: absolute;
+				z-index: 0;
+			}
+
+			p {
+				font-size: 36px;
+				text-align:center;
+				vertical-align: middle;
+				display: table-cell;
 			}
 
 			.fade-in {
@@ -113,8 +132,10 @@
 		<div id="top_bar"></div>
 		<div id="bottom_bar"></div>
 
-		<div id="left_bar"></div>
-		<div id="right_bar"></div>
+		<div id="left_bar"><p>🢀</p></div>
+		<div id="right_bar"><p>🢂</p></div>
+
+		<div id="subtitle_box"></div>
 
 		<script src="three.min.js"></script>
 		<script src="inflate.min.js"></script>

@@ -664,13 +664,11 @@ function init() {
         else if(String.fromCharCode(event.keyCode) === "t"){
             startCutScene();
         }
-        else if(String.fromCharCode(event.keyCode) === "n"){
-            childanimation = (childanimation + 1)%child.animations.length;
-            playAnimation(child, childanimation);
+        else if(String.fromCharCode(event.keyCode) === "o"){
+            controls.enabled = !controls.enabled;
         }
-        else if(String.fromCharCode(event.keyCode) === "m"){
-            childanimation = (childanimation + 1)%child.animations.length;
-            blendIntoAnimation(child, childanimation);
+        else if(String.fromCharCode(event.keyCode) === "p"){
+            playSound("TakeSeats");
         }
         else if(String.fromCharCode(event.keyCode) === " "){
             nextPosition();
