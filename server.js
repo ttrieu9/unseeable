@@ -3,11 +3,12 @@ var app = express();
 var path = require('path');
 var mongoose = require('mongoose');
 var mongoUrl = 'mongodb://ttrieu:unseeable@ds239587.mlab.com:39587/unseeable-logger-test';
+var uuidv4 = require('uuid/v4');
+var favicon = require('express-favicon');
 
 // Import routes
 var logger = require('./routes/logger');
-
-app.use(logger);
+var userId = require('./routes/userId')
 
 // Set up mongo connection
 mongoose.connect(mongoUrl, () => {
@@ -23,13 +24,26 @@ var db = mongoose.connection;
 // Print error if one occurs
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+// Route handling
 app.use(express.static(__dirname));
+app.use('/logger', logger);
+app.use('/userId', userId);
+app.use(favicon(__dirname + '/favicon.png'));
 
+// app.get('/favicon.ico', (req, res) => {
+//   res.sendFile(path.join(__dirname + '/favicon.png'));
+// })
+// Load game
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/views/informedConsent.html'));
 })
 
-var server = app.listen(8080, () => {
-  console.log('Example app listening at http://localhost:8080');
+var port = process.env.PORT || 8080;
+
+var server = app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`);
 })
+
+// app.listen(port);
+// console.log(`Example app listening at http://localhost:${port}`);
 

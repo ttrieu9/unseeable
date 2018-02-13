@@ -29,6 +29,8 @@ var paperGroup = [];
 var paper = new THREE.Group();
 var posted = false;
 var controlsEnabled = true;
+var colorPaperAnswers;
+var colorPaperScore = 0;
 
 var paths = [];
 var splineTargets = [];
@@ -43,7 +45,13 @@ var lookatRotation;
 
 var camPosIndex;
 
+var logger = new Logger('player id', 1);
+
 init();
+
+loadJSON("colorPaperAnswers", (result) => { 
+    colorPaperAnswers = result
+});
 
 function disableControls() {
     controlsEnabled = false;
@@ -187,6 +195,7 @@ function colorPaper() {
         }
         else if(intersected.name.includes('Paper') && coloredObjects.includes(intersected.name) && !intersected.name.includes("Outline") && currentObject) {
             intersected.material = currentObject.material[0];
+            updatePaperScore(intersected.name, currentObject.material[0].name)
             var paperIndex = coloredObjects.findIndex((object) => {
                 return object.includes(intersected.name)
             });
@@ -194,8 +203,9 @@ function colorPaper() {
 
             playSound("Writing");
 
-            if(coloredObjects.length === 2) {
+            if(coloredObjects.length === 0) {
                 startCutScene();
+                logger.logTask("Color paper", colorPaperScore / 14);
                 setTimeout(() => {
                     nextPosition();
                 }, 750);
@@ -212,6 +222,22 @@ function colorPaper() {
             }
         }
     }
+}
+
+/**
+ * Updates player score when coloring a piece of paper.
+ * 
+ * @param {*} intersectedName - name of piece of paper that is being colored.
+ * @param {*} crayonColor - current color of crayon, identified by name.
+ */
+function updatePaperScore(intersectedName, crayonColor) {
+    var piece = colorPaperAnswers.find((element) => {
+        return element.name == intersectedName;
+    });
+
+    if(piece.trueColor == crayonColor) {
+        colorPaperScore++;
+    };
 }
 
 /**
@@ -287,6 +313,7 @@ function selectTable() {
                     moveAlongSpline(1, -1, 4, function(){
                         sitAtTable();
                     });
+                    logger.logTask("Select Table", attempts)
                 }
                 else if(intersected.name.includes("Yellow")){
                     currentTable = "Yellow";
@@ -563,6 +590,9 @@ function init() {
     //teacher dialogue to sit
     loadSound('TakeSeats.ogg', 0.4, false, false, () => {
         endCutScene();
+        setTimeout(() => {
+            logger.recordTaskStartTime();
+        }, 950);
     });
 
     //teacher dialogue with first wrong attempt
@@ -604,6 +634,7 @@ function init() {
     loadSound('HowToDraw.ogg', 0.4, false, false, function(){
         new TWEEN.Tween(camera.rotation).to({x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 1300).start();
         endCutScene();
+        logger.recordTaskStartTime();
     });
 
     //teacher dialogue when coloring is finished
@@ -621,7 +652,9 @@ function init() {
     });
 
     //kids mocking the bad painting
-    loadSound('HackJob.ogg', 0.4);
+    loadSound('HackJob.ogg', 0.4, false, false, () => {
+        logger.endLog();
+    });
 
     //create raycaster for object selection
     raycaster = new THREE.Raycaster();
@@ -640,10 +673,10 @@ function init() {
             console.log(camera);
         }
         else if(String.fromCharCode(event.keyCode) === "f"){
-            fade();
+            logger.printLog();
         }
         else if(String.fromCharCode(event.keyCode) === "t"){
-            startCutScene();
+            console.log(coloredObjects)
         }
         else if(String.fromCharCode(event.keyCode) === "n"){
             childanimation = (childanimation + 1)%child.animations.length;
@@ -683,12 +716,15 @@ function init() {
                 case 1:
                     selectTable();
                     playSound("Click.mp3");
+                    logger.logEvent("mousedown", mouse.x, mouse.y);
                     break;
                 case 2:
                     colorPaper();
+                    logger.logEvent("mousedown", mouse.x, mouse.y);
                     break;
                 case 3:
                     postPaper();
+                    logger.logEvent("mousedown", mouse.x, mouse.y);
                     break;
             }
         }
@@ -756,7 +792,7 @@ function init() {
     }, 3000)
 }
 
-window.onload = changeColorVision();
+// window.onload = changeColorVision();
 
 function nextPosition(){
     switch(cameraPosition){
