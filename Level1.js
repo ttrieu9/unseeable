@@ -536,6 +536,7 @@ function init() {
             teacher.scale.set(scale, scale, scale);
         });
 
+        /*
     loadAnimationFBX2("T-Pose_WithSkin.fbx",
         ["Sitting_Bones.fbx", "Sitting2_Bones.fbx", "Sitting Yell_Bones.fbx"],
         function(object){
@@ -548,7 +549,7 @@ function init() {
                 playAnimation(object, 1);
             }, 1000);
         });
-
+    */
     //load sounds
 
     //kids playing in background
