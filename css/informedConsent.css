@@ -1,0 +1,28 @@
+body {
+  font-family: Arial;
+  margin: 2.5%;
+  background-color:  #fdfdfd
+}
+
+.bold {
+  font-weight: bold;
+}
+
+#e_signature {
+  width: 200px;
+  height: 25px;
+  font-size: 10pt;
+}
+
+#submit_button {
+  width: 70px;
+  height: 32px;
+  border-radius: 5px;
+  border: solid black 1px;
+  font-size: 12pt;
+  margin: auto;
+}
+
+.signature_input {
+  float: right;
+}

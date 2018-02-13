@@ -30,20 +30,18 @@ app.use('/logger', logger);
 app.use('/userId', userId);
 app.use(favicon(__dirname + '/favicon.png'));
 
-// app.get('/favicon.ico', (req, res) => {
-//   res.sendFile(path.join(__dirname + '/favicon.png'));
-// })
 // Load game
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname + '/views/informedConsent.html'));
+  res.sendFile('/index.html');
 })
+
+//Informed consent
+app.get('/informedConsent', (req, res) => {
+  res.sendFile(path.join(__dirname+'/views/informedConsent.html'));
+});
 
 var port = process.env.PORT || 8080;
 
 var server = app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 })
-
-// app.listen(port);
-// console.log(`Example app listening at http://localhost:${port}`);
-
