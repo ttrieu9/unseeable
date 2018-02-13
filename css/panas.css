@@ -1,0 +1,99 @@
+body {
+  font-family: Arial;
+  margin: 0 25%;
+  background-color:  #fdfdfd
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.feeling {
+  display: inline-block;
+  width: 7.5%;
+}
+
+.gray_question {
+  background-color: #d3d3d3;
+  border-radius: 15px;
+  padding: 15px;
+  padding-top: 7.5px;
+  padding-left: 20px;
+  padding-right: 0px;
+}
+
+.white_question {
+  background-color: white;
+  border-radius: 15px;
+  padding: 15px;
+  padding-top: 7.5px;
+  padding-left: 20px;
+  padding-right: 0px;
+}
+
+.container {
+  display: inline;
+  position: relative;
+  margin-left: 15%;;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.rating {
+  width: 75px;
+  display: inline-block;
+  font-size: 16px;
+  margin-left: 5%;
+  margin-right:0;
+}
+
+.long {
+  width: 100px;
+}
+
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 35px;
+  width: 35px;
+  background-color: #eee;
+  border-radius: 50%;
+}
+
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+.container input:checked ~ .checkmark {
+  background-color: navy;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.container .checkmark:after {
+  top: 9px;
+  left: 9px;
+  width: 17.5px;
+  height: 17.5px;
+  border-radius: 50%;
+  background: white;
+}

@@ -40,6 +40,11 @@ app.get('/informedConsent', (req, res) => {
   res.sendFile(path.join(__dirname+'/views/informedConsent.html'));
 });
 
+//panas
+app.get('/panas', (req, res) => {
+  res.sendFile(path.join(__dirname+'/views/panas.html'));
+});
+
 var port = process.env.PORT || 8080;
 
 var server = app.listen(port, () => {
