@@ -129,7 +129,7 @@
 	<body id="body">
 		<img class ="fit-screen" src="https://i.imgur.com/E0LOSCn.jpg">
 		<div id="bottom_bar_title">
-			<span style="float: left; margin-left: 10%;"><h1 id="credits_button" class="button-mouse-over">Credits</h1></span>
+			<span style="float: left; margin-left: 10%;"><h1 id="credits_button" class="button-mouse-over" onclick="creditsDisplay()">Credits</h1></span>
 			<span style="float: left;"><h1 id="play_button" class="button-mouse-over">Play</h1></span>
 			<span style="float: left; margin-left: 27%"><h1 id="exit_button" class="button-mouse-over" onclick="exitGame()">Exit</h1></span>
 			
@@ -138,6 +138,13 @@
 		<script>
 			function exitGame(){
 				window.close();
+			}
+
+			function creditsDisplay(){
+				document.body.innerHTML = "";
+				document.body.style.background = "black";
+				document.body.innerHTML = "<h1 style=\"text-align: center; font-size: 600%;\"> Thanks for playing!<h1/>";
+				document.body.innerHTML += "<h1 style=\"text-align: center; font-size: 200%;\">Developed by Alex Horton, Isaiah Cochran, Tommy Trieu, and Drew Tisdelle<h1/>"
 			}
 		</script>
 	</body>
