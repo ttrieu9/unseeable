@@ -12,4 +12,4 @@ var MouseCoordinateSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model('MouseCoordinateModel', MouseCoordinateSchema);
+module.exports = MouseCoordinateSchema;

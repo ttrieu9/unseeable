@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+var EventSchema = require('./event');
+var TaskSchema = require('./task');
 var Schema = mongoose.Schema;
 
 var LogSchema = new Schema({
@@ -14,15 +16,27 @@ var LogSchema = new Schema({
     type: Date,
     required: [true, 'Required field missing: "date".']
   },
-  startTime: {
-    type: Number,
-    required: [true, 'Required field missing: "startTime".']
-  },
   levelDuration: {
     type: Number
   },
-  events: [{type: Schema.Types.ObjectId, ref: 'EventModel'}],
-  tasks: [{type: Schema.Types.ObjectId, ref: 'TaskModel'}]
+  events: {
+    type: [EventSchema]
+  },
+  tasks: {
+    type: [TaskSchema]
+  }
 });
 
-module.exports = mongoose.model('LogModel', LogSchema);
+LogSchema.statics.read_logs = function(cb) {
+  return this.find({}, cb);
+};
+
+LogSchema.statics.find_log = function(target, cb) {
+  return this.find(target, cb);
+};
+
+LogSchema.methods.create_log = function(cb) {
+  return this.save(cb);
+};
+
+module.exports = mongoose.model('Log', LogSchema);
