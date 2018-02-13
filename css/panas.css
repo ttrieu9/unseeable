@@ -97,3 +97,13 @@ body {
   border-radius: 50%;
   background: white;
 }
+
+#panas_submit_button {
+  float: right;
+  margin: 15px 0;
+  height: 35px;
+  width: 75px;
+  border-radius: 10px;
+  font-size: 14pt;
+  border: 1px solid black;
+}
