@@ -75,13 +75,21 @@
 			}
 
 			#subtitle_box {
-				background-color: white;
 				left: 7.5%;
 				bottom: 10%;
 				width: 85%;
 				height: 10%;
 				position: absolute;
 				z-index: 0;
+				display: table;
+			}
+
+			#subs {
+				color: black;
+				font-size: 30px;
+				text-align:center;
+				vertical-align: middle;
+				display: table-cell;
 			}
 
 			p {
@@ -135,7 +143,7 @@
 		<div id="left_bar"><p>🢀</p></div>
 		<div id="right_bar"><p>🢂</p></div>
 
-		<div id="subtitle_box"></div>
+		<div id="subtitle_box"><p id="subs"></p></div>
 
 		<script src="three.min.js"></script>
 		<script src="inflate.min.js"></script>

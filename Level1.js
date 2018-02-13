@@ -44,7 +44,7 @@ var currentTable = null;
 var lookatPosition = {x: 5, y: 2, z: 6};
 var lookatRotation;
 
-var camPosIndex;
+var subtitles;
 
 var logger = new Logger('player id', 1);
 
@@ -500,10 +500,26 @@ function fade() {
  * @param name String name of the sound to be played
  */
 function playSound(name) {
-    //fins the sound whose name includes the given string
+    //find the sound whose name includes the given string
     let sound = sounds.find(function(element){
         return element.name.includes(name);
     });
+
+    //add subtitles
+    let subs = subtitles.audio.find(function(element){
+        return element.name.includes(name);
+    });
+
+    if(subs){
+        for(let i in subs.lines){
+            setTimeout(function(){
+                let subtitle = document.getElementById("subs");
+                subtitle.innerText = subs.lines[i].text;
+            }, subs.lines[i].offset);
+        }
+    }
+    console.log(subs);
+
     sound.play();
 }
 
@@ -573,6 +589,12 @@ function init() {
             object.rotation.y = Math.PI;
             playAnimation(object, "Sitting_Bones");
         });
+
+    //load subtitles
+    loadJSON("level1subs", function(json){
+        subtitles = json;
+        console.log(subtitles);
+    });
 
     //load sounds
 

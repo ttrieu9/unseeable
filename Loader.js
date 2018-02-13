@@ -217,6 +217,12 @@ function loadSound(filename, volume, playImmediately, loop, onEnded){
             if(onEnded){
                 song.onEnded = onEnded;
             }
+            song.onEnded = function(){
+                document.getElementById("subs").innerText = "";
+                if(onEnded){
+                    onEnded();
+                }
+            }
             song.name = filename;
         },
         null, onError
