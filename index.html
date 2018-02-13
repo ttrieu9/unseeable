@@ -131,16 +131,13 @@
 		<div id="bottom_bar_title">
 			<span style="float: left; margin-left: 10%;"><h1 id="credits_button" class="button-mouse-over">Credits</h1></span>
 			<span style="float: left;"><h1 id="play_button" class="button-mouse-over">Play</h1></span>
-			<span style="float: left; margin-left: 27%"><h1 id="exit_button" class="button-mouse-over" onclick="self.close()">Exit</h1></span>
+			<span style="float: left; margin-left: 27%"><h1 id="exit_button" class="button-mouse-over" onclick="exitGame()">Exit</h1></span>
 			
 			
 		</div>
 		<script>
 			function exitGame(){
 				window.close();
-				document.body.innerHTML = "";
-				document.body.style.background = "black";
-				document.body.innerHTML = "<h1 style=\"text-align: center; font-size: 1000%;\"> Thanks for playing!<h1/>";
 			}
 		</script>
 	</body>
