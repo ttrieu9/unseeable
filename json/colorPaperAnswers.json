@@ -1,0 +1,58 @@
+[
+  {
+    "name": "MainPaper_BigFlower_Petal1",
+    "trueColor": "Blue"
+  },
+  {
+    "name": "MainPaper_BigFlower_Petal2",
+    "trueColor": "blinn3"
+  },
+  {
+    "name": "MainPaper_BigFlower_Petal3",
+    "trueColor": "Red"
+  },
+  {
+    "name": "MainPaper_BigFlower_Petal4",
+    "trueColor": "Orange"
+  },
+  {
+    "name": "MainPaper_BigFlower_Petal5",
+    "trueColor": "Yellow"
+  },
+  {
+    "name": "MainPaper_BigFlower_Stem",
+    "trueColor": "Green"
+  },
+  {
+    "name": "MainPaper_Grass",
+    "trueColor": "Green"
+  },
+  {
+    "name": "MainPaper_Sky",
+    "trueColor": "blinn10"
+  },
+  {
+    "name": "MainPaper_SmallFlower_Petal1",
+    "trueColor": "Red"
+  },
+  {
+    "name": "MainPaper_SmallFlower_Petal2",
+    "trueColor": "Orange"
+  },
+  {
+    "name": "MainPaper_SmallFlower_Petal3",
+    "trueColor": "Yellow"
+  },
+  {
+    "name": "MainPaper_SmallFlower_Petal4",
+    "trueColor": "Green"
+  },
+  {
+    "name": "MainPaper_SmallFlower_Petal5",
+    "trueColor": "Blue"
+  },
+  {
+    "name": "MainPaper_SmallFlower_Stem",
+    "trueColor": "Green"
+  }
+]

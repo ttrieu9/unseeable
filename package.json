@@ -2,9 +2,10 @@
   "name": "unseeable",
   "version": "0.0.0",
   "description": "Alex Horton Drew Tisdelle Isaiah Cochran Tommy Trieu",
-  "main": "index.js",
+  "main": "server.js",
   "dependencies": {
     "express": "^4.16.2",
+    "express-favicon": "^2.0.0",
     "mongoose": "^5.0.0-rc2"
   },
   "devDependencies": {},

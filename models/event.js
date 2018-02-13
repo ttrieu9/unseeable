@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var MouseCoordinateSchema = require('./mouseCoordinate');
 var Schema = mongoose.Schema;
 
 var EventSchema = new Schema({
@@ -11,10 +12,9 @@ var EventSchema = new Schema({
     required: [true, 'Required field missing: event "time".']
   },
   mouseCoordinate: {
-    type: Schema.Types.ObjectId,
-    ref: 'MouseCoordinateModel',
+    type: MouseCoordinateSchema,
     required: [true, 'Required field missing: event "mouseCoordinate".']
   }
 });
 
-module.exports = mongoose.model('EventModel', EventSchema);
+module.exports = EventSchema;
