@@ -651,18 +651,17 @@ function init() {
             teacher.scale.set(scale, scale, scale);
         });
 
-        /*
-    loadAnimationFBX2("T-Pose_WithSkin.fbx",
-        ["Sitting_Bones.fbx", "Sitting2_Bones.fbx", "Sitting Yell_Bones.fbx"],
+    //load and place the children
+    loadAnimationFBX2("T-Pose (1).fbx",
+        ["Sitting (1).fbx", "Sitting Angry.fbx", "Sitting Disapproval.fbx", "Sitting Idle (1).fbx", "Sitting Laughing.fbx", "Sitting Talking.fbx", "Sitting Victory (1).fbx", "Sitting2.fbx"],
         function(object){
             child = object;
             let scale = 2.4;
             object.scale.set(scale, scale, scale);
             object.position.set(2, .5, 3.4);
             object.rotation.y = Math.PI;
-            playAnimation(object, "Sitting_Bones");
+            playAnimation(object, "Sitting (1)");
         });
-        */
 
     //load subtitles
     loadJSON("level1subs", function(json){
