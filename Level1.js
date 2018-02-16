@@ -57,11 +57,15 @@ loadJSON("colorPaperAnswers", (result) => {
 function disableControls() {
     controlsEnabled = false;
     document.body.style.cursor = 'none';
+    hideCameraControls();
 }
 
 function enableControls() {
     controlsEnabled = true;
     document.body.style.cursor = 'default';
+    if(cameraPosition === 1 && controlsUsed === false){
+        showCameraControls();
+    }
 }
 
 function onMouseMove() {
@@ -468,7 +472,7 @@ function startCutScene() {
     setTimeout(() => {
         topBar.style.opacity = 1;
         bottomBar.style.opacity = 1;
-    }, 1000);
+    }, 950);
 }
 
 function endCutScene () {
@@ -518,7 +522,7 @@ function showCameraControls(which){
         if(which != "left") {
             rightBar.style.opacity = 0.5;
         }
-    }, 1000);
+    }, 950);
 }
 
 /**
@@ -551,7 +555,7 @@ function hideCameraControls(which){
         if(which != "left") {
             rightBar.style.opacity = 0;
         }
-    }, 1000);
+    }, 950);
 }
 
 function fade() {
@@ -679,9 +683,6 @@ function init() {
         setTimeout(() => {
             logger.recordTaskStartTime();
         }, 950);
-        setTimeout(function() {
-            showCameraControls();
-        }, 1200);
     });
 
     //teacher dialogue with first wrong attempt
@@ -763,19 +764,35 @@ function init() {
     //event listeners for turning the camera left when looking at tables
     let leftBar = document.getElementById("left_bar");
     leftBar.addEventListener("mouseenter", function(){
-        cameraDirection = "left";
+        if(cameraPosition === 1) {
+            cameraDirection = "left";
+            showCameraControls("left");
+            if (controlsUsed === false) {
+                hideCameraControls("right");
+                controlsUsed = true;
+            }
+        }
     });
     leftBar.addEventListener("mouseleave", function(){
         cameraDirection = null;
+        hideCameraControls("left");
     });
 
     //event listeners for turning the camera right when looking at tables
     let rightBar = document.getElementById("right_bar");
     rightBar.addEventListener("mouseenter", function(){
-        cameraDirection = "right";
+        if(cameraPosition === 1) {
+            cameraDirection = "right";
+            showCameraControls("right");
+            if (controlsUsed === false) {
+                hideCameraControls("left");
+                controlsUsed = true;
+            }
+        }
     });
     rightBar.addEventListener("mouseleave", function(){
         cameraDirection = null;
+        hideCameraControls("right");
     });
 
     element.addEventListener("keypress", function(event){
@@ -908,9 +925,6 @@ function init() {
 function nextPosition(){
     switch(cameraPosition){
         case 1:
-            //move to looking at the paper
-            // camera.rotation.set(-1.0581080584316573, -0.5617291507874522, 0);
-            // camera.position.set(6.962359430337607, 2.121043760351845, 4.453431362994369);
             cameraPosition = 2;
             break;
         case 2:
