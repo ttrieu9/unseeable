@@ -113,6 +113,16 @@
 				animation-duration: 1s;
 			}
 
+			.controls-fade-in {
+				animation-name: controls-fade-in;
+				animation-duration: 1s;
+			}
+
+			.controls-fade-out {
+				animation-name: controls-fade-out;
+				animation-duration: 1s;
+			}
+
 			.screen-change {
 				animation-name: screen-change;
 				animation-duration: 2s;
@@ -132,6 +142,16 @@
 
 			@keyframes fade-out {
 				0% {opacity: 1;}
+				100% {opacity: 0;}
+			}
+
+			@keyframes controls-fade-in {
+				0% {opacity: 0;}
+				100% {opacity: 0.5;}
+			}
+
+			@keyframes controls-fade-out {
+				0% {opacity: 0.5;}
 				100% {opacity: 0;}
 			}
 

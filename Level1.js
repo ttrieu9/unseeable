@@ -4,7 +4,7 @@ var container, stats, controls;
 var camera, scene, renderer, light;
 var teacher = {};
 var child;
-var childanimation = 0;
+var controlsUsed = false;
 
 var audioListener;
 var sounds = [];
@@ -488,6 +488,72 @@ function endCutScene () {
     }, 950);
 }
 
+/**
+ * Show camera controls when looking around the classroom
+ * @param which Optional "left" or "right" to only show one of the controls on the left or right.
+ */
+function showCameraControls(which){
+    var leftBar = document.getElementById("left_bar");
+    var rightBar = document.getElementById("right_bar");
+
+    if(which === "left") {
+        leftBar.classList.remove("controls-fade-out");
+        leftBar.classList.add("controls-fade-in");
+    }
+    else if(which === "right") {
+        rightBar.classList.remove("controls-fade-out");
+        rightBar.classList.add("controls-fade-in");
+    }
+    else{
+        leftBar.classList.remove("controls-fade-out");
+        rightBar.classList.remove("controls-fade-out");
+        leftBar.classList.add("controls-fade-in");
+        rightBar.classList.add("controls-fade-in");
+    }
+
+    setTimeout(() => {
+        if(which != "right") {
+            leftBar.style.opacity = 0.5;
+        }
+        if(which != "left") {
+            rightBar.style.opacity = 0.5;
+        }
+    }, 1000);
+}
+
+/**
+ * Hide camera controls when looking around the classroom
+ * @param which Optional "left" or "right" to only hide one of the controls on the left or right.
+ */
+function hideCameraControls(which){
+    var leftBar = document.getElementById("left_bar");
+    var rightBar = document.getElementById("right_bar");
+
+    if(which === "left"){
+        leftBar.classList.remove("controls-fade-in");
+        leftBar.classList.add("controls-fade-out");
+    }
+    else if(which === "right"){
+        rightBar.classList.remove("controls-fade-in");
+        rightBar.classList.add("controls-fade-out");
+    }
+    else {
+        leftBar.classList.remove("controls-fade-in");
+        rightBar.classList.remove("controls-fade-in");
+        leftBar.classList.add("controls-fade-out");
+        rightBar.classList.add("controls-fade-out");
+    }
+
+    setTimeout(() => {
+        if(which != "right") {
+            leftBar.style.opacity = 0;
+        }
+        if(which != "left") {
+            rightBar.style.opacity = 0;
+        }
+    }, 1000);
+}
+
 function fade() {
     var curtain = document.getElementById("curtain");
     curtain.classList.remove("screen-change");
@@ -613,6 +679,9 @@ function init() {
         setTimeout(() => {
             logger.recordTaskStartTime();
         }, 950);
+        setTimeout(function() {
+            showCameraControls();
+        }, 1200);
     });
 
     //teacher dialogue with first wrong attempt
@@ -723,7 +792,10 @@ function init() {
             controls.enabled = !controls.enabled;
         }
         else if(String.fromCharCode(event.keyCode) === "p"){
-            playSound("TakeSeats");
+            showCameraControls("right");
+        }
+        else if(String.fromCharCode(event.keyCode) === "l"){
+            hideCameraControls("right");
         }
         else if(String.fromCharCode(event.keyCode) === " "){
             nextPosition();
