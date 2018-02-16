@@ -281,7 +281,7 @@ function lookAtTeacher(){
  */
 function sitAtTable(){
     setTimeout(function(){
-        new TWEEN.Tween(camera.position).to({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, 2000).onComplete(function(){
+        new TWEEN.Tween(camera.position).to({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, 1000).onComplete(function(){
             lookAtTeacher();
             playSound("HowToDraw");
         }).start();
@@ -646,21 +646,57 @@ function init() {
     loadAnimationFBX('Idle.fbx',
         function(object){
             teacher = object;
-            teacher.position.set(4, -.05, -1);
+            teacher.position.set(6, -.05, -3);
             let scale = 2.2;
             teacher.scale.set(scale, scale, scale);
         });
 
-    //load and place the children
+    //load and place the children GREEN TABLE
     loadAnimationFBX2("T-Pose (1).fbx",
         ["Sitting (1).fbx", "Sitting Angry.fbx", "Sitting Disapproval.fbx", "Sitting Idle (1).fbx", "Sitting Laughing.fbx", "Sitting Talking.fbx", "Sitting Victory (1).fbx", "Sitting2.fbx"],
         function(object){
             child = object;
             let scale = 2.4;
             object.scale.set(scale, scale, scale);
-            object.position.set(2, .5, 3.4);
-            object.rotation.y = Math.PI;
+            object.position.set(3.2, .5, -0.4);
+            object.rotation.y = -Math.PI/8;
             playAnimation(object, "Sitting (1)");
+        });
+
+    //load and place the children RED TABLE
+    loadAnimationFBX2("T-Pose (1).fbx",
+        ["Sitting (1).fbx", "Sitting Angry.fbx", "Sitting Disapproval.fbx", "Sitting Idle (1).fbx", "Sitting Laughing.fbx", "Sitting Talking.fbx", "Sitting Victory (1).fbx", "Sitting2.fbx"],
+        function(object){
+            child = object;
+            let scale = 2.4;
+            object.scale.set(scale, scale, scale);
+            object.position.set(9.4, .5, 1);
+            object.rotation.y = -Math.PI/4;
+            playAnimation(object, "Sitting Idle (1)");
+        });
+
+    //load and place the children YELLOW TABLE
+    loadAnimationFBX2("T-Pose (1).fbx",
+        ["Sitting (1).fbx", "Sitting Angry.fbx", "Sitting Disapproval.fbx", "Sitting Idle (1).fbx", "Sitting Laughing.fbx", "Sitting Talking.fbx", "Sitting Victory (1).fbx", "Sitting2.fbx"],
+        function(object){
+            child = object;
+            let scale = 2.4;
+            object.scale.set(scale, scale, scale);
+            object.position.set(7.8, .5, 10.8);
+            object.rotation.y = Math.PI*7/8;
+            playAnimation(object, "Sitting Talking");
+        });
+
+    //load and place the children BLUE TABLE
+    loadAnimationFBX2("T-Pose (1).fbx",
+        ["Sitting (1).fbx", "Sitting Angry.fbx", "Sitting Disapproval.fbx", "Sitting Idle (1).fbx", "Sitting Laughing.fbx", "Sitting Talking.fbx", "Sitting Victory (1).fbx", "Sitting2.fbx"],
+        function(object){
+            child = object;
+            let scale = 2.4;
+            object.scale.set(scale, scale, scale);
+            object.position.set(.6, .5, 11);
+            object.rotation.y = Math.PI/2;
+            playAnimation(object, "Sitting2");
         });
 
     //load subtitles
@@ -821,22 +857,22 @@ function init() {
         }
     }, false);
 
-    window.addEventListener("dblclick", () => {
-        if(colormode === 1) {
-            revertColors(document);
-            for(var i in paths) {
-                paths[i].visible = true;
-            }
-            colormode = 0
-        }
-        else {
-            changeColorVision();
-            for(var i in paths) {
-                paths[i].visible = false;
-            }
-            colormode = 1
-        }
-    });
+    // window.addEventListener("dblclick", () => {
+    //     if(colormode === 1) {
+    //         revertColors(document);
+    //         for(var i in paths) {
+    //             paths[i].visible = true;
+    //         }
+    //         colormode = 0
+    //     }
+    //     else {
+    //         changeColorVision();
+    //         for(var i in paths) {
+    //             paths[i].visible = false;
+    //         }
+    //         colormode = 1
+    //     }
+    // });
 
     window.addEventListener("mousemove", onMouseMove);
 
@@ -922,7 +958,7 @@ function init() {
     }, 3000)
 }
 
-// window.onload = changeColorVision();
+window.onload = changeColorVision();
 
 function nextPosition(){
     switch(cameraPosition){
