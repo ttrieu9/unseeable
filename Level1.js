@@ -445,6 +445,9 @@ function postPaper() {
                 zoomOut.start();
                 zoomOut.onComplete(() => {
                     playSound("HackJob");
+                    setTimeout(function(){
+                        window.open("endscreen.html", '_self');
+                    },10000)
                 })
             }
             posted = true;
