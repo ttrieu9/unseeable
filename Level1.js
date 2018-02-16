@@ -518,7 +518,6 @@ function playSound(name) {
             }, subs.lines[i].offset);
         }
     }
-    console.log(subs);
 
     sound.play();
 }
@@ -579,6 +578,7 @@ function init() {
             teacher.scale.set(scale, scale, scale);
         });
 
+        /*
     loadAnimationFBX2("T-Pose_WithSkin.fbx",
         ["Sitting_Bones.fbx", "Sitting2_Bones.fbx", "Sitting Yell_Bones.fbx"],
         function(object){
@@ -589,13 +589,13 @@ function init() {
             object.rotation.y = Math.PI;
             playAnimation(object, "Sitting_Bones");
         });
+        */
 
     //load subtitles
     loadJSON("level1subs", function(json){
         subtitles = json;
         console.log(subtitles);
     });
-
     //load sounds
 
     //kids playing in background
