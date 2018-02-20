@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 })
 
 // Informed consent
-app.get('/informedConsent', (req, res) => {
+app.get('/informed-consent', (req, res) => {
   res.sendFile(path.join(__dirname+'/views/informedConsent.html'));
 });
 
@@ -48,6 +48,11 @@ app.get('/panas', (req, res) => {
 // IRI
 app.get('/iri', (req, res) => {
   res.sendFile(path.join(__dirname+'/views/iri.html'));
+});
+
+// Pre-Survey
+app.get('/pre-survey', (req, res) => {
+  res.sendFile(path.join(__dirname+'/views/preSurvey.html'));
 });
 
 var port = process.env.PORT || 8080;

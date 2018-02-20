@@ -1,0 +1,128 @@
+body {
+  font-family: Arial;
+  margin: 0 20%;
+  background-color:  #fdfdfd
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.scenario {
+  font-size: 14pt;
+  padding-top: 5px;
+  padding-bottom: 10px;
+  font-weight: bold;
+}
+
+.gray_question {
+  background-color: #d3d3d3;
+  border-radius: 15px;
+  padding: 15px;
+  padding-top: 7.5px;
+  padding-left: 20px;
+  padding-right: 0px;
+  padding-bottom: 30px;
+}
+
+.white_question {
+  background-color: white;
+  border-radius: 15px;
+  padding: 15px;
+  padding-top: 15px;
+  padding-left: 20px;
+  padding-right: 0px;
+  padding-bottom: 35px;
+}
+
+.container {
+  display: inline;
+  position: relative;
+  margin: 0 5.5%;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.rating {
+  position: relative;
+  display: inline-block;
+  padding-top: 5px;
+  width: 20%;
+  text-align: center;
+  font-size: 13pt;
+}
+
+.long {
+  width: 100px;
+}
+
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 35px;
+  width: 35px;
+  background-color: #eee;
+  border-radius: 50%;
+}
+
+.container:hover input ~ .checkmark {
+  background-color: darkgray;
+}
+
+.container input:checked ~ .checkmark {
+  background-color: navy;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.container .checkmark:after {
+  top: 9px;
+  left: 9px;
+  width: 17.5px;
+  height: 17.5px;
+  border-radius: 50%;
+  background: white;
+}
+
+.answer_label {
+  font-size: 16pt;
+  position: absolute;
+  padding-left: 0px;
+  padding-top: 3px;
+}
+
+.q1_follow_up {
+  border-top: 1px dashed black;
+  margin-top: 25px;
+  margin-right: 25px;
+  padding-top: 15px;
+}
+
+#iri_submit_button {
+  float: right;
+  margin: 15px 0;
+  height: 35px;
+  width: 75px;
+  border-radius: 10px;
+  font-size: 14pt;
+  border: 1px solid black;
+}
