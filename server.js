@@ -35,14 +35,19 @@ app.get('/', (req, res) => {
   res.sendFile('/index.html');
 })
 
-//Informed consent
+// Informed consent
 app.get('/informedConsent', (req, res) => {
   res.sendFile(path.join(__dirname+'/views/informedConsent.html'));
 });
 
-//panas
+// Panas
 app.get('/panas', (req, res) => {
   res.sendFile(path.join(__dirname+'/views/panas.html'));
+});
+
+// IRI
+app.get('/iri', (req, res) => {
+  res.sendFile(path.join(__dirname+'/views/iri.html'));
 });
 
 var port = process.env.PORT || 8080;
