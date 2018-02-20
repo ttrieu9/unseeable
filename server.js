@@ -55,6 +55,11 @@ app.get('/pre-survey', (req, res) => {
   res.sendFile(path.join(__dirname+'/views/preSurvey.html'));
 });
 
+// Pre-Survey
+app.get('/post-survey', (req, res) => {
+  res.sendFile(path.join(__dirname+'/views/postSurvey.html'));
+});
+
 var port = process.env.PORT || 8080;
 
 var server = app.listen(port, () => {
