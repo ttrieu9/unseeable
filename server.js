@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
 
 var port = process.env.PORT || 8080;
 
-var server = app.listen(port, function() {
+var server = app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 })
 
