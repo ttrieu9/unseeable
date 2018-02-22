@@ -617,7 +617,7 @@ function init() {
     //camera controls, mostly for debugging purposes
     controls = new THREE.OrbitControls( camera );
     controls.target = new THREE.Vector3(3, 1, 5);
-    controls.enabled = false; //set to false to turn off controls
+    controls.enabled = true; //set to false to turn off controls
 
     //initial camera position
     camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
@@ -643,8 +643,12 @@ function init() {
                     }
                 }
 
-                //turn off receiving shadows on the papers and krans
+                //turn off receiving shadows on the papers and crayons
                 if(child.name.includes("Paper")){
+                    child.castShadow = false;
+                    child.receiveShadow = false;
+                }
+                else if(child.name.includes("Crayon")){
                     child.receiveShadow = false;
                 }
 
@@ -866,22 +870,22 @@ function init() {
         }
     }, false);
 
-    // window.addEventListener("dblclick", () => {
-    //     if(colormode === 1) {
-    //         revertColors(document);
-    //         for(var i in paths) {
-    //             paths[i].visible = true;
-    //         }
-    //         colormode = 0
-    //     }
-    //     else {
-    //         changeColorVision();
-    //         for(var i in paths) {
-    //             paths[i].visible = false;
-    //         }
-    //         colormode = 1
-    //     }
-    // });
+    window.addEventListener("dblclick", () => {
+        if(colormode === 1) {
+            revertColors(document);
+            for(var i in paths) {
+                paths[i].visible = true;
+            }
+            colormode = 0
+        }
+        else {
+            changeColorVision();
+            for(var i in paths) {
+                paths[i].visible = false;
+            }
+            colormode = 1
+        }
+    });
 
     window.addEventListener("mousemove", onMouseMove);
 
@@ -908,32 +912,40 @@ function init() {
     window.addEventListener( 'resize', onWindowResize, false );
 
     //place the lights
-    light = new THREE.PointLight(0xd6d498, 1, 50, 1);
+    light = new THREE.PointLight(0xfff1e0, 0.4, 50, 1);
     light.position.set(-4, 9, -1);
     light.castShadow = true;
     light.shadowMapWidth = 1024;
     light.shadowMapHeight = 1024;
     scene.add(light);
+    scene.add(new THREE.PointLightHelper(light));
 
-    light = new THREE.PointLight(0xd6d498, 1, 50, 1);
+    light = new THREE.PointLight(0xfff1e0, 0.4, 50, 1);
     light.position.set(4, 9, -1);
     light.castShadow = true;
     light.shadowMapWidth = 1024;
     light.shadowMapHeight = 1024;
     scene.add(light);
+    scene.add(new THREE.PointLightHelper(light));
 
-    light = new THREE.PointLight(0xd6d498, 1, 50, .7);
+    light = new THREE.PointLight(0xfff1e0, 0.4, 50, .7);
     light.position.set(-4, 9, 10);
     light.castShadow = true;
     light.shadowMapWidth = 1024;
     light.shadowMapHeight = 1024;
     scene.add(light);
+    scene.add(new THREE.PointLightHelper(light));
 
-    light = new THREE.PointLight(0xd6d498, 1, 50, .7);
+    light = new THREE.PointLight(0xfff1e0, 0.4, 50, .7);
     light.position.set(4, 9, 10);
     light.castShadow = true;
     light.shadowMapWidth = 1024;
     light.shadowMapHeight = 1024;
+    scene.add(light);
+    scene.add(new THREE.PointLightHelper(light));
+
+    //ambient light to make the shadows not as dark
+    light = new THREE.AmbientLight(0xfff1e0, 0.6);
     scene.add(light);
 
     animate();
