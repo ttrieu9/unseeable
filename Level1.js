@@ -802,6 +802,46 @@ function init() {
         logger.endLog();
     });
 
+    //
+    // LIGHTS
+    //
+    
+    light = new THREE.PointLight(0xfffaf4, 0.5, 50, 1);
+    light.position.set(-4, 9, -1);
+    light.castShadow = true;
+    light.shadowMapWidth = 1024;
+    light.shadowMapHeight = 1024;
+    scene.add(light);
+    scene.add(new THREE.PointLightHelper(light));
+
+    light = new THREE.PointLight(0xfffaf4, 0.5, 50, 1);
+    light.position.set(4, 9, -1);
+    light.castShadow = true;
+    light.shadowMapWidth = 1024;
+    light.shadowMapHeight = 1024;
+    scene.add(light);
+    scene.add(new THREE.PointLightHelper(light));
+
+    light = new THREE.PointLight(0xfffaf4, 0.5, 50, .7);
+    light.position.set(-4, 9, 10);
+    light.castShadow = true;
+    light.shadowMapWidth = 1024;
+    light.shadowMapHeight = 1024;
+    scene.add(light);
+    scene.add(new THREE.PointLightHelper(light));
+
+    light = new THREE.PointLight(0xfffaf4, 0.5, 50, .7);
+    light.position.set(4, 9, 10);
+    light.castShadow = true;
+    light.shadowMapWidth = 1024;
+    light.shadowMapHeight = 1024;
+    scene.add(light);
+    scene.add(new THREE.PointLightHelper(light));
+
+    //ambient light to make the shadows not as dark
+    light = new THREE.AmbientLight(0xfff1e0, 0.4);
+    scene.add(light);
+
     //create raycaster for object selection
     raycaster = new THREE.Raycaster();
     container = document.createElement( 'div' );
@@ -915,43 +955,6 @@ function init() {
     });
 
     window.addEventListener( 'resize', onWindowResize, false );
-
-    //place the lights
-    light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
-    light.position.set(-4, 9, -1);
-    light.castShadow = true;
-    light.shadowMapWidth = 1024;
-    light.shadowMapHeight = 1024;
-    scene.add(light);
-    scene.add(new THREE.PointLightHelper(light));
-
-    light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
-    light.position.set(4, 9, -1);
-    light.castShadow = true;
-    light.shadowMapWidth = 1024;
-    light.shadowMapHeight = 1024;
-    scene.add(light);
-    scene.add(new THREE.PointLightHelper(light));
-
-    light = new THREE.PointLight(0xfff1e0, 0.3, 50, .7);
-    light.position.set(-4, 9, 10);
-    light.castShadow = true;
-    light.shadowMapWidth = 1024;
-    light.shadowMapHeight = 1024;
-    scene.add(light);
-    scene.add(new THREE.PointLightHelper(light));
-
-    light = new THREE.PointLight(0xfff1e0, 0.3, 50, .7);
-    light.position.set(4, 9, 10);
-    light.castShadow = true;
-    light.shadowMapWidth = 1024;
-    light.shadowMapHeight = 1024;
-    scene.add(light);
-    scene.add(new THREE.PointLightHelper(light));
-
-    //ambient light to make the shadows not as dark
-    light = new THREE.AmbientLight(0xfff1e0, 0.5);
-    scene.add(light);
 
     animate();
     startCutScene();
