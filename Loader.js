@@ -78,6 +78,11 @@ function loadAnimationFBX(fileName, onLoad){
     fbxloader.load(
         "3dmodels/" + fileName,
         function( object ) {
+            //set the object to cast shadows
+            for(let i in object.children){
+                object.children[i].castShadow = true;
+            }
+
             //execute onLoad function if there is one
             if(onLoad){
                 onLoad(object);
@@ -108,6 +113,10 @@ function loadAnimationFBX2(filename, animations, onLoad){
     fbxloader.load(
         "3dmodels/" + filename,
         function(object){
+            //set the object to cast shadows
+            for(let i in object.children){
+                object.children[i].castShadow = true;
+            }
 
             //load in the animations and add them to the object
             let animationsLoaded = 0;
@@ -153,8 +162,8 @@ function loadWorldFBX(fileName, onLoad){
             //add shadow casting and receiving for all of the child objects loaded
             for(let i in object.children){
                 //set shadows for the objects
-                // object.children[i].castShadow = true;
-                // object.children[i].receiveShadow = true;
+                object.children[i].castShadow = true;
+                object.children[i].receiveShadow = true;
 
                 //convert the paths in the scene into splines
                 if(object.children[i].name.includes("Path")) {

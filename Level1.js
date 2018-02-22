@@ -630,8 +630,11 @@ function init() {
     //load the classroom
     loadWorldFBX('3dmodels/Preschool_New_1.31.fbx',
         function(object){
+        console.log(object);
             for(let i in object.children) {
                 let child = object.children[i];
+
+                //save the parts of the paper to the appropriate sections
                 if (child.name.includes("MainPaper")) {
                     paperGroup.push(child);
 
@@ -639,6 +642,12 @@ function init() {
                         coloredObjects.push(child.name);
                     }
                 }
+
+                //turn off receiving shadows on the papers and krans
+                if(child.name.includes("Paper")){
+                    child.receiveShadow = false;
+                }
+
             }
         });
 
@@ -699,12 +708,12 @@ function init() {
             playAnimation(object, "Sitting2");
         });
 
-    //load subtitles
+    //load audio
+
+    // load subtitles
     loadJSON("level1subs", function(json){
         subtitles = json;
-        console.log(subtitles);
     });
-    //load sounds
 
     //kids playing in background
     loadSound('kids-playing-1.mp3', 0.025, true, true);
@@ -898,6 +907,7 @@ function init() {
 
     window.addEventListener( 'resize', onWindowResize, false );
 
+    //place the lights
     light = new THREE.PointLight(0xd6d498, 1, 50, 1);
     light.position.set(-4, 9, -1);
     light.castShadow = true;
@@ -914,42 +924,17 @@ function init() {
 
     light = new THREE.PointLight(0xd6d498, 1, 50, .7);
     light.position.set(-4, 9, 10);
-    // light.castShadow = true;
-    // light.shadowMapWidth = 1024;
-    // light.shadowMapHeight = 1024;
+    light.castShadow = true;
+    light.shadowMapWidth = 1024;
+    light.shadowMapHeight = 1024;
     scene.add(light);
 
     light = new THREE.PointLight(0xd6d498, 1, 50, .7);
     light.position.set(4, 9, 10);
-    // light.castShadow = true;
-    // light.shadowMapWidth = 1024;
-    // light.shadowMapHeight = 1024;
+    light.castShadow = true;
+    light.shadowMapWidth = 1024;
+    light.shadowMapHeight = 1024;
     scene.add(light);
-
-    // light = new THREE.AmbientLight( 0x656565 ); // soft white light
-    // scene.add( light );
-
-    var spotLight = new THREE.SpotLight( 0x222222 );
-    spotLight.position.set( 100, 1000, 100 );
-
-    spotLight.castShadow = true;
-
-    spotLight.shadow.mapSize.width = 1024;
-    spotLight.shadow.mapSize.height = 1024;
-
-    spotLight.shadow.camera.near = 500;
-    spotLight.shadow.camera.far = 4000;
-    spotLight.shadow.camera.fov = 30;
-
-    scene.add( spotLight );
-
-    light = new THREE.AmbientLight(0xd6d498, .1);
-    // /scene.add(light);
-
-    light = new THREE.DirectionalLight(0xffffff, 1.0);
-    light.position.set(0, 10, -50);
-    light.rotation.x = Math.PI / 2;
-    // scene.add(light);
 
     animate();
     startCutScene();
