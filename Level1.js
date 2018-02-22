@@ -805,36 +805,36 @@ function init() {
     //
     // LIGHTS
     //
-    
+
     light = new THREE.PointLight(0xfffaf4, 0.5, 50, 1);
     light.position.set(-4, 9, -1);
     light.castShadow = true;
-    light.shadowMapWidth = 1024;
-    light.shadowMapHeight = 1024;
+    light.shadow.mapSize.width = 1024;
+    light.shadow.mapSize.height = 1024;
     scene.add(light);
     scene.add(new THREE.PointLightHelper(light));
 
     light = new THREE.PointLight(0xfffaf4, 0.5, 50, 1);
     light.position.set(4, 9, -1);
     light.castShadow = true;
-    light.shadowMapWidth = 1024;
-    light.shadowMapHeight = 1024;
+    light.shadow.mapSize.width = 1024;
+    light.shadow.mapSize.height = 1024;
     scene.add(light);
     scene.add(new THREE.PointLightHelper(light));
 
     light = new THREE.PointLight(0xfffaf4, 0.5, 50, .7);
     light.position.set(-4, 9, 10);
     light.castShadow = true;
-    light.shadowMapWidth = 1024;
-    light.shadowMapHeight = 1024;
+    light.shadow.mapSize.width = 1024;
+    light.shadow.mapSize.height = 1024;
     scene.add(light);
     scene.add(new THREE.PointLightHelper(light));
 
     light = new THREE.PointLight(0xfffaf4, 0.5, 50, .7);
     light.position.set(4, 9, 10);
     light.castShadow = true;
-    light.shadowMapWidth = 1024;
-    light.shadowMapHeight = 1024;
+    light.shadow.mapSize.width = 1024;
+    light.shadow.mapSize.height = 1024;
     scene.add(light);
     scene.add(new THREE.PointLightHelper(light));
 
