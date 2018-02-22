@@ -643,12 +643,17 @@ function init() {
                     }
                 }
 
-                //turn off receiving shadows on the papers and crayons
+                //turn off shadow casting/receiving for the appropriate objects
                 if(child.name.includes("Paper")){
                     child.castShadow = false;
                     child.receiveShadow = false;
                 }
                 else if(child.name.includes("Crayon")){
+                    child.receiveShadow = false;
+                }
+                //sky sphere
+                else if(child.name.includes("pSphere10")){
+                    child.castShadow = false;
                     child.receiveShadow = false;
                 }
 
@@ -912,7 +917,7 @@ function init() {
     window.addEventListener( 'resize', onWindowResize, false );
 
     //place the lights
-    light = new THREE.PointLight(0xfff1e0, 0.4, 50, 1);
+    light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
     light.position.set(-4, 9, -1);
     light.castShadow = true;
     light.shadowMapWidth = 1024;
@@ -920,7 +925,7 @@ function init() {
     scene.add(light);
     scene.add(new THREE.PointLightHelper(light));
 
-    light = new THREE.PointLight(0xfff1e0, 0.4, 50, 1);
+    light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
     light.position.set(4, 9, -1);
     light.castShadow = true;
     light.shadowMapWidth = 1024;
@@ -928,7 +933,7 @@ function init() {
     scene.add(light);
     scene.add(new THREE.PointLightHelper(light));
 
-    light = new THREE.PointLight(0xfff1e0, 0.4, 50, .7);
+    light = new THREE.PointLight(0xfff1e0, 0.3, 50, .7);
     light.position.set(-4, 9, 10);
     light.castShadow = true;
     light.shadowMapWidth = 1024;
@@ -936,7 +941,7 @@ function init() {
     scene.add(light);
     scene.add(new THREE.PointLightHelper(light));
 
-    light = new THREE.PointLight(0xfff1e0, 0.4, 50, .7);
+    light = new THREE.PointLight(0xfff1e0, 0.3, 50, .7);
     light.position.set(4, 9, 10);
     light.castShadow = true;
     light.shadowMapWidth = 1024;
@@ -945,7 +950,7 @@ function init() {
     scene.add(new THREE.PointLightHelper(light));
 
     //ambient light to make the shadows not as dark
-    light = new THREE.AmbientLight(0xfff1e0, 0.6);
+    light = new THREE.AmbientLight(0xfff1e0, 0.5);
     scene.add(light);
 
     animate();
