@@ -5,7 +5,6 @@ var activeSpline = null; // active spline that the camera is moving along
 var splineDuration = 0; // the amount of time that the camera will take to move along the spline
 var dir;
 
-//TODO: should the spline be given by its index or something else?
 /**
  * Move the camera along the given spline for the given amount of time
  * @param spline Spline to move the camera along

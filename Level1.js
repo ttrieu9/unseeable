@@ -304,7 +304,6 @@ function selectTable() {
                 currentHover.material = previousMaterial;
                 currentHover = null
             }
-            //TODO: find a less ugly of selecting which spline to traverse besides all these ifs
             //select the correct spline to move along, depending on the current table you are at
             //starting position
             if(currentTable === null){
