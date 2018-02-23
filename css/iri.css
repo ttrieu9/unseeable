@@ -120,10 +120,11 @@ body {
 .bar {
   background: darkgray;
   border: 1px solid black;
-  width: 25%;
-  height: 3%;
-  margin: 0 0 50% 17.5%;
-  position: fixed;
+  width: 28.5%;
+  height: 1%;
+  left: 530px;
+  top: 215px;
+  position: absolute;
 }
 
 #iri_submit_button {
