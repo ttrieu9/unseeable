@@ -10,8 +10,9 @@ body {
 
 .feeling {
   font-size: 16pt;
-  padding-top: 5px;
+  position: relative;
   display: inline-block;
+  top: 3.5px;
   width: 7.5%;
 }
 
@@ -19,18 +20,20 @@ body {
   background-color: #d3d3d3;
   border-radius: 15px;
   padding: 15px;
-  padding-top: 7.5px;
+  padding-top: 10px;
   padding-left: 20px;
   padding-right: 0px;
+  padding-bottom: 20px;
 }
 
 .white_question {
   background-color: white;
   border-radius: 15px;
   padding: 15px;
-  padding-top: 7.5px;
+  padding-top: 10px;
   padding-left: 20px;
   padding-right: 0px;
+  padding-bottom: 20px;
 }
 
 .container {
