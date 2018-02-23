@@ -628,7 +628,7 @@ function init() {
     //
 
     //load the classroom
-    loadWorldFBX('3dmodels/Preschool_New_1.31.fbx',
+    loadWorldFBX('Preschool_New_1.31.fbx',
         function(object){
         console.log(object);
             for(let i in object.children) {
@@ -806,7 +806,7 @@ function init() {
     // LIGHTS
     //
 
-    light = new THREE.PointLight(0xfffaf4, 0.5, 50, 1);
+    light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
     light.position.set(-4, 9, -1);
     light.castShadow = true;
     light.shadow.mapSize.width = 1024;
@@ -814,7 +814,7 @@ function init() {
     scene.add(light);
     scene.add(new THREE.PointLightHelper(light));
 
-    light = new THREE.PointLight(0xfffaf4, 0.5, 50, 1);
+    light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
     light.position.set(4, 9, -1);
     light.castShadow = true;
     light.shadow.mapSize.width = 1024;
@@ -822,7 +822,7 @@ function init() {
     scene.add(light);
     scene.add(new THREE.PointLightHelper(light));
 
-    light = new THREE.PointLight(0xfffaf4, 0.5, 50, .7);
+    light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
     light.position.set(-4, 9, 10);
     light.castShadow = true;
     light.shadow.mapSize.width = 1024;
@@ -830,7 +830,7 @@ function init() {
     scene.add(light);
     scene.add(new THREE.PointLightHelper(light));
 
-    light = new THREE.PointLight(0xfffaf4, 0.5, 50, .7);
+    light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
     light.position.set(4, 9, 10);
     light.castShadow = true;
     light.shadow.mapSize.width = 1024;
@@ -839,7 +839,7 @@ function init() {
     scene.add(new THREE.PointLightHelper(light));
 
     //ambient light to make the shadows not as dark
-    light = new THREE.AmbientLight(0xfff1e0, 0.4);
+    light = new THREE.AmbientLight(0xfff1e0, 0.6);
     scene.add(light);
 
     //create raycaster for object selection

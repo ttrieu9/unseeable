@@ -157,7 +157,7 @@ function loadAnimationFBX2(filename, animations, onLoad){
 function loadWorldFBX(fileName, onLoad){
 
     fbxloader.load(
-        fileName,
+        "3dmodels/" + fileName,
         function( object ) {
             //add shadow casting and receiving for all of the child objects loaded
             for(let i in object.children){
