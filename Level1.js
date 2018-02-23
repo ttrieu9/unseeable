@@ -608,7 +608,7 @@ function init() {
 
     // renderer
     renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.enabled = false;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -809,32 +809,32 @@ function init() {
     light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
     light.position.set(-4, 9, -1);
     light.castShadow = true;
-    light.shadow.mapSize.width = 1024;
-    light.shadow.mapSize.height = 1024;
+    light.shadow.mapSize.width = 512;
+    light.shadow.mapSize.height = 512;
     scene.add(light);
     scene.add(new THREE.PointLightHelper(light));
 
     light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
     light.position.set(4, 9, -1);
     light.castShadow = true;
-    light.shadow.mapSize.width = 1024;
-    light.shadow.mapSize.height = 1024;
+    light.shadow.mapSize.width = 512;
+    light.shadow.mapSize.height = 512;
     scene.add(light);
     scene.add(new THREE.PointLightHelper(light));
 
     light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
     light.position.set(-4, 9, 10);
     light.castShadow = true;
-    light.shadow.mapSize.width = 1024;
-    light.shadow.mapSize.height = 1024;
+    light.shadow.mapSize.width = 512;
+    light.shadow.mapSize.height = 512;
     scene.add(light);
     scene.add(new THREE.PointLightHelper(light));
 
     light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
     light.position.set(4, 9, 10);
     light.castShadow = true;
-    light.shadow.mapSize.width = 1024;
-    light.shadow.mapSize.height = 1024;
+    light.shadow.mapSize.width = 512;
+    light.shadow.mapSize.height = 512;
     scene.add(light);
     scene.add(new THREE.PointLightHelper(light));
 
