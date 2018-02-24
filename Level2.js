@@ -68,8 +68,48 @@ function onMouseMove() {
 
         if(intersects.length > 0) {
             var intersected = intersects[0].object;
-            if(intersected.name.includes('Blockos')){
-                console.log(intersected);
+
+            //if mouse is over a blocko
+            if(intersected.name.includes('Blockos')) {
+                document.body.style.cursor = 'pointer';
+
+                //if there is no already hovering piece
+                if(!currentHover){
+                    currentHover = intersected;
+
+                    //move the piece up slightly
+                    previousPosition = {
+                        x: intersected.position.x,
+                        y: intersected.position.y,
+                        z: intersected.position.z
+                    };
+                    currentHover.position.set(previousPosition.x, previousPosition.y+.1, previousPosition.z);
+                }
+                //if mouse hovers over a new piece
+                else if(currentHover.name !== intersected.name){
+                    //return the previous piece back and select the new one
+                    currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+                    currentHover = intersected;
+
+                    //move the piece up slightly
+                    previousPosition = {
+                        x: intersected.position.x,
+                        y: intersected.position.y,
+                        z: intersected.position.z
+                    };
+                    currentHover.position.set(previousPosition.x, previousPosition.y+.1, previousPosition.z);
+                }
+
+
+            }
+            else{
+                document.body.style.cursor = 'default';
+
+                //if there is a currently selected piece, return it to its previous position
+                if(currentHover) {
+                    currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+                    currentHover = null;
+                }
             }
             // switch(cameraPosition) {
             //     case 1:
@@ -324,12 +364,12 @@ function init() {
 
     //camera controls, mostly for debugging purposes
     controls = new THREE.OrbitControls( camera );
-    controls.target = new THREE.Vector3(3, 1, 5);
+    controls.target = new THREE.Vector3(-13, 0, 1);
     controls.enabled = true; //set to false to turn off controls
 
+    //TODO: find initial camera position
     //initial camera position
-    camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
-    camera.rotation.set(-0.09963408823470919, -1.5005061696940256, 2.0920433907298925e-17);
+    camera.position.set(-6, 3, 1);
 
     //
     // LOADING
