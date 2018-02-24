@@ -206,7 +206,7 @@ function onMouseMove() {
 }
 
 //TODO: update this function to use blocks instead of crayons
-function colorPaper() {
+function buildBlock() {
     raycaster.setFromCamera(mouse, camera);
 
     var intersects = raycaster.intersectObjects(intersectableObjects);
@@ -214,65 +214,53 @@ function colorPaper() {
     if(intersects.length > 0) {
         var intersected = intersects[0].object;
 
-        if (intersected.name.includes('Crayon')) {
-            if(intersected.name.includes('Crayon_Box')){
-                currentObject.visible = true;
-                currentObject = null;
-            }
-            else {
-                if(currentObject && currentObject.visible === false) {
-                    currentObject.visible = true;
-                }
-
-                currentObject = intersected;
-                currentObject.visible = false;
-            }
-
-        }
-        else if(intersected.name.includes('Paper') && coloredObjects.includes(intersected.name) && !intersected.name.includes("Outline") && currentObject) {
-            intersected.material = currentObject.material[0];
-            updatePaperScore(intersected.name, currentObject.material[0].name)
-            var paperIndex = coloredObjects.findIndex((object) => {
-                return object.includes(intersected.name)
-            });
-            coloredObjects.splice(paperIndex, 1);
-
-
-            if(coloredObjects.length === 0) {
-                logger.logTask("Color paper", colorPaperScore / 14);
-                setTimeout(() => {
-                    nextPosition();
-                }, 750);
-
-                setTimeout(() => {
-                    // create paper group
-                    for(var i in paperGroup) {
-                        paper.add(paperGroup[i]);
-                    }
-                    paper.rotateX(Math.PI/2);
-                    paper.rotateY(Math.PI/4);
-                    scene.add(paper);
-                }, 1500);
-            }
-        }
+        // if (intersected.name.includes('Crayon')) {
+        //     if(intersected.name.includes('Crayon_Box')){
+        //         currentObject.visible = true;
+        //         currentObject = null;
+        //     }
+        //     else {
+        //         if(currentObject && currentObject.visible === false) {
+        //             currentObject.visible = true;
+        //         }
+        //
+        //         currentObject = intersected;
+        //         currentObject.visible = false;
+        //     }
+        //
+        // }
+        // else if(intersected.name.includes('Paper') && coloredObjects.includes(intersected.name) && !intersected.name.includes("Outline") && currentObject) {
+        //     intersected.material = currentObject.material[0];
+        //     var paperIndex = coloredObjects.findIndex((object) => {
+        //         return object.includes(intersected.name)
+        //     });
+        //     coloredObjects.splice(paperIndex, 1);
+        //
+        //
+        //     if(coloredObjects.length === 0) {
+        //         setTimeout(() => {
+        //             nextPosition();
+        //         }, 750);
+        //
+        //         setTimeout(() => {
+        //             // create paper group
+        //             for(var i in paperGroup) {
+        //                 paper.add(paperGroup[i]);
+        //             }
+        //             paper.rotateX(Math.PI/2);
+        //             paper.rotateY(Math.PI/4);
+        //             scene.add(paper);
+        //         }, 1500);
+        //     }
+        // }
     }
 }
 
 //TODO: update score for building instead of coloring
 /**
- * Updates player score when coloring a piece of paper.
- *
- * @param {*} intersectedName - name of piece of paper that is being colored.
- * @param {*} crayonColor - current color of crayon, identified by name.
+ * Updates player score when building.
  */
-function updatePaperScore(intersectedName, crayonColor) {
-    var piece = colorPaperAnswers.find((element) => {
-        return element.name == intersectedName;
-    });
-
-    if(piece.trueColor == crayonColor) {
-        colorPaperScore++;
-    };
+function updateBuildingScore() {
 }
 
 function startCutScene() {
@@ -484,19 +472,8 @@ function init() {
     //TODO: update these for the bedroom situations
     window.addEventListener("mousedown", () => {
         if(controlsEnabled) {
-            switch(cameraPosition) {
-                case 1:
-                    logger.logEvent("mousedown", mouse.x, mouse.y);
-                    break;
-                case 2:
-                    colorPaper();
-                    logger.logEvent("mousedown", mouse.x, mouse.y);
-                    break;
-                case 3:
-                    postPaper();
-                    logger.logEvent("mousedown", mouse.x, mouse.y);
-                    break;
-            }
+            buildBlock();
+            logger.logEvent("mousedown", mouse.x, mouse.y);
         }
     });
 
