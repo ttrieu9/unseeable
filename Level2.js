@@ -57,151 +57,149 @@ function enableControls() {
 
 //TODO: update to work with blocks
 function onMouseMove() {
-    if(controlsEnabled) {
-        event.preventDefault();
-        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-        mouse.y =  - ( event.clientY / window.innerHeight ) * 2 + 1;
+    event.preventDefault();
+    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    mouse.y =  - ( event.clientY / window.innerHeight ) * 2 + 1;
 
 
-        raycaster.setFromCamera(mouse, camera);
-        var intersects = raycaster.intersectObjects(intersectableObjects);
+    raycaster.setFromCamera(mouse, camera);
+    var intersects = raycaster.intersectObjects(intersectableObjects);
 
-        if(intersects.length > 0) {
-            var intersected = intersects[0].object;
+    if(intersects.length > 0) {
+        var intersected = intersects[0].object;
 
-            //if mouse is over a blocko
-            if(intersected.name.includes('Blockos')) {
-                document.body.style.cursor = 'pointer';
+        //if mouse is over a blocko
+        if(intersected.name.includes('Blockos')) {
+            document.body.style.cursor = 'pointer';
 
-                //if there is no already hovering piece
-                if(!currentHover){
-                    currentHover = intersected;
+            //if there is no already hovering piece
+            if(!currentHover){
+                currentHover = intersected;
 
-                    //move the piece up slightly
-                    previousPosition = {
-                        x: intersected.position.x,
-                        y: intersected.position.y,
-                        z: intersected.position.z
-                    };
-                    currentHover.position.set(previousPosition.x, previousPosition.y+.1, previousPosition.z);
-                }
-                //if mouse hovers over a new piece
-                else if(currentHover.name !== intersected.name){
-                    //return the previous piece back and select the new one
-                    currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
-                    currentHover = intersected;
-
-                    //move the piece up slightly
-                    previousPosition = {
-                        x: intersected.position.x,
-                        y: intersected.position.y,
-                        z: intersected.position.z
-                    };
-                    currentHover.position.set(previousPosition.x, previousPosition.y+.1, previousPosition.z);
-                }
-
-
+                //move the piece up slightly
+                previousPosition = {
+                    x: intersected.position.x,
+                    y: intersected.position.y,
+                    z: intersected.position.z
+                };
+                currentHover.position.set(previousPosition.x, previousPosition.y+.1, previousPosition.z);
             }
-            else{
-                document.body.style.cursor = 'default';
+            //if mouse hovers over a new piece
+            else if(currentHover.name !== intersected.name){
+                //return the previous piece back and select the new one
+                currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+                currentHover = intersected;
 
-                //if there is a currently selected piece, return it to its previous position
-                if(currentHover) {
-                    currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
-                    currentHover = null;
-                }
+                //move the piece up slightly
+                previousPosition = {
+                    x: intersected.position.x,
+                    y: intersected.position.y,
+                    z: intersected.position.z
+                };
+                currentHover.position.set(previousPosition.x, previousPosition.y+.1, previousPosition.z);
             }
-            // switch(cameraPosition) {
-            //     case 1:
-            //         if(intersected.name.includes('Table') && !intersected.name.includes('Chair') && !intersected.name.includes('Legs') && !intersected.name.includes("Path")) {
-            //             document.body.style.cursor = 'pointer';
-            //
-            //             if(!currentHover) {
-            //                 currentHover = intersected;
-            //                 newMaterial = currentHover.material[0].clone();
-            //                 previousMaterial = [currentHover.material[0].clone(),currentHover.material[1].clone()];
-            //                 newMaterial.color.setHex('0xffffff');
-            //                 currentHover.material = newMaterial
-            //             }
-            //             else {
-            //                 currentHover.material = previousMaterial;
-            //                 currentHover = intersected;
-            //                 newMaterial = currentHover.material[0].clone();
-            //                 previousMaterial = [currentHover.material[0].clone(),currentHover.material[1].clone()];
-            //                 newMaterial.color.setHex('0xffffff');
-            //                 currentHover.material = newMaterial
-            //             }
-            //         }
-            //         else {
-            //             document.body.style.cursor = 'default';
-            //
-            //             if(currentHover) {
-            //                 currentHover.material = previousMaterial;
-            //                 currentHover = null
-            //             }
-            //         }
-            //         break;
-            //     case 2:
-            //         if(intersected.name.includes('Crayon')) {
-            //             document.body.style.cursor = 'pointer';
-            //
-            //             if(!intersected.name.includes('Box')) {
-            //                 if(!currentHover) {
-            //                     currentHover = intersected;
-            //                     previousPosition = {
-            //                         x: intersected.position.x,
-            //                         y: intersected.position.y,
-            //                         z: intersected.position.z
-            //                     };
-            //                     currentHover.position.set(previousPosition.x + 0.015, previousPosition.y, previousPosition.z - 0.025)
-            //                 }
-            //                 else if(currentHover.name !== intersected.name) {
-            //                     currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
-            //                     currentHover = intersected;
-            //                     previousPosition = {
-            //                         x: intersected.position.x,
-            //                         y: intersected.position.y,
-            //                         z: intersected.position.z
-            //                     };
-            //                     currentHover.position.set(previousPosition.x + 0.015, previousPosition.y, previousPosition.z - 0.025)
-            //                 }
-            //             }
-            //             else if(currentHover) {
-            //                 currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
-            //                 currentHover = null
-            //             }
-            //         }
-            //         else if(intersected.name.includes('Paper')) {
-            //             if(!intersected.name.includes('Outline')) {
-            //                 document.body.style.cursor = 'pointer'
-            //             }
-            //             else {
-            //                 document.body.style.cursor = 'default'
-            //             }
-            //         }
-            //         else {
-            //             document.body.style.cursor = 'default';
-            //
-            //             if(currentHover) {
-            //                 currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
-            //                 currentHover = null
-            //             }
-            //         }
-            //         break;
-            //     case 3:
-            //         if(posted === false) {
-            //             document.body.style.cursor = 'pointer'
-            //             var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
-            //             vector.unproject(camera);
-            //             var dir = vector.sub( camera.position ).normalize();
-            //             var distance = - camera.position.z / dir.z;
-            //             var pos = camera.position.clone().add( dir.multiplyScalar( distance ) );
-            //             pos.set(-1.9*(pos.x + 3.9), -1.9*(pos.y - 1.2), pos.z - 7.5);
-            //             paper.position.copy(pos);
-            //         }
-            //         break;
-            // }
+
+
         }
+        else{
+            document.body.style.cursor = 'default';
+
+            //if there is a currently selected piece, return it to its previous position
+            if(currentHover) {
+                currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+                currentHover = null;
+            }
+        }
+        // switch(cameraPosition) {
+        //     case 1:
+        //         if(intersected.name.includes('Table') && !intersected.name.includes('Chair') && !intersected.name.includes('Legs') && !intersected.name.includes("Path")) {
+        //             document.body.style.cursor = 'pointer';
+        //
+        //             if(!currentHover) {
+        //                 currentHover = intersected;
+        //                 newMaterial = currentHover.material[0].clone();
+        //                 previousMaterial = [currentHover.material[0].clone(),currentHover.material[1].clone()];
+        //                 newMaterial.color.setHex('0xffffff');
+        //                 currentHover.material = newMaterial
+        //             }
+        //             else {
+        //                 currentHover.material = previousMaterial;
+        //                 currentHover = intersected;
+        //                 newMaterial = currentHover.material[0].clone();
+        //                 previousMaterial = [currentHover.material[0].clone(),currentHover.material[1].clone()];
+        //                 newMaterial.color.setHex('0xffffff');
+        //                 currentHover.material = newMaterial
+        //             }
+        //         }
+        //         else {
+        //             document.body.style.cursor = 'default';
+        //
+        //             if(currentHover) {
+        //                 currentHover.material = previousMaterial;
+        //                 currentHover = null
+        //             }
+        //         }
+        //         break;
+        //     case 2:
+        //         if(intersected.name.includes('Crayon')) {
+        //             document.body.style.cursor = 'pointer';
+        //
+        //             if(!intersected.name.includes('Box')) {
+        //                 if(!currentHover) {
+        //                     currentHover = intersected;
+        //                     previousPosition = {
+        //                         x: intersected.position.x,
+        //                         y: intersected.position.y,
+        //                         z: intersected.position.z
+        //                     };
+        //                     currentHover.position.set(previousPosition.x + 0.015, previousPosition.y, previousPosition.z - 0.025)
+        //                 }
+        //                 else if(currentHover.name !== intersected.name) {
+        //                     currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+        //                     currentHover = intersected;
+        //                     previousPosition = {
+        //                         x: intersected.position.x,
+        //                         y: intersected.position.y,
+        //                         z: intersected.position.z
+        //                     };
+        //                     currentHover.position.set(previousPosition.x + 0.015, previousPosition.y, previousPosition.z - 0.025)
+        //                 }
+        //             }
+        //             else if(currentHover) {
+        //                 currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+        //                 currentHover = null
+        //             }
+        //         }
+        //         else if(intersected.name.includes('Paper')) {
+        //             if(!intersected.name.includes('Outline')) {
+        //                 document.body.style.cursor = 'pointer'
+        //             }
+        //             else {
+        //                 document.body.style.cursor = 'default'
+        //             }
+        //         }
+        //         else {
+        //             document.body.style.cursor = 'default';
+        //
+        //             if(currentHover) {
+        //                 currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+        //                 currentHover = null
+        //             }
+        //         }
+        //         break;
+        //     case 3:
+        //         if(posted === false) {
+        //             document.body.style.cursor = 'pointer'
+        //             var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
+        //             vector.unproject(camera);
+        //             var dir = vector.sub( camera.position ).normalize();
+        //             var distance = - camera.position.z / dir.z;
+        //             var pos = camera.position.clone().add( dir.multiplyScalar( distance ) );
+        //             pos.set(-1.9*(pos.x + 3.9), -1.9*(pos.y - 1.2), pos.z - 7.5);
+        //             paper.position.copy(pos);
+        //         }
+        //         break;
+        // }
     }
 }
 
@@ -214,6 +212,17 @@ function buildBlock() {
     if(intersects.length > 0) {
         var intersected = intersects[0].object;
 
+        //if clicking on a block
+        if(intersected.name.includes("Blockos")){
+            //if there is already a selected block, make if visible
+            if(currentObject){
+                currentObject.visible = true;
+            }
+
+            //select the block and make it invisible
+            currentObject = intersected;
+            currentObject.visible = false;
+        }
         // if (intersected.name.includes('Crayon')) {
         //     if(intersected.name.includes('Crayon_Box')){
         //         currentObject.visible = true;
@@ -467,7 +476,11 @@ function init() {
         }
     });
 
-    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mousemove", function(){
+        if(controlsEnabled){
+            onMouseMove(event);
+        }
+    });
 
     //TODO: update these for the bedroom situations
     window.addEventListener("mousedown", () => {
