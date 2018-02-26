@@ -117,7 +117,7 @@ function onMouseMove() {
             if(intersected.name.includes("pCylinder1")){
                 let ray = intersects[0].point;
 
-                sphere.position.set(ray.x, ray.y, ray.z);
+                currentObject.position.set(ray.x, ray.y, ray.z);
             }
 
         }
@@ -236,7 +236,21 @@ function buildBlock() {
             let curPos = currentObject.position;
             let curWorPos = currentObject.getWorldPosition();
 
-            sphere.position.set(curWorPos.x, curWorPos.y, curWorPos.z);
+            //TODO: move this to load time
+            currentObject.geometry.computeBoundingBox();
+            let box = currentObject.geometry.boundingBox;
+            //get the center of the bounding box
+            let boxPos = {
+                x: 0.5 * (box.max.x + box.min.x),
+                y: 0.5 * (box.max.y + box.min.y),
+                z: 0.5 * (box.max.z + box.min.z)
+            };
+
+            //center the geometry and move it back to its original location
+            currentObject.geometry.center();
+            setTimeout(function(){
+                currentObject.position.set(boxPos.x, boxPos.y, boxPos.z);
+            }, 0);
         }
         // if (intersected.name.includes('Crayon')) {
         //     if(intersected.name.includes('Crayon_Box')){
