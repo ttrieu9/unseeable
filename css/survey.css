@@ -4,6 +4,10 @@ body {
   background-color:  #fdfdfd
 }
 
+textarea {
+  resize: none
+}
+
 .bold {
   font-weight: bold;
 }
@@ -48,13 +52,36 @@ body {
   user-select: none;
 }
 
-.rating {
+.rating_left {
   position: relative;
   display: inline-block;
-  padding-top: 5px;
   width: 15%;
-  text-align: center;
+  text-align: right;
   font-size: 13pt;
+  top: 2.5px;
+  right: 0;
+  left: 10px;
+}
+
+.rating_left_overflow {
+  position: relative;
+  display: inline-block;
+  width: 15%;
+  text-align: right;
+  font-size: 13pt;
+  top: 10px;
+  right: 0;
+  left: 10px;
+}
+
+.rating_right {
+  position: relative;
+  display: inline-block;
+  width: 15%;
+  text-align: left;
+  font-size: 13pt;
+  top: 2.5px;
+  left: -15px;
 }
 
 .q3_answer {
@@ -127,6 +154,10 @@ body {
 
 .hidden {
   display: none;
+}
+
+.q4_description {
+  margin-bottom: 10px;
 }
 
 #survey_submit_button {
