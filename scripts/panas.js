@@ -88,7 +88,7 @@ function scoreAnswers(answers) {
  * @param {*} answers - answers to 20 PANAS questions.
  * @param {*} score - positive affect and negative affect scores.
  */
-function postPanas(answers, score) {
+function sendPanas(answers, score) {
   let results = {
     userId: '',
     answers: answers,

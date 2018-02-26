@@ -18,7 +18,15 @@ function submitForm() {
     alert('Error: You must enter your full name.')
   }
   else {
-    // TODO: AJAX POST Request
-    console.log(signature)
+    sendInformedConsent(signature);
   }
+}
+
+function sendInformedConsent(signature) {
+  let results = {
+    userId = '',
+    signature: signature
+  }
+
+  // TODO: AJAX POST Request
 }
