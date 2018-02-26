@@ -155,6 +155,13 @@ class Logger {
     xhttp.send();
   }
 
+  /** 
+   * Sends current log to client.
+  */
+  getCurrentLog() {
+    return this.log;
+  }
+
   /**
    * Prints the current Log to the console.
    */
