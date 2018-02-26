@@ -6,7 +6,6 @@ function init() {
 }
 
 function submitForm() {
-  // TODO: Score Panas
   let answers = recordAnswers();
   let score;
 
@@ -17,11 +16,13 @@ function submitForm() {
   else {
     score = scoreAnswers(answers);
 
-    // TODO: AJAX POST Request
-  console.log('Send Panas')
+    postPanas(answers, score);
   }
 }
 
+/** 
+ * Records answers of radio buttons selected by user.
+*/
 function recordAnswers() {
   let answers = [];
 
@@ -38,6 +39,11 @@ function recordAnswers() {
   return answers;
 }
 
+/**
+ * Returns JSON object containg positive affect score and negative affect score.
+ * 
+ * @param {*} answers - array of 20 answers to items in PANAS. 
+ */
 function scoreAnswers(answers) {
   let score = {
     positive: 0,
@@ -74,4 +80,21 @@ function scoreAnswers(answers) {
   }
 
   return score;
+}
+
+/**
+ * Sends PANAS data to MongoDB.
+ * 
+ * @param {*} answers - answers to 20 PANAS questions.
+ * @param {*} score - positive affect and negative affect scores.
+ */
+function postPanas(answers, score) {
+  let results = {
+    userId: '',
+    answers: answers,
+    positiveAffect: score.positive,
+    negativeAffect: score.negative
+  }
+
+  // TODO: AJAX POST Request
 }
