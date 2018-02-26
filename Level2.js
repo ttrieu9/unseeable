@@ -233,6 +233,10 @@ function buildBlock() {
 
             //select the block and make it invisible
             currentObject = intersected;
+            let curPos = currentObject.position;
+            let curWorPos = currentObject.getWorldPosition();
+
+            sphere.position.set(curWorPos.x, curWorPos.y, curWorPos.z);
         }
         // if (intersected.name.includes('Crayon')) {
         //     if(intersected.name.includes('Crayon_Box')){
@@ -380,7 +384,7 @@ function init() {
     camera.position.set(-6, 3, 1);
 
 
-    sphere = new THREE.Mesh(new THREE.SphereGeometry());
+    sphere = new THREE.Mesh(new THREE.SphereGeometry(.5));
     scene.add(sphere);
 
     //
@@ -391,11 +395,6 @@ function init() {
     loadWorldFBX('Newest.2.22.18.fbx',
         function(object){
             console.log(object);
-            for(let i in object.children){
-                if(object.children[i].name.includes("Blockos")){
-                    scene.add(new THREE.BoxHelper(object.children[i]));
-                }
-            }
         });
 
     //load audio
