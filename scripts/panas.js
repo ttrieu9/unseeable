@@ -7,8 +7,8 @@ function init() {
 
 function submitForm() {
   // TODO: Score Panas
-  console.log('Score Panas')
   let answers = recordAnswers();
+  let score = scoreAnswers(answers);
 
   // TODO: AJAX POST Request
   console.log('Send Panas')
@@ -28,4 +28,42 @@ function recordAnswers() {
   }
 
   return answers;
+}
+
+function scoreAnswers(answers) {
+  let score = {
+    positive: 0,
+    negative: 0
+  }
+
+  for(var i = 0; i < 20; i++) {
+    switch(i) {
+      case 0:
+      case 2:
+      case 4:
+      case 8:
+      case 9:
+      case 11:
+      case 13:
+      case 15:
+      case 16:
+      case 18:
+        score.positive += answers[i];
+        break;
+      case 1:
+      case 3:
+      case 5:
+      case 6:
+      case 7:
+      case 10:
+      case 12:
+      case 14:
+      case 17:
+      case 19:
+        score.negative += answers[i];
+        break;
+    }
+  }
+
+  return score;
 }
