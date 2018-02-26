@@ -33,6 +33,7 @@ body {
   padding-left: 20px;
   padding-right: 0px;
   padding-bottom: 35px;
+  border: 1px solid #adadad;
 }
 
 .container {
@@ -75,10 +76,11 @@ body {
 .checkmark {
   position: absolute;
   top: 0;
-  left: 0;
+  left: -25px;
   height: 35px;
   width: 35px;
-  background-color: #eee;
+  background-color: #ebe8e8;
+  border: 1px solid rgb(133, 133, 133);
   border-radius: 50%;
 }
 
@@ -111,9 +113,9 @@ body {
 
 .answer_label {
   font-size: 16pt;
-  position: absolute;
-  padding-left: 0px;
-  padding-top: 3px;
+  position: relative;
+  left: -4%;
+  top: 5px;
 }
 
 .q1_follow_up {
@@ -123,7 +125,11 @@ body {
   padding-top: 15px;
 }
 
-#iri_submit_button {
+.hidden {
+  display: none;
+}
+
+#survey_submit_button {
   float: right;
   margin: 15px 0;
   height: 35px;
