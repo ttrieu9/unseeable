@@ -392,7 +392,7 @@ function init() {
     //
 
     //load the bedroom
-    loadWorldFBX('Newest.2.22.18.fbx',
+    loadWorldFBX('Newest.2.26.18.fbx',
         function(object){
             console.log(object);
         });
