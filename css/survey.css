@@ -1,15 +1,5 @@
-body {
-  font-family: Arial;
-  margin: 0 20%;
-  background-color:  #fdfdfd
-}
-
 textarea {
   resize: none
-}
-
-.bold {
-  font-weight: bold;
 }
 
 .scenario {
@@ -17,39 +7,6 @@ textarea {
   padding-top: 5px;
   padding-bottom: 10px;
   font-weight: bold;
-}
-
-.gray_question {
-  background-color: #d3d3d3;
-  border-radius: 15px;
-  padding: 15px;
-  padding-top: 7.5px;
-  padding-left: 20px;
-  padding-right: 0px;
-  padding-bottom: 30px;
-}
-
-.white_question {
-  background-color: white;
-  border-radius: 15px;
-  padding: 15px;
-  padding-top: 15px;
-  padding-left: 20px;
-  padding-right: 0px;
-  padding-bottom: 35px;
-  border: 1px solid #adadad;
-}
-
-.container {
-  display: inline;
-  position: relative;
-  margin: 0 6.5%;
-  cursor: pointer;
-  font-size: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 }
 
 .rating_left {
@@ -60,7 +17,7 @@ textarea {
   font-size: 13pt;
   top: 2.5px;
   right: 0;
-  left: 10px;
+  left: 15px;
 }
 
 .rating_left_overflow {
@@ -71,7 +28,7 @@ textarea {
   font-size: 13pt;
   top: 10px;
   right: 0;
-  left: 10px;
+  left: 15px;
 }
 
 .rating_right {
@@ -81,67 +38,20 @@ textarea {
   text-align: left;
   font-size: 13pt;
   top: 2.5px;
-  left: -15px;
+  left: -10px;
 }
 
-.q3_answer {
+.q4_answer {
   width: 95%;
   height: 100px;
   padding-top:0;
-}
-
-.long {
-  width: 100px;
-}
-
-.container input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.checkmark {
-  position: absolute;
-  top: 0;
-  left: -25px;
-  height: 35px;
-  width: 35px;
-  background-color: #ebe8e8;
-  border: 1px solid rgb(133, 133, 133);
-  border-radius: 50%;
-}
-
-.container:hover input ~ .checkmark {
-  background-color: darkgray;
-}
-
-.container input:checked ~ .checkmark {
-  background-color: navy;
-}
-
-.checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
-}
-
-.container input:checked ~ .checkmark:after {
-  display: block;
-}
-
-.container .checkmark:after {
-  top: 9px;
-  left: 9px;
-  width: 17.5px;
-  height: 17.5px;
-  border-radius: 50%;
-  background: white;
+  font-size: 11pt;
 }
 
 .answer_label {
   font-size: 16pt;
   position: relative;
-  left: -4%;
+  left: -2%;
   top: 5px;
 }
 
