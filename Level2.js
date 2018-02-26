@@ -34,6 +34,9 @@ var subtitles;
 
 var logger = new Logger('player id', 1);
 
+//TODO: debugging only, remove when done
+var sphere;
+
 init();
 
 //TODO: will probably need to get the building answers here
@@ -101,14 +104,22 @@ function onMouseMove() {
 
 
         }
-        else{
+        //if not hovering over a piece
+        else if(currentHover){
             document.body.style.cursor = 'default';
+            currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+            currentHover = null;
+        }
 
-            //if there is a currently selected piece, return it to its previous position
-            if(currentHover) {
-                currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
-                currentHover = null;
+        //if there is a selected piece, make it follow the mouse
+        if(currentObject){
+            //TODO: the name may be updated at some point
+            if(intersected.name.includes("pCylinder1")){
+                let ray = intersects[0].point;
+
+                sphere.position.set(ray.x, ray.y, ray.z);
             }
+
         }
         // switch(cameraPosition) {
         //     case 1:
@@ -211,6 +222,7 @@ function buildBlock() {
 
     if(intersects.length > 0) {
         var intersected = intersects[0].object;
+        console.log(intersected);
 
         //if clicking on a block
         if(intersected.name.includes("Blockos")){
@@ -221,7 +233,6 @@ function buildBlock() {
 
             //select the block and make it invisible
             currentObject = intersected;
-            currentObject.visible = false;
         }
         // if (intersected.name.includes('Crayon')) {
         //     if(intersected.name.includes('Crayon_Box')){
@@ -368,6 +379,10 @@ function init() {
     //initial camera position
     camera.position.set(-6, 3, 1);
 
+
+    sphere = new THREE.Mesh(new THREE.SphereGeometry());
+    scene.add(sphere);
+
     //
     // LOADING
     //
@@ -376,6 +391,11 @@ function init() {
     loadWorldFBX('Newest.2.22.18.fbx',
         function(object){
             console.log(object);
+            for(let i in object.children){
+                if(object.children[i].name.includes("Blockos")){
+                    scene.add(new THREE.BoxHelper(object.children[i]));
+                }
+            }
         });
 
     //load audio
