@@ -8,10 +8,18 @@ function init() {
 function submitForm() {
   // TODO: Score Panas
   let answers = recordAnswers();
-  let score = scoreAnswers(answers);
+  let score;
 
-  // TODO: AJAX POST Request
+  if(answers.length < 20) {
+    alert('Error: there are items left unanswered in the survey.')
+    throw 'Error: there are items left unanswered in the survey.';
+  }
+  else {
+    score = scoreAnswers(answers);
+
+    // TODO: AJAX POST Request
   console.log('Send Panas')
+  }
 }
 
 function recordAnswers() {
