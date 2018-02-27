@@ -34,9 +34,6 @@ var subtitles;
 
 var logger = new Logger('player id', 1);
 
-//TODO: debugging only, remove when done
-var sphere;
-
 init();
 
 //TODO: will probably need to get the building answers here
@@ -235,22 +232,6 @@ function buildBlock() {
             currentObject = intersected;
             let curPos = currentObject.position;
             let curWorPos = currentObject.getWorldPosition();
-
-            //TODO: move this to load time
-            currentObject.geometry.computeBoundingBox();
-            let box = currentObject.geometry.boundingBox;
-            //get the center of the bounding box
-            let boxPos = {
-                x: 0.5 * (box.max.x + box.min.x),
-                y: 0.5 * (box.max.y + box.min.y),
-                z: 0.5 * (box.max.z + box.min.z)
-            };
-
-            //center the geometry and move it back to its original location
-            currentObject.geometry.center();
-            setTimeout(function(){
-                currentObject.position.set(boxPos.x, boxPos.y, boxPos.z);
-            }, 0);
         }
         // if (intersected.name.includes('Crayon')) {
         //     if(intersected.name.includes('Crayon_Box')){
@@ -397,10 +378,6 @@ function init() {
     //initial camera position
     camera.position.set(-6, 3, 1);
 
-
-    sphere = new THREE.Mesh(new THREE.SphereGeometry(.5));
-    scene.add(sphere);
-
     //
     // LOADING
     //
@@ -409,6 +386,24 @@ function init() {
     loadWorldFBX('Newest.2.26.18.fbx',
         function(object){
             console.log(object);
+            for(let i in object.children){
+                let child = object.children[i];
+
+                if(child.name.includes("Blockos") && child.geometry){
+                    child.geometry.computeBoundingBox();
+                    let box = child.geometry.boundingBox;
+                    //get the center of the bounding box
+                    let boxPos = {
+                        x: 0.5 * (box.max.x + box.min.x),
+                        y: 0.5 * (box.max.y + box.min.y),
+                        z: 0.5 * (box.max.z + box.min.z)
+                    };
+
+                    //center the geometry and move it back to its original location
+                    child.geometry.center();
+                    child.position.set(boxPos.x, boxPos.y, boxPos.z);
+                }
+            }
         });
 
     //load audio
