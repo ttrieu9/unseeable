@@ -34,6 +34,9 @@ var subtitles;
 
 var logger = new Logger('player id', 1);
 
+//TODO: probably only temporary for building
+var box;
+
 init();
 
 //TODO: will probably need to get the building answers here
@@ -108,106 +111,18 @@ function onMouseMove() {
             currentHover = null;
         }
 
-        //if there is a selected piece, make it follow the mouse
+        //if there is a selected piece, make it follow the mouse on the rug
         if(currentObject){
-            //TODO: the name may be updated at some point
-            if(intersected.name.includes("pCylinder1")){
-                let ray = intersects[0].point;
+            let rug = intersects.find(function(element){
+                return element.object.name.includes("pCylinder1");
+            })
+            if(rug){
+                let point = rug.point;
 
-                currentObject.position.set(ray.x, ray.y, ray.z);
+                currentObject.position.set(point.x, point.y, point.z);
             }
 
         }
-        // switch(cameraPosition) {
-        //     case 1:
-        //         if(intersected.name.includes('Table') && !intersected.name.includes('Chair') && !intersected.name.includes('Legs') && !intersected.name.includes("Path")) {
-        //             document.body.style.cursor = 'pointer';
-        //
-        //             if(!currentHover) {
-        //                 currentHover = intersected;
-        //                 newMaterial = currentHover.material[0].clone();
-        //                 previousMaterial = [currentHover.material[0].clone(),currentHover.material[1].clone()];
-        //                 newMaterial.color.setHex('0xffffff');
-        //                 currentHover.material = newMaterial
-        //             }
-        //             else {
-        //                 currentHover.material = previousMaterial;
-        //                 currentHover = intersected;
-        //                 newMaterial = currentHover.material[0].clone();
-        //                 previousMaterial = [currentHover.material[0].clone(),currentHover.material[1].clone()];
-        //                 newMaterial.color.setHex('0xffffff');
-        //                 currentHover.material = newMaterial
-        //             }
-        //         }
-        //         else {
-        //             document.body.style.cursor = 'default';
-        //
-        //             if(currentHover) {
-        //                 currentHover.material = previousMaterial;
-        //                 currentHover = null
-        //             }
-        //         }
-        //         break;
-        //     case 2:
-        //         if(intersected.name.includes('Crayon')) {
-        //             document.body.style.cursor = 'pointer';
-        //
-        //             if(!intersected.name.includes('Box')) {
-        //                 if(!currentHover) {
-        //                     currentHover = intersected;
-        //                     previousPosition = {
-        //                         x: intersected.position.x,
-        //                         y: intersected.position.y,
-        //                         z: intersected.position.z
-        //                     };
-        //                     currentHover.position.set(previousPosition.x + 0.015, previousPosition.y, previousPosition.z - 0.025)
-        //                 }
-        //                 else if(currentHover.name !== intersected.name) {
-        //                     currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
-        //                     currentHover = intersected;
-        //                     previousPosition = {
-        //                         x: intersected.position.x,
-        //                         y: intersected.position.y,
-        //                         z: intersected.position.z
-        //                     };
-        //                     currentHover.position.set(previousPosition.x + 0.015, previousPosition.y, previousPosition.z - 0.025)
-        //                 }
-        //             }
-        //             else if(currentHover) {
-        //                 currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
-        //                 currentHover = null
-        //             }
-        //         }
-        //         else if(intersected.name.includes('Paper')) {
-        //             if(!intersected.name.includes('Outline')) {
-        //                 document.body.style.cursor = 'pointer'
-        //             }
-        //             else {
-        //                 document.body.style.cursor = 'default'
-        //             }
-        //         }
-        //         else {
-        //             document.body.style.cursor = 'default';
-        //
-        //             if(currentHover) {
-        //                 currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
-        //                 currentHover = null
-        //             }
-        //         }
-        //         break;
-        //     case 3:
-        //         if(posted === false) {
-        //             document.body.style.cursor = 'pointer'
-        //             var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
-        //             vector.unproject(camera);
-        //             var dir = vector.sub( camera.position ).normalize();
-        //             var distance = - camera.position.z / dir.z;
-        //             var pos = camera.position.clone().add( dir.multiplyScalar( distance ) );
-        //             pos.set(-1.9*(pos.x + 3.9), -1.9*(pos.y - 1.2), pos.z - 7.5);
-        //             paper.position.copy(pos);
-        //         }
-        //         break;
-        // }
     }
 }
 
@@ -378,6 +293,13 @@ function init() {
     //initial camera position
     camera.position.set(-6, 3, 1);
 
+    //TODO: temporary box for building the house
+    box = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 2), new THREE.MeshBasicMaterial({color:0xdddddd}));
+    box.name = "buildingBox";
+    box.position.set(-10, 0, 0);
+    intersectableObjects.push(box);
+    scene.add(box);
+
     //
     // LOADING
     //
@@ -389,10 +311,11 @@ function init() {
             for(let i in object.children){
                 let child = object.children[i];
 
+                //center the geometries for the blockos in the room
                 if(child.name.includes("Blockos") && child.geometry){
+                    //generate the bounding box for it and find the center point
                     child.geometry.computeBoundingBox();
                     let box = child.geometry.boundingBox;
-                    //get the center of the bounding box
                     let boxPos = {
                         x: 0.5 * (box.max.x + box.min.x),
                         y: 0.5 * (box.max.y + box.min.y),
