@@ -21,7 +21,6 @@ function submitForm() {
   }
   else {
     score = scoreAnswers(answers);
-
     postPanas(answers, score);
   }
 }
