@@ -37,13 +37,20 @@ function recordAnswers() {
 
 function sendPostSurvey(answers) {
   let results = {
-    userId: '',
+    userId: 'test user id',
     q1: answers[0],
     q2: answers[1],
     q3: answers[2],
     q4: answers[3]
   }
 
-  // TODO: AJAX POST Request
-  console.log(results)
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      let response = JSON.parse(this.responseText)
+      document.location.href = response.redirect;
+    }
+  };
+  xhttp.open("POST", "/postSurvey/create", true);
+  xhttp.send(JSON.stringify(results));
 }
