@@ -41,7 +41,7 @@ textarea {
   left: -10px;
 }
 
-.q4_answer {
+#postSurvey_q4 {
   width: 95%;
   height: 100px;
   padding-top:0;
