@@ -12,6 +12,7 @@ var userId = require('./routes/userId');
 var informedConsent = require('./routes/informedConsent');
 var iri = require('./routes/iri');
 var panas = require('./routes/panas');
+var preSurvey = require('./routes/preSurvey');
 
 // Set up mongo connection
 mongoose.connect(mongoUrl, () => {
@@ -34,6 +35,7 @@ app.use('/userId', userId);
 app.use('/informedConsent', informedConsent);
 app.use('/iri', iri);
 app.use('/panas', panas);
+app.use('/preSurvey', preSurvey);
 app.use(favicon(__dirname + '/favicon.png'));
 
 // Load game

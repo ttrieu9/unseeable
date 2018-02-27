@@ -76,15 +76,22 @@ function recordAnswers() {
 
 function sendPreSurvey(answers) {
   let results = {
-    userId: '',
+    userId: 'test user id',
     q1: answers.q1,
     q1_1: answers.q1_1,
     q1_2: answers.q1_2,
     q2: answers.q2
   }
 
-  // TODO: AJAX POST Request
-  console.log(results)
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      let response = JSON.parse(this.responseText)
+      document.location.href = response.redirect;
+    }
+  };
+  xhttp.open("POST", "/preSurvey/create", true);
+  xhttp.send(JSON.stringify(results));
 }
 
 /**
