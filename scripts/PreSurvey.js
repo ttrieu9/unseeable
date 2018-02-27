@@ -34,10 +34,10 @@ function submitForm() {
 
 function recordAnswers() {
   let answers = {
-    q1: 0,
-    q1_1: '',
-    q1_2: 0,
-    q2: 0
+    q1: null,
+    q1_1: null,
+    q1_2: null,
+    q2: null
   }
 
   let q1 = document.getElementsByName('preSurvey_q1');
