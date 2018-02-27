@@ -158,14 +158,51 @@ function buildBlock() {
  * Place the selected block in the building box
  */
 function placeBlock(){
+
+    //depending on which step it is, calculate the offset to place the piece correctly
+    let offset;
+    switch(buildingStep){
+        case 0: //base
+            offset = {
+                x: 0,
+                y: -0.51,
+                z: 0
+            };
+            break;
+        case 1: //second layer of wall
+            offset = {
+                x: 0,
+                y: -0.17,
+                z: 0
+            };
+            break;
+        case 2: //third layer of wall
+            offset = {
+                x: 0,
+                y: 0.17,
+                z: 0
+            };
+            break;
+        case 3: //third layer of wall
+            offset = {
+                x: 0,
+                y: 0.51,
+                z: 0
+            };
+            break;
+        case 4: //door
+            offset = {
+                x: -0.17,
+                y: 0.08,
+                z: 0.71
+            };
+            break;
+    }
+
     //place the block inside inside of the box
-    currentObject.position.set(box.position.x, box.position.y, box.position.z);
+    currentObject.position.set(box.position.x + offset.x, box.position.y + offset.y, box.position.z + offset.z);
     currentObject.placed = true;
     currentObject = null;
-
-    switch(buildingStep){
-        
-    }
     buildingStep += 1;
 }
 
@@ -308,6 +345,11 @@ function init() {
 
                     //add a boolean field that tells whther the piece has been placed or not
                     child.placed = false;
+
+                    let clone = child.clone();
+                    intersectableObjects.push(clone);
+                    clone.placed = false;
+                    scene.add(clone);
                 }
             }
         });
@@ -387,6 +429,9 @@ function init() {
         }
         else if(String.fromCharCode(event.keyCode) === "o"){
             controls.enabled = !controls.enabled;
+        }
+        else if(String.fromCharCode(event.keyCode) === "p"){
+            currentObject.position.y -= .01;
         }
         else if(String.fromCharCode(event.keyCode) === " "){
             nextPosition();
