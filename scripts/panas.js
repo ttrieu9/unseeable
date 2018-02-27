@@ -1,10 +1,16 @@
 init();
 
+/**
+ * Creates event listeners.
+ */
 function init() {
   var submit = document.getElementById('panas_submit_button');
   submit.addEventListener('click', submitForm)
 }
 
+/**
+ * Sends data to DB if all items are answered.
+ */
 function submitForm() {
   let answers = recordAnswers();
   let score;
