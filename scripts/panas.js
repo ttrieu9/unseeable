@@ -21,7 +21,7 @@ function submitForm() {
   }
   else {
     score = scoreAnswers(answers);
-    postPanas(answers, score);
+    sendPanas(answers, score);
   }
 }
 
@@ -95,11 +95,19 @@ function scoreAnswers(answers) {
  */
 function sendPanas(answers, score) {
   let results = {
-    userId: '',
+    userId: 'test user id',
     answers: answers,
     positiveAffect: score.positive,
     negativeAffect: score.negative
   }
 
-  // TODO: AJAX POST Request
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      let response = JSON.parse(this.responseText)
+      document.location.href = response.redirect;
+    }
+  };
+  xhttp.open("POST", "/panas/create", true);
+  xhttp.send(JSON.stringify(results));
 }
