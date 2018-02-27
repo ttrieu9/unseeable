@@ -22,9 +22,6 @@ var coloredObjects = [];
 var attempts = 0;
 var colormode = 1;
 var intersectableObjects = [];
-var paperGroup = [];
-var paper = new THREE.Group();
-var posted = false;
 var controlsEnabled = true;
 
 var paths = [];
@@ -72,7 +69,7 @@ function onMouseMove() {
         var intersected = intersects[0].object;
 
         //if mouse is over a blocko
-        if(intersected.name.includes('Blockos')) {
+        if(intersected.name.includes('Blockos') && intersected.placed === false) {
             document.body.style.cursor = 'pointer';
 
             //if there is no already hovering piece
@@ -117,8 +114,8 @@ function onMouseMove() {
                 return element.object.name.includes("pCylinder1");
             })
             if(rug){
+                //TODO: make offsets for the pieces so that they are above the rug and not in it
                 let point = rug.point;
-
                 currentObject.position.set(point.x, point.y, point.z);
             }
 
@@ -137,7 +134,7 @@ function buildBlock() {
         console.log(intersected);
 
         //if clicking on a block
-        if(intersected.name.includes("Blockos")){
+        if(intersected.name.includes("Blockos") && intersected.placed === false){
             //if there is already a selected block, make if visible
             if(currentObject){
                 currentObject.visible = true;
@@ -148,45 +145,14 @@ function buildBlock() {
             let curPos = currentObject.position;
             let curWorPos = currentObject.getWorldPosition();
         }
-        // if (intersected.name.includes('Crayon')) {
-        //     if(intersected.name.includes('Crayon_Box')){
-        //         currentObject.visible = true;
-        //         currentObject = null;
-        //     }
-        //     else {
-        //         if(currentObject && currentObject.visible === false) {
-        //             currentObject.visible = true;
-        //         }
-        //
-        //         currentObject = intersected;
-        //         currentObject.visible = false;
-        //     }
-        //
-        // }
-        // else if(intersected.name.includes('Paper') && coloredObjects.includes(intersected.name) && !intersected.name.includes("Outline") && currentObject) {
-        //     intersected.material = currentObject.material[0];
-        //     var paperIndex = coloredObjects.findIndex((object) => {
-        //         return object.includes(intersected.name)
-        //     });
-        //     coloredObjects.splice(paperIndex, 1);
-        //
-        //
-        //     if(coloredObjects.length === 0) {
-        //         setTimeout(() => {
-        //             nextPosition();
-        //         }, 750);
-        //
-        //         setTimeout(() => {
-        //             // create paper group
-        //             for(var i in paperGroup) {
-        //                 paper.add(paperGroup[i]);
-        //             }
-        //             paper.rotateX(Math.PI/2);
-        //             paper.rotateY(Math.PI/4);
-        //             scene.add(paper);
-        //         }, 1500);
-        //     }
-        // }
+        //if placing the piece inside of the box
+        else if(intersected === box){
+            //TODO: place the piece inside of the box
+            //place the block inside on top of the box
+            currentObject.position.set(box.position.x, box.position.y, box.position.z);
+            currentObject.placed = true;
+            currentObject = null;
+        }
     }
 }
 
@@ -291,14 +257,15 @@ function init() {
 
     //TODO: find initial camera position
     //initial camera position
-    camera.position.set(-6, 3, 1);
+    camera.position.set(-13, 4.5, 11.6);
 
-    //TODO: temporary box for building the house
-    box = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 2), new THREE.MeshBasicMaterial({color:0xdddddd}));
+    //TODO: remove box helper when done
+    box = new THREE.Mesh(new THREE.BoxGeometry(4, 2, 3), new THREE.MeshBasicMaterial({color:0xdddddd, visible:false}));
     box.name = "buildingBox";
-    box.position.set(-10, 0, 0);
+    box.position.set(-13, 1, 6.5);
     intersectableObjects.push(box);
     scene.add(box);
+    scene.add(new THREE.BoxHelper(box));
 
     //
     // LOADING
@@ -325,6 +292,9 @@ function init() {
                     //center the geometry and move it back to its original location
                     child.geometry.center();
                     child.position.set(boxPos.x, boxPos.y, boxPos.z);
+
+                    //add a boolean field that tells whther the piece has been placed or not
+                    child.placed = false;
                 }
             }
         });
