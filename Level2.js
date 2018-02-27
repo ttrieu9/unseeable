@@ -33,6 +33,7 @@ var logger = new Logger('player id', 1);
 
 //TODO: probably only temporary for building
 var box;
+var buildingStep = 0;
 
 init();
 
@@ -146,14 +147,26 @@ function buildBlock() {
             let curWorPos = currentObject.getWorldPosition();
         }
         //if placing the piece inside of the box
-        else if(intersected === box){
-            //TODO: place the piece inside of the box
-            //place the block inside on top of the box
-            currentObject.position.set(box.position.x, box.position.y, box.position.z);
-            currentObject.placed = true;
-            currentObject = null;
+        else if(currentObject && intersected === box){
+            placeBlock();
         }
     }
+}
+
+//TODO: update the function to work with new blocko names
+/**
+ * Place the selected block in the building box
+ */
+function placeBlock(){
+    //place the block inside inside of the box
+    currentObject.position.set(box.position.x, box.position.y, box.position.z);
+    currentObject.placed = true;
+    currentObject = null;
+
+    switch(buildingStep){
+        
+    }
+    buildingStep += 1;
 }
 
 //TODO: update score for building instead of coloring
