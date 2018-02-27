@@ -197,6 +197,20 @@ function placeBlock(){
                 z: 0.71
             };
             break;
+        case 5: //flat roof piece
+            offset = {
+                x: 0.855,
+                y: 0.765,
+                z: -0.085
+            };
+            break;
+        case 6: //roof
+            offset = {
+                x: -0.17,
+                y: 1.02,
+                z: 0.08
+            };
+            break;
     }
 
     //place the block inside inside of the box
