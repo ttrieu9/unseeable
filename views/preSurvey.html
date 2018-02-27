@@ -5,7 +5,6 @@
     <title>Unseeable Pre-Survey</title>
     <link rel="stylesheet" href="css/questions.css">
     <link rel="stylesheet" href="css/survey.css">
-    <script type="text/javascript" src="scripts/preSurvey.js"></script>
   </head>
 
   <body>
@@ -20,22 +19,28 @@
 
       <div class="hidden q1_follow_up" id="q1_yes">
         <div class="scenario">If yes, what type of colorblindness do you have?</div>
-        <input class="q1_input" type="text">
+        <select id="colorblindness_selector">
+          <option value="red-green">Red-Green</option>
+          <option value="blue-yellow">Blue-Yellow</option>
+          <option value="monochromacy">Complete (monochromacy)</option>
+          <option>Other...</option>
+          <input id="q1.1_input" class="hidden" type="text">
+        </select>
       </div>
 
       <div class="hidden q1_follow_up" id="q1_no">
         <div class="scenario">Have you ever thought about what it's like to be colorblind?</div>
-        <label class="container"> <input type="radio" name="preSurvey_q2" value="1"> <span class="checkmark"></span> </label> <span class="answer_label">Yes</span>
+        <label class="container"> <input type="radio" name="preSurvey_q1.2" value="1"> <span class="checkmark"></span> </label> <span class="answer_label">Yes</span>
         <br><br>
-        <label class="container"> <input type="radio" name="preSurvey_q2" value="2"> <span class="checkmark"></span> </label> <span class="answer_label">No</span>
+        <label class="container"> <input type="radio" name="preSurvey_q1.2" value="2"> <span class="checkmark"></span> </label> <span class="answer_label">No</span>
       </div>
     </div>
 
     <div class="white_question q3">
       <div class="scenario">Do you have any family or friends that are colorblind?</div>
-      <label class="container"> <input type="radio" name="preSurvey_q3" value="1"> <span class="checkmark"></span> </label> <span class="answer_label">Yes</span>
+      <label class="container"> <input type="radio" name="preSurvey_q2" value="1"> <span class="checkmark"></span> </label> <span class="answer_label">Yes</span>
       <br><br>
-      <label class="container"> <input type="radio" name="preSurvey_q3" value="2"> <span class="checkmark"></span> </label> <span class="answer_label">No</span>
+      <label class="container"> <input type="radio" name="preSurvey_q2" value="2"> <span class="checkmark"></span> </label> <span class="answer_label">No</span>
     </div>
 
     <div>
@@ -43,4 +48,5 @@
     </div>
 
   </body>
+  <script type="text/javascript" src="scripts/preSurvey.js"></script>
 </html>
