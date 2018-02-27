@@ -40,11 +40,11 @@ function sendInformedConsent(signature) {
     date: new Date()
   }
 
-  // TODO: AJAX POST Request
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      console.log(JSON.parse(this.responseText));
+      let response = JSON.parse(this.responseText)
+      document.location.href = response.redirect;
     }
   };
   xhttp.open("POST", "/informedConsent/create", true);
