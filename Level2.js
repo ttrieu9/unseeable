@@ -324,7 +324,7 @@ function init() {
     camera.position.set(-13, 4.5, 11.6);
 
     //TODO: remove box helper when done
-    box = new THREE.Mesh(new THREE.BoxGeometry(4, 2, 3), new THREE.MeshBasicMaterial({color:0xdddddd, visible:false}));
+    box = new THREE.Mesh(new THREE.BoxGeometry(4, 3, 3), new THREE.MeshBasicMaterial({color:0xdddddd, visible:false}));
     box.name = "buildingBox";
     box.position.set(-13, 1, 6.5);
     intersectableObjects.push(box);
