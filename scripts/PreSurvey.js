@@ -34,15 +34,15 @@ function submitForm() {
 
 function recordAnswers() {
   let answers = {
-    q1: '',
+    q1: 0,
     q1_1: '',
-    q1_2: '',
-    q2: ''
+    q1_2: 0,
+    q2: 0
   }
 
   let q1 = document.getElementsByName('preSurvey_q1');
   if(q1[0].checked) {
-    answers.q1 = q1[0].value;
+    answers.q1 = parseInt(q1[0].value);
     
     let selector = document.getElementById('colorblindness_selector');
     if(selector.options[selector.selectedIndex].value != 'Other...') {
@@ -54,12 +54,12 @@ function recordAnswers() {
     }
   }
   else if(q1[1].checked) {
-    answers.q1 = q1[1].value;
+    answers.q1 = parseInt(q1[1].value);
 
     let q1_2 = document.getElementsByName('preSurvey_q1.2');
     for(var i = 0; i < q1_2.length; i++) {
       if(q1_2[i].checked) {
-        answers.q1_2 = q1_2[i].value;
+        answers.q1_2 = parseInt(q1_2[i].value);
       }
     }
   }
@@ -67,7 +67,7 @@ function recordAnswers() {
   let q2 = document.getElementsByName('preSurvey_q2');
   for(var i = 0; i < q2.length; i++) {
     if(q2[i].checked) {
-      answers.q2 = q2[i].value;
+      answers.q2 = parseInt(q2[i].value);
     }
   }
 
