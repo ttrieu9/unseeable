@@ -1,3 +1,6 @@
+/**
+ * Reveals drop down list of colorblindnesses.
+ */
 function Q1_Yes() {
   var q2 = document.getElementById('q1_no');
   q2.style.display = 'none';
@@ -6,6 +9,9 @@ function Q1_Yes() {
   followUp.style.display = 'block';
 }
 
+/**
+ * Reveals binary question to ask about perspective on colorblindness.
+ */
 function Q1_No() {
   var followUp = document.getElementById('q1_yes');
   followUp.style.display = 'none';

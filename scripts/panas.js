@@ -45,7 +45,7 @@ function recordAnswers() {
 }
 
 /**
- * Returns JSON object containg positive affect score and negative affect score.
+ * Returns JSON object containing positive affect score and negative affect score.
  * 
  * @param {*} answers - array of 20 answers to items in PANAS. 
  */
