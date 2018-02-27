@@ -9,7 +9,8 @@ var favicon = require('express-favicon');
 // Import routes
 var logger = require('./routes/logger');
 var userId = require('./routes/userId');
-var informedConsent = require('./routes/informedConsent')
+var informedConsent = require('./routes/informedConsent');
+var iri = require('./routes/iri');
 
 // Set up mongo connection
 mongoose.connect(mongoUrl, () => {
@@ -30,6 +31,7 @@ app.use(express.static(__dirname));
 app.use('/logger', logger);
 app.use('/userId', userId);
 app.use('/informedConsent', informedConsent);
+app.use('/iri', iri);
 app.use(favicon(__dirname + '/favicon.png'));
 
 // Load game
