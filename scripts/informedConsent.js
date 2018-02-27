@@ -35,12 +35,20 @@ function submitForm() {
  */
 function sendInformedConsent(signature) {
   let results = {
-    userId = '',
+    userId: 'test user id',
     signature: signature,
     date: new Date()
   }
 
   // TODO: AJAX POST Request
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      console.log(JSON.parse(this.responseText));
+    }
+  };
+  xhttp.open("POST", "/informedConsent/create", true);
+  xhttp.send(JSON.stringify(results));
 }
 
 /**
