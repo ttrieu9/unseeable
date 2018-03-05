@@ -16,13 +16,13 @@ var raycaster;
 var mouse = new THREE.Vector2();
 var currentObject;
 var currentHover;
-var previousMaterial;
 var previousPosition;
-var coloredObjects = [];
 var attempts = 0;
 var colormode = 1;
 var intersectableObjects = [];
 var controlsEnabled = true;
+
+var blocks = [];
 
 var paths = [];
 var splineTargets = [];
@@ -348,6 +348,10 @@ function init() {
 
                 //center the geometries for the blockos in the room
                 if(child.name.includes("Blockos") && child.geometry){
+
+                    //add the blocks to the array of blocks
+                    blocks.push(child);
+
                     //generate the bounding box for it and find the center point
                     child.geometry.computeBoundingBox();
                     let box = child.geometry.boundingBox;
