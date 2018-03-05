@@ -56,7 +56,9 @@ function enableControls() {
     }
 }
 
-//TODO: update to work with blocks
+/**
+ * Called during building puzzle, used to control blocks
+ */
 function onMouseMove() {
     event.preventDefault();
     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
@@ -117,14 +119,16 @@ function onMouseMove() {
             if(rug){
                 //TODO: make offsets for the pieces so that they are above the rug and not in it
                 let point = rug.point;
-                currentObject.position.set(point.x, point.y, point.z);
+                currentObject.position.set(point.x, point.y + currentObject.hoverHeight, point.z);
             }
 
         }
     }
 }
 
-//TODO: update this function to use blocks instead of crayons
+/**
+ * Called when selecting and placing pieces in the block puzzle.
+ */
 function buildBlock() {
     raycaster.setFromCamera(mouse, camera);
 
@@ -132,6 +136,7 @@ function buildBlock() {
 
     if(intersects.length > 0) {
         var intersected = intersects[0].object;
+        console.log(intersected);
 
         //if clicking on a block
         if(intersected.name.includes("Blockos") && intersected.placed === false){
@@ -356,10 +361,13 @@ function init() {
                     child.geometry.center();
                     child.position.set(boxPos.x, boxPos.y, boxPos.z);
 
-                    //add a boolean field that tells whther the piece has been placed or not
+                    //hoverHeight is the offset for the block to hover over an object without intersecting
+                    child.hoverHeight = (box.max.y - box.min.y)/2 + 0.1;
+
+                    //boolean field that tells whther the piece has been placed or not
                     child.placed = false;
 
-                    //rotate the blocko randomly, giving appearance of child placement
+                    //rotate the blocko randomly up to 180 degrees, giving appearance of child placement
                     child.rotation.y = Math.random()*Math.PI;
                 }
             }
@@ -469,7 +477,6 @@ function init() {
         }
     });
 
-    //TODO: update these for the bedroom situations
     window.addEventListener("mousedown", () => {
         if(controlsEnabled) {
             buildBlock();
