@@ -132,7 +132,6 @@ function buildBlock() {
 
     if(intersects.length > 0) {
         var intersected = intersects[0].object;
-        console.log(intersected);
 
         //if clicking on a block
         if(intersected.name.includes("Blockos") && intersected.placed === false){
@@ -360,10 +359,8 @@ function init() {
                     //add a boolean field that tells whther the piece has been placed or not
                     child.placed = false;
 
-                    let clone = child.clone();
-                    intersectableObjects.push(clone);
-                    clone.placed = false;
-                    scene.add(clone);
+                    //rotate the blocko randomly, giving appearance of child placement
+                    child.rotation.y = Math.random()*Math.PI;
                 }
             }
         });
@@ -437,9 +434,6 @@ function init() {
         }
         else if(String.fromCharCode(event.keyCode) === "f"){
             logger.printLog();
-        }
-        else if(String.fromCharCode(event.keyCode) === "t"){
-            console.log(coloredObjects)
         }
         else if(String.fromCharCode(event.keyCode) === "o"){
             controls.enabled = !controls.enabled;
