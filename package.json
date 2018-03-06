@@ -6,7 +6,8 @@
   "dependencies": {
     "express": "^4.16.2",
     "express-favicon": "^2.0.0",
-    "mongoose": "^5.0.0-rc2"
+    "mongoose": "^5.0.0-rc2",
+    "uuid": "^3.2.1"
   },
   "devDependencies": {},
   "scripts": {
