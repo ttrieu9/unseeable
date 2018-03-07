@@ -121,7 +121,8 @@ function onMouseMove(event) {
                 currentObject.position.set(point.x, point.y + currentObject.hoverHeight, point.z);
 
                 let intersect = blocks.find(function(element){
-                    return doesIntersect(currentObject, element);
+                    return currentObject !== element &&
+                        doesIntersect(currentObject, element);
                 });
 
                 if(intersect){
@@ -135,13 +136,43 @@ function onMouseMove(event) {
 
 /**
  * Returns whether or not the bounding boxes of 2 objects intersect.
+ * Bounding box dimensions are stored relative to object's origin, so have to take their positions into account.
  * @param object1 First object to check intersection
  * @param object2 Second object to check intersection
  */
 function doesIntersect(object1, object2){
-    //TODO: figure out the math between the intersection of 2 3d boxes
 
-    return false;
+    //calculate the actual bounding boxes using the positional offsets
+    let obj1box = {
+        min:{
+            x: object1.position.x + object1.geometry.boundingBox.min.x,
+            y: object1.position.y + object1.geometry.boundingBox.min.y,
+            z: object1.position.z + object1.geometry.boundingBox.min.z
+        },
+        max:{
+            x: object1.position.x + object1.geometry.boundingBox.max.x,
+            y: object1.position.y + object1.geometry.boundingBox.max.y,
+            z: object1.position.z + object1.geometry.boundingBox.max.z
+        }
+    };
+
+    let obj2box = {
+        min:{
+            x: object2.position.x + object2.geometry.boundingBox.min.x,
+            y: object2.position.y + object2.geometry.boundingBox.min.y,
+            z: object2.position.z + object2.geometry.boundingBox.min.z
+        },
+        max:{
+            x: object2.position.x + object2.geometry.boundingBox.max.x,
+            y: object2.position.y + object2.geometry.boundingBox.max.y,
+            z: object2.position.z + object2.geometry.boundingBox.max.z
+        }
+    };
+
+    //check intersection by checking if not intersecting
+    return !(obj1box.min.x > obj2box.max.x || obj1box.max.x < obj2box.min.x
+          || obj1box.min.y > obj2box.max.y || obj1box.max.y < obj2box.min.y
+          || obj1box.min.z > obj2box.max.z || obj1box.max.z < obj2box.min.z);
 }
 
 /**
