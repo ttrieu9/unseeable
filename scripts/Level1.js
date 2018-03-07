@@ -313,7 +313,6 @@ function selectTable() {
                     moveAlongSpline(1, -1, 4, function(){
                         sitAtTable();
                     });
-                    logger.logTask("Select Table", attempts)
                 }
                 else if(intersected.name.includes("Yellow")){
                     currentTable = "Yellow";
@@ -378,15 +377,17 @@ function selectTable() {
 
             //tell the player that they selected the wrong table
             if(currentTable !== "Red") {
+                attempts++;
+
                 setTimeout(function () {
 
                     //move them to the correct table
-                    if (attempts === 2) {
+                    if (attempts === 3) {
+                        attempts++;
+                        logger.logTask("Select Table", attempts)
                         playSound("ShowToSeat");
                         nextPosition();
                     }
-
-                    attempts++;
                     if (attempts === 1) {
                         playSound("NotSeatOne");
                     } else if (attempts === 2) {
@@ -396,6 +397,8 @@ function selectTable() {
                 }, 3500);
             }
             else{
+                attempts++;
+                logger.logTask("Select Table", attempts)
                 nextPosition();
             }
 
