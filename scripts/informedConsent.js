@@ -35,6 +35,8 @@ function submitForm() {
  */
 function sendInformedConsent(signature) {
   getUserId((userId) => {
+    window.sessionStorage.setItem('userId', userId)
+
     let results = {
       userId: userId,
       signature: signature,

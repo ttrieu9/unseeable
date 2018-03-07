@@ -128,9 +128,8 @@ function scoreAnswers(answers) {
  * @param {*} score - positive affect and negative affect scores.
  */
 function sendPanas(answers, score) {
-  getUserId((userId) => {
     let results = {
-      userId: userId,
+      userId: window.sessionStorage.getItem('userId'),
       answers: answers,
       positiveAffect: score.positive,
       negativeAffect: score.negative
@@ -145,20 +144,4 @@ function sendPanas(answers, score) {
     };
     xhttp.open("POST", "/panas/create", true);
     xhttp.send(JSON.stringify(results));
-  })
-}
-
-/**
- * Retrieves user id for current session.
- */
-function getUserId(cb) {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      let response = this.responseText
-      cb(response)
-    }
-  };
-  xhttp.open("GET", "/userId/retrieve", true);
-  xhttp.send();
 }

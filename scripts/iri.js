@@ -159,9 +159,8 @@ function scoreAnswers(answers) {
  * @param {*} score - Perspective-Taking Scale, Fantasty Scale, Empathic Concern Scale, and Personal Distress Scale scores.
  */
 function sendIri(answers, score) {
-  getUserId((userId) => {
     let results = {
-      userId: userId,
+      userId: window.sessionStorage.getItem('userId'),
       answers: answers,
       PT: score.PT,
       FS: score.FS,
@@ -178,20 +177,4 @@ function sendIri(answers, score) {
     };
     xhttp.open("POST", "/iri/create", true);
     xhttp.send(JSON.stringify(results));
-  })
-}
-
-/**
- * Retrieves user id for current session.
- */
-function getUserId(cb) {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      let response = this.responseText
-      cb(response)
-    }
-  };
-  xhttp.open("GET", "/userId/retrieve", true);
-  xhttp.send();
 }

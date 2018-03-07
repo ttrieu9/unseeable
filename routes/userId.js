@@ -9,6 +9,4 @@ var user_id_controller = require('../controllers/userIdController');
 // GET user ID
 router.get('/generate', user_id_controller.generate_user_id);
 
-router.get('/retrieve', user_id_controller.get_user_id);
-
 module.exports = router;

@@ -36,17 +36,17 @@ class Logger {
    * @param {Number} levelId - An integer representing the level being played.
    */
   constructor(playerId, levelId) {
-    var date = new Date();
-    this.log = {
-      playerId: playerId,
-      levelId: levelId,
-      date: date,
-      startTime: date.getTime(),
-      levelDuration: 0.0,
-      events: [],
-      tasks: []
-    };
-    this.taskStartTime = 0;
+      var date = new Date();
+      this.log = {
+        playerId: window.sessionStorage.getItem('userId'),
+        levelId: levelId,
+        date: date,
+        startTime: date.getTime(),
+        levelDuration: 0.0,
+        events: [],
+        tasks: []
+      };
+      this.taskStartTime = 0;
   }
 
   /**

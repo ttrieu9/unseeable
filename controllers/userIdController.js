@@ -13,15 +13,3 @@ exports.generate_user_id = (req, res) => {
   });
   console.log('Read all logs.');
 };
-
-// Retrive generated User ID
-exports.get_user_id = (req, res) => {
-  req.on('data', (data) => {
-  });
-
-  req.on('end', (data) => {
-    console.log(userId)
-    res.send(userId).end();
-  });
-  console.log('Read all logs.');
-};
