@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var mongoose = require('mongoose');
-var mongoUrl = 'mongodb://ttrieu:unseeable@ds239587.mlab.com:39587/unseeable-logger-test';
+var mongoUrl = 'mongodb://ttrieu:unseeable@ds259768.mlab.com:59768/unseeable';
 var uuidv4 = require('uuid/v4');
 var favicon = require('express-favicon');
 
