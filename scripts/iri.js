@@ -6,6 +6,22 @@ init();
 function init() {
   let submit = document.getElementById('iri_submit_button');
   submit.addEventListener("click", submitForm);
+
+  for(let i = 1; i <= 28; i++) {
+    let id = 'iri_q' + i
+    let question = document.getElementById(id);
+    question.addEventListener('click', () => {
+      removeRedBorder(id)
+    })
+  }
+}
+
+/**
+ * Removes red border from questions that have missing responses
+ */
+function removeRedBorder(id) {
+  let question = document.getElementById(id);
+  question.classList.remove('missing');
 }
 
 /**
@@ -16,12 +32,30 @@ function submitForm() {
   let score;
 
   if(answers.length < 28) {
-    alert('Error: there are items left unanswered in the survey.');
+    markMissingAnswers();
     throw 'Error: there are items left unanswered in the survey.';
   }
   else {
     score = scoreAnswers(answers);
     sendIri(answers, score);
+  }
+}
+
+function markMissingAnswers() {
+  for(var i = 1; i <= 28; i++) {
+    let questionId = 'iri_q' + i;
+    let radio = document.getElementsByName(questionId);
+    let missing = true;
+
+    for(var j = 0; j < radio.length; j++) {
+      if(radio[j].checked) {
+        missing = false
+      }
+    }
+
+    if(missing) {
+      document.getElementById(questionId).classList.add('missing');
+    }
   }
 }
 
