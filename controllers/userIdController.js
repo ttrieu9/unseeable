@@ -1,5 +1,4 @@
 var uuidv4 = require('uuid/v4')
-let userId;
 
 // Generate random User ID
 exports.generate_user_id = (req, res) => {
@@ -7,9 +6,6 @@ exports.generate_user_id = (req, res) => {
   });
 
   req.on('end', (data) => {
-    userId = uuidv4();
-    console.log(userId)
-    res.send(userId).end();
+    res.send(uuidv4()).end();
   });
-  console.log('Read all logs.');
 };
