@@ -66,6 +66,10 @@ textarea {
   display: none;
 }
 
+#q1-1_input {
+  width: 200px
+}
+
 .q4_description {
   margin-bottom: 10px;
 }

@@ -9,22 +9,22 @@
 
   <body>
     <h1>Unseeable Pre-Survey</h1>
-    <p>Before playing the game, we would like to ask you a few questions. Please answer the questions presented below honestly and thoughtfully. Again, these questions are optional.</p>
+    <p>Before playing the game, we would like to ask you a few questions. Please answer the questions presented below honestly and thoughtfully. These questions are optional.</p>
 
     <div class="gray_question">
-      <div class="scenario">Are you colorblind?</div>
+      <div class="scenario">Have you been diagnosed with colorblindness?</div>
       <label class="container"> <input type="radio" name="preSurvey_q1" value="1"> <span class="checkmark" onclick="Q1_Yes()"></span> </label> <span class="answer_label">Yes</span>
       <br><br>
       <label class="container"> <input type="radio" name="preSurvey_q1" value="2"> <span class="checkmark" onclick="Q1_No()"></span> </label> <span class="answer_label">No</span>
 
       <div class="hidden q1_follow_up" id="q1_yes">
-        <div class="scenario">If yes, what type of colorblindness do you have?</div>
+        <div class="scenario">With what type of colorblindness have you been diagnosed with?</div>
         <select id="colorblindness_selector">
           <option value="red-green">Red-Green</option>
           <option value="blue-yellow">Blue-Yellow</option>
           <option value="monochromacy">Complete (monochromacy)</option>
           <option>Other...</option>
-          <input id="q1.1_input" class="hidden" type="text">
+          <input id="q1-1_input" class="hidden" type="text" placeholder="Enter type of colorblindness here">
         </select>
       </div>
 

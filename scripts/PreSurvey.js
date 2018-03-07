@@ -17,10 +17,10 @@ function init() {
 function detectSelectorChange() {
   var selector = document.getElementById('colorblindness_selector');
   if(selector.options[selector.selectedIndex].value != 'Other...') {
-    document.getElementById('q1.1_input').style.display = 'none'
+    document.getElementById('q1-1_input').style.display = 'none'
   }
   else {
-    document.getElementById('q1.1_input').style.display = 'inline'
+    document.getElementById('q1-1_input').style.display = 'inline'
   }
 }
 
@@ -49,7 +49,7 @@ function recordAnswers() {
       answers.q1_1 = selector.options[selector.selectedIndex].value
     }
     else {
-      let other = document.getElementById('q1.1_input');
+      let other = document.getElementById('q1-1_input');
       answers.q1_1 = other.value;
     }
   }
