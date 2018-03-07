@@ -8,6 +8,7 @@ exports.generate_user_id = (req, res) => {
 
   req.on('end', (data) => {
     userId = uuidv4();
+    console.log(userId)
     res.send(userId).end();
   });
   console.log('Read all logs.');
@@ -19,6 +20,7 @@ exports.get_user_id = (req, res) => {
   });
 
   req.on('end', (data) => {
+    console.log(userId)
     res.send(userId).end();
   });
   console.log('Read all logs.');
