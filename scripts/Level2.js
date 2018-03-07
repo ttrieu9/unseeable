@@ -126,7 +126,7 @@ function onMouseMove(event) {
                 });
 
                 if(intersect){
-                    console.log(intersect);
+                    currentObject.position.y = currentObject.hoverHeight + intersect.position.y + intersect.geometry.boundingBox.max.y;
                 }
             }
 
