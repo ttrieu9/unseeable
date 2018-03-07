@@ -59,7 +59,7 @@ function enableControls() {
 /**
  * Called during building puzzle, used to control blocks
  */
-function onMouseMove() {
+function onMouseMove(event) {
     event.preventDefault();
     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     mouse.y =  - ( event.clientY / window.innerHeight ) * 2 + 1;
@@ -117,13 +117,31 @@ function onMouseMove() {
                 return element.object.name.includes("pCylinder1");
             })
             if(rug){
-                //TODO: make offsets for the pieces so that they are above the rug and not in it
                 let point = rug.point;
                 currentObject.position.set(point.x, point.y + currentObject.hoverHeight, point.z);
+
+                let intersect = blocks.find(function(element){
+                    return doesIntersect(currentObject, element);
+                });
+
+                if(intersect){
+                    console.log(intersect);
+                }
             }
 
         }
     }
+}
+
+/**
+ * Returns whether or not the bounding boxes of 2 objects intersect.
+ * @param object1 First object to check intersection
+ * @param object2 Second object to check intersection
+ */
+function doesIntersect(object1, object2){
+    //TODO: figure out the math between the intersection of 2 3d boxes
+
+    return false;
 }
 
 /**
@@ -147,8 +165,6 @@ function buildBlock() {
 
             //select the block and make it invisible
             currentObject = intersected;
-            let curPos = currentObject.position;
-            let curWorPos = currentObject.getWorldPosition();
         }
         //if placing the piece inside of the box
         else if(currentObject && intersected === box){
@@ -347,7 +363,7 @@ function init() {
                 let child = object.children[i];
 
                 //center the geometries for the blockos in the room
-                if(child.name.includes("Blockos") && child.geometry){
+                if(child.name.includes("BlockosScene") && child.geometry){
 
                     //add the blocks to the array of blocks
                     blocks.push(child);
