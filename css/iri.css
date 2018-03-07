@@ -1,0 +1,36 @@
+.scenario {
+  font-size: 14pt;
+  padding-top: 5px;
+  font-weight: bold;
+}
+
+.rating_left {
+  position: relative;
+  display: inline-block;
+  width: 20%;
+  text-align: right;
+  font-size: 13pt;
+  top: 12.5px;
+  right: 0;
+  left: 10px;
+}
+
+.rating_right {
+  position: relative;
+  display: inline-block;
+  width: 15%;
+  text-align: left;
+  font-size: 13pt;
+  top: 12.5px;
+  left: 5px;
+}
+
+#iri_submit_button {
+  float: right;
+  margin: 15px 0;
+  height: 35px;
+  width: 75px;
+  border-radius: 10px;
+  font-size: 14pt;
+  border: 1px solid black;
+}
