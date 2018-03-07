@@ -128,20 +128,37 @@ function scoreAnswers(answers) {
  * @param {*} score - positive affect and negative affect scores.
  */
 function sendPanas(answers, score) {
-  let results = {
-    userId: 'test user id',
-    answers: answers,
-    positiveAffect: score.positive,
-    negativeAffect: score.negative
-  }
+  getUserId((userId) => {
+    let results = {
+      userId: userId,
+      answers: answers,
+      positiveAffect: score.positive,
+      negativeAffect: score.negative
+    }
 
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        let response = JSON.parse(this.responseText)
+        document.location.href = response.redirect;
+      }
+    };
+    xhttp.open("POST", "/panas/create", true);
+    xhttp.send(JSON.stringify(results));
+  })
+}
+
+/**
+ * Retrieves user id for current session.
+ */
+function getUserId(cb) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      let response = JSON.parse(this.responseText)
-      document.location.href = response.redirect;
+      let response = this.responseText
+      cb(response)
     }
   };
-  xhttp.open("POST", "/panas/create", true);
-  xhttp.send(JSON.stringify(results));
+  xhttp.open("GET", "/userId/retrieve", true);
+  xhttp.send();
 }

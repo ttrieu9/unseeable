@@ -75,23 +75,25 @@ function recordAnswers() {
 }
 
 function sendPreSurvey(answers) {
-  let results = {
-    userId: 'test user id',
-    q1: answers.q1,
-    q1_1: answers.q1_1,
-    q1_2: answers.q1_2,
-    q2: answers.q2
-  }
-
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      let response = JSON.parse(this.responseText)
-      document.location.href = response.redirect;
+  getUserId((userId) => {
+    let results = {
+      userId: userId,
+      q1: answers.q1,
+      q1_1: answers.q1_1,
+      q1_2: answers.q1_2,
+      q2: answers.q2
     }
-  };
-  xhttp.open("POST", "/preSurvey/create", true);
-  xhttp.send(JSON.stringify(results));
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        let response = JSON.parse(this.responseText)
+        document.location.href = response.redirect;
+      }
+    };
+    xhttp.open("POST", "/preSurvey/create", true);
+    xhttp.send(JSON.stringify(results));
+  })
 }
 
 /**
@@ -114,4 +116,19 @@ function Q1_No() {
 
   var q2 = document.getElementById('q1_no');
   q2.style.display = 'block';
+}
+
+/**
+ * Retrieves user id for current session.
+ */
+function getUserId(cb) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      let response = this.responseText
+      cb(response)
+    }
+  };
+  xhttp.open("GET", "/userId/retrieve", true);
+  xhttp.send();
 }

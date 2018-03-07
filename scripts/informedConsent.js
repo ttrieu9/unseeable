@@ -34,30 +34,36 @@ function submitForm() {
  * @param {String} signature - Full name of participant.
  */
 function sendInformedConsent(signature) {
-  let results = {
-    userId: 'test user id',
-    signature: signature,
-    date: new Date()
-  }
-
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      let response = JSON.parse(this.responseText)
-      document.location.href = response.redirect;
+  getUserId((userId) => {
+    let results = {
+      userId: userId,
+      signature: signature,
+      date: new Date()
     }
-  };
-  xhttp.open("POST", "/informedConsent/create", true);
-  xhttp.send(JSON.stringify(results));
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        let response = JSON.parse(this.responseText)
+        document.location.href = response.redirect;
+      }
+    };
+    xhttp.open("POST", "/informedConsent/create", true);
+    xhttp.send(JSON.stringify(results));
+  })
 }
 
 /**
  * Retrieves user id for current session.
  */
-function getUserId() {
-  let userId;
-
-  // TODO: AJAX GET Request
-
-  return userId;
+function getUserId(cb) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      let response = this.responseText
+      cb(response)
+    }
+  };
+  xhttp.open("GET", "/userId/generate", true);
+  xhttp.send();
 }

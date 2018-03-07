@@ -36,21 +36,38 @@ function recordAnswers() {
 }
 
 function sendPostSurvey(answers) {
-  let results = {
-    userId: 'test user id',
-    q1: answers[0],
-    q2: answers[1],
-    q3: answers[2],
-    q4: answers[3]
-  }
+  getUserId((userId) => {
+    let results = {
+      userId: userId,
+      q1: answers[0],
+      q2: answers[1],
+      q3: answers[2],
+      q4: answers[3]
+    }
 
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        let response = JSON.parse(this.responseText)
+        document.location.href = response.redirect;
+      }
+    };
+    xhttp.open("POST", "/postSurvey/create", true);
+    xhttp.send(JSON.stringify(results));
+  })
+}
+
+/**
+ * Retrieves user id for current session.
+ */
+function getUserId(cb) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      let response = JSON.parse(this.responseText)
-      document.location.href = response.redirect;
+      let response = this.responseText
+      cb(response)
     }
   };
-  xhttp.open("POST", "/postSurvey/create", true);
-  xhttp.send(JSON.stringify(results));
+  xhttp.open("GET", "/userId/retrieve", true);
+  xhttp.send();
 }

@@ -159,22 +159,39 @@ function scoreAnswers(answers) {
  * @param {*} score - Perspective-Taking Scale, Fantasty Scale, Empathic Concern Scale, and Personal Distress Scale scores.
  */
 function sendIri(answers, score) {
-  let results = {
-    userId: 'test user id',
-    answers: answers,
-    PT: score.PT,
-    FS: score.FS,
-    EC: score.EC,
-    PD: score.PD
-  }
+  getUserId((userId) => {
+    let results = {
+      userId: userId,
+      answers: answers,
+      PT: score.PT,
+      FS: score.FS,
+      EC: score.EC,
+      PD: score.PD
+    }
 
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        let response = JSON.parse(this.responseText)
+        document.location.href = response.redirect;
+      }
+    };
+    xhttp.open("POST", "/iri/create", true);
+    xhttp.send(JSON.stringify(results));
+  })
+}
+
+/**
+ * Retrieves user id for current session.
+ */
+function getUserId(cb) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      let response = JSON.parse(this.responseText)
-      document.location.href = response.redirect;
+      let response = this.responseText
+      cb(response)
     }
   };
-  xhttp.open("POST", "/iri/create", true);
-  xhttp.send(JSON.stringify(results));
+  xhttp.open("GET", "/userId/retrieve", true);
+  xhttp.send();
 }
