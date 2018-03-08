@@ -48,6 +48,11 @@ var subtitles;
 
 var logger = new Logger('player id', 1);
 
+//TODO: remove when done
+var xoff = 0.06;
+var yoff = 0.05;
+var zoff = -0.03;
+
 init();
 
 loadJSON("colorPaperAnswers", (result) => { 
@@ -156,6 +161,18 @@ function onMouseMove() {
                             currentHover = null
                         }
                     }
+
+                    //if there is a currently selected crayon
+                    if(currentObject){
+                        //make it hover over the mouse position
+                        let hoverPoint = intersects.find(function(element){
+                            return currentObject.name !== element.object.name;
+                        }).point;
+                        currentObject.position.set(hoverPoint.x + xoff, hoverPoint.y + yoff, hoverPoint.z + zoff);
+
+                        //some weird math stuff to find the point 90% along the raycast
+                        
+                    }
                     break;
                 case 3:
                     if(posted === false) {
@@ -182,18 +199,23 @@ function colorPaper() {
     if(intersects.length > 0) {
         var intersected = intersects[0].object;
 
+        //if clicking on crayons or the box
         if (intersected.name.includes('Crayon')) {
+            //if clicking on the box, put the crayon away
             if(intersected.name.includes('Crayon_Box')){
                 currentObject.visible = true;
                 currentObject = null;
             }
+            //else pick up the crayon
             else {
+                //reset the current crayon if there is one
                 if(currentObject && currentObject.visible === false) {
                     currentObject.visible = true;
                 }
 
+                //pick up the crayon
                 currentObject = intersected;
-                currentObject.visible = false;
+                currentObject.rotation.set(0, Math.PI*5/6, Math.PI*11/6);
             }
 
             playSound("Click");
@@ -616,7 +638,7 @@ function init() {
     //camera controls, mostly for debugging purposes
     controls = new THREE.OrbitControls( camera );
     controls.target = new THREE.Vector3(3, 1, 5);
-    controls.enabled = true; //set to false to turn off controls
+    controls.enabled = false; //set to false to turn off controls
 
     //initial camera position
     camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
@@ -916,11 +938,17 @@ function init() {
         else if(String.fromCharCode(event.keyCode) === "o"){
             controls.enabled = !controls.enabled;
         }
-        else if(String.fromCharCode(event.keyCode) === "p"){
-            showCameraControls("right");
+        else if(String.fromCharCode(event.keyCode) === "x"){
+            xoff += .01;
+            console.log(xoff);
         }
-        else if(String.fromCharCode(event.keyCode) === "l"){
-            hideCameraControls("right");
+        else if(String.fromCharCode(event.keyCode) === "y"){
+            yoff += .01;
+            console.log(yoff);
+        }
+        else if(String.fromCharCode(event.keyCode) === "z"){
+            zoff -= .01;
+            console.log(zoff);
         }
         else if(String.fromCharCode(event.keyCode) === " "){
             nextPosition();
