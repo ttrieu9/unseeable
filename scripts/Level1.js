@@ -468,11 +468,14 @@ function postPaper() {
                     camera.zoom = currentZoom.value
                 });
                 zoomOut.start();
+
+                //mock the player and display their results
                 zoomOut.onComplete(() => {
                     playSound("HackJob");
                     setTimeout(function(){
-                        window.open("endscreen.html", '_self');
-                    },10000)
+                        document.get
+                        console.log("level over");
+                    },10000);
                 })
             }
             posted = true;
@@ -628,12 +631,11 @@ function init() {
     camera.add(audioListener);
 
     // renderer
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer = new THREE.WebGLRenderer({ antialias: true, canvas: document.getElementById("canvas")});
     renderer.shadowMap.enabled = false;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
-    document.body.appendChild( renderer.domElement );
 
     //camera controls, mostly for debugging purposes
     controls = new THREE.OrbitControls( camera );
