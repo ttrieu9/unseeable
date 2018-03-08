@@ -112,6 +112,7 @@ function onMouseMove(event) {
         }
 
         //if there is a selected piece, make it follow the mouse on the rug
+        //TODO: it might be cleaner using the point the raycaster is at, looking at blocks as well as the rug
         if(currentObject){
             let rug = intersects.find(function(element){
                 return element.object.name.includes("pCylinder1");
@@ -418,8 +419,8 @@ function init() {
                     //boolean field that tells whther the piece has been placed or not
                     child.placed = false;
 
-                    //rotate the blocko randomly up to 180 degrees, giving appearance of child placement
-                    child.rotation.y = Math.random()*Math.PI;
+                    //TODO: add random rotation to puzzle pieces
+
                 }
             }
         });

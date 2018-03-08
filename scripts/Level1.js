@@ -649,6 +649,19 @@ function init() {
                 }
                 else if(child.name.includes("Crayon")){
                     child.receiveShadow = false;
+
+                    //generate the bounding box for it and find the center point
+                    child.geometry.computeBoundingBox();
+                    let box = child.geometry.boundingBox;
+                    let boxPos = {
+                        x: 0.5 * (box.max.x + box.min.x),
+                        y: 0.5 * (box.max.y + box.min.y),
+                        z: 0.5 * (box.max.z + box.min.z)
+                    };
+
+                    //center the geometry and move it back to its original location
+                    child.geometry.center();
+                    child.position.set(boxPos.x, boxPos.y, boxPos.z);
                 }
                 //sky sphere
                 else if(child.name.includes("pSphere10")){
