@@ -197,7 +197,9 @@ function colorPaper() {
     var intersects = raycaster.intersectObjects(intersectableObjects);
 
     if(intersects.length > 0) {
-        var intersected = intersects[0].object;
+        var intersected = intersects.find(function(element){
+            return currentObject !== element.object;
+        }).object;
 
         //if clicking on crayons or the box
         if (intersected.name.includes('Crayon')) {
@@ -473,8 +475,7 @@ function postPaper() {
                 zoomOut.onComplete(() => {
                     playSound("HackJob");
                     setTimeout(function(){
-                        document.get
-                        console.log("level over");
+                        showEndScreen();
                     },10000);
                 })
             }
@@ -590,6 +591,22 @@ function fade() {
     curtain.classList.remove("screen-change");
     curtain.offsetWidth;
     curtain.classList.add("screen-change");
+}
+
+/**
+ * Shows the end screen with the player's results and gives them the ability to continue or return to the main menu
+ */
+function showEndScreen(){
+    let canvas = document.getElementById("canvas");
+    let blur = {blur: 0};
+
+    //slowly blur the screen
+    let blurTween = new TWEEN.Tween(blur).to({blur: 5}, 1000);
+    blurTween.onUpdate(function(object){
+        canvas.style.filter = "blur(" + blur.blur + "px)";
+    });
+    blurTween.start();
+    console.log("level over");
 }
 
 /**
@@ -951,6 +968,9 @@ function init() {
         else if(String.fromCharCode(event.keyCode) === "z"){
             zoff -= .01;
             console.log(zoff);
+        }
+        else if(String.fromCharCode(event.keyCode) === "m"){
+            showEndScreen();
         }
         else if(String.fromCharCode(event.keyCode) === " "){
             nextPosition();
