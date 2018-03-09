@@ -51,9 +51,10 @@ var subtitles;
 var logger = new Logger('player id', 1);
 
 //TODO: remove when done
-var xoff = 0.06;
-var yoff = 0.05;
-var zoff = -0.03;
+var xoff = 0;
+var yoff = 0;
+var zoff = 0;
+var tip;
 
 init();
 
@@ -164,15 +165,22 @@ function onMouseMove() {
                         }
                     }
 
-                    //if there is a currently selected crayon
+                    //if there is a currently selected crayon, make it hover over the mouse position
                     if(currentObject){
-                        //make it hover over the mouse position
+                        //the hover point is the first object in the intersection array
                         let hoverPoint = intersects.find(function(element){
                             return currentObject.name !== element.object.name;
                         }).point;
-                        currentObject.position.set(hoverPoint.x + xoff, hoverPoint.y + yoff, hoverPoint.z + zoff);
 
-                        //place the crayon at the point that is 90% along the ray cast
+                        //find the point that is 90% of the way along the ray cast
+                        let crayonPos = {
+                            x: camera.position.x + (hoverPoint.x - camera.position.x)*.9,
+                            y: camera.position.y + (hoverPoint.y - camera.position.y)*.9,
+                            z: camera.position.z + (hoverPoint.z - camera.position.z)*.9
+                        };
+
+                        //place the crayon at that position, plus some offset to place the tip at the mouse pointer
+                        currentObject.position.set(crayonPos.x+.07, crayonPos.y+.025, crayonPos.z-.04);
 
                     }
                     break;
@@ -203,6 +211,7 @@ function colorPaper() {
             return currentObject !== element.object;
         }).object;
 
+        //TODO: return the crayon to the box
         //if clicking on crayons or the box
         if (intersected.name.includes('Crayon')) {
             //if clicking on the box, put the crayon away
@@ -705,6 +714,10 @@ function init() {
     camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
     camera.rotation.set(-0.09963408823470919, -1.5005061696940256, 2.0920433907298925e-17);
 
+    //TODO: remove after finding the tip
+    tip = new THREE.Mesh(new THREE.SphereGeometry(0.01));
+    scene.add(tip);
+
     //
     // LOADING
     //
@@ -1000,38 +1013,38 @@ function init() {
         hideCameraControls("right");
     });
 
-    // element.addEventListener("keypress", function(event){
-    //     if(String.fromCharCode(event.keyCode) === "c"){
-    //         console.log(camera);
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === "f"){
-    //         logger.printLog();
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === "t"){
-    //         console.log(coloredObjects)
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === "o"){
-    //         controls.enabled = !controls.enabled;
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === "x"){
-    //         xoff += .01;
-    //         console.log(xoff);
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === "y"){
-    //         yoff += .01;
-    //         console.log(yoff);
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === "z"){
-    //         zoff -= .01;
-    //         console.log(zoff);
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === "m"){
-    //         showEndScreen();
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === " "){
-    //         nextPosition();
-    //     }
-    // }, false);
+    element.addEventListener("keypress", function(event){
+        if(String.fromCharCode(event.keyCode) === "c"){
+            console.log(camera);
+        }
+        else if(String.fromCharCode(event.keyCode) === "f"){
+            logger.printLog();
+        }
+        else if(String.fromCharCode(event.keyCode) === "t"){
+            console.log(coloredObjects)
+        }
+        else if(String.fromCharCode(event.keyCode) === "o"){
+            controls.enabled = !controls.enabled;
+        }
+        else if(String.fromCharCode(event.keyCode) === "x"){
+            xoff -= .01;
+            console.log(xoff);
+        }
+        else if(String.fromCharCode(event.keyCode) === "y"){
+            yoff -= .01;
+            console.log(yoff);
+        }
+        else if(String.fromCharCode(event.keyCode) === "z"){
+            zoff += .01;
+            console.log(zoff);
+        }
+        else if(String.fromCharCode(event.keyCode) === "m"){
+            showEndScreen();
+        }
+        else if(String.fromCharCode(event.keyCode) === " "){
+            nextPosition();
+        }
+    }, false);
 
     // window.addEventListener("dblclick", () => {
     //     if(colormode === 1) {
