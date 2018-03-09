@@ -87,7 +87,7 @@ class Logger {
     this.log.tasks.push(
       {
         name: name,
-        duration: new Date().getTime() - this.log.date.getTime(),
+        duration: new Date().getTime() - this.taskStartTime,
         grade: grade,
         additional: additional
       });
