@@ -78,6 +78,11 @@ function loadAnimationFBX(fileName, onLoad){
     fbxloader.load(
         "3dmodels/" + fileName,
         function( object ) {
+            //set the object to cast shadows
+            for(let i in object.children){
+                object.children[i].castShadow = true;
+            }
+
             //execute onLoad function if there is one
             if(onLoad){
                 onLoad(object);
@@ -108,13 +113,25 @@ function loadAnimationFBX2(filename, animations, onLoad){
     fbxloader.load(
         "3dmodels/" + filename,
         function(object){
+            //set the object to cast shadows
+            for(let i in object.children){
+                object.children[i].castShadow = true;
+            }
 
-            //load in the animations
+            //load in the animations and add them to the object
+            let animationsLoaded = 0;
             for(let i in animations){
                 fbxloader.load(
                     "3dmodels/animations/" + animations[i],
                     function(animation){
+                        animation.animations[0].name = animations[i];
                         object.animations.push(animation.animations[0]);
+
+                        //perform the onLoad function when the last of the animations has been loaded
+                        animationsLoaded += 1;
+                        if(animationsLoaded === animations.length && onLoad){
+                            onLoad(object);
+                        }
                     },
                     null, onError
                 );
@@ -122,14 +139,9 @@ function loadAnimationFBX2(filename, animations, onLoad){
 
             object.currentAnimation = 0;
 
-            //add the object's animation mixer
+            //add the object's animation mixer to the global list of mixers
             object.mixer = new THREE.AnimationMixer( object );
             mixers.push( object.mixer );
-
-            //perform the onLoad function, if one is specified
-            if(onLoad){
-                onLoad(object);
-            }
 
             scene.add(object);
         },
@@ -145,13 +157,13 @@ function loadAnimationFBX2(filename, animations, onLoad){
 function loadWorldFBX(fileName, onLoad){
 
     fbxloader.load(
-        fileName,
+        "3dmodels/" + fileName,
         function( object ) {
             //add shadow casting and receiving for all of the child objects loaded
             for(let i in object.children){
                 //set shadows for the objects
-                // object.children[i].castShadow = true;
-                // object.children[i].receiveShadow = true;
+                object.children[i].castShadow = true;
+                object.children[i].receiveShadow = true;
 
                 //convert the paths in the scene into splines
                 if(object.children[i].name.includes("Path")) {
@@ -213,6 +225,12 @@ function loadSound(filename, volume, playImmediately, loop, onEnded){
             }
             if(onEnded){
                 song.onEnded = onEnded;
+            }
+            song.onEnded = function(){
+                document.getElementById("subs").innerText = "";
+                if(onEnded){
+                    onEnded();
+                }
             }
             song.name = filename;
         },
