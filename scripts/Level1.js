@@ -603,6 +603,7 @@ function fade() {
 function showEndScreen(){
     let canvas = document.getElementById("canvas");
     let endScreen = document.getElementById("endgame");
+    endScreen.style.display = 'block'
     let blur = {blur: 0};
 
     //slowly blur the screen
@@ -613,7 +614,7 @@ function showEndScreen(){
     });
     //make the mouse visible again
     blurTween.onComplete(function(){
-        document.body.style.cursor = "defualt";
+        document.body.style.cursor = "default";
     })
     blurTween.start();
     console.log("level over");
@@ -646,8 +647,25 @@ function playSound(name) {
     sound.play();
 }
 
+function nextPage() {
+    console.log('Panas2')
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        let response = JSON.parse(this.responseText)
+        document.location.href = response.redirect;
+      }
+    };
+    xhttp.open("GET", "/unseeable/nextPage", true);
+    xhttp.send();
+}
+
 function init() {
     startCutScene();
+    let cont = document.getElementById('continue')
+    cont.addEventListener('click', nextPage)
+
     //create the scene
     scene = new THREE.Scene();
 
@@ -954,55 +972,55 @@ function init() {
         hideCameraControls("right");
     });
 
-    element.addEventListener("keypress", function(event){
-        if(String.fromCharCode(event.keyCode) === "c"){
-            console.log(camera);
-        }
-        else if(String.fromCharCode(event.keyCode) === "f"){
-            logger.printLog();
-        }
-        else if(String.fromCharCode(event.keyCode) === "t"){
-            console.log(coloredObjects)
-        }
-        else if(String.fromCharCode(event.keyCode) === "o"){
-            controls.enabled = !controls.enabled;
-        }
-        else if(String.fromCharCode(event.keyCode) === "x"){
-            xoff += .01;
-            console.log(xoff);
-        }
-        else if(String.fromCharCode(event.keyCode) === "y"){
-            yoff += .01;
-            console.log(yoff);
-        }
-        else if(String.fromCharCode(event.keyCode) === "z"){
-            zoff -= .01;
-            console.log(zoff);
-        }
-        else if(String.fromCharCode(event.keyCode) === "m"){
-            showEndScreen();
-        }
-        else if(String.fromCharCode(event.keyCode) === " "){
-            nextPosition();
-        }
-    }, false);
+    // element.addEventListener("keypress", function(event){
+    //     if(String.fromCharCode(event.keyCode) === "c"){
+    //         console.log(camera);
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === "f"){
+    //         logger.printLog();
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === "t"){
+    //         console.log(coloredObjects)
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === "o"){
+    //         controls.enabled = !controls.enabled;
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === "x"){
+    //         xoff += .01;
+    //         console.log(xoff);
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === "y"){
+    //         yoff += .01;
+    //         console.log(yoff);
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === "z"){
+    //         zoff -= .01;
+    //         console.log(zoff);
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === "m"){
+    //         showEndScreen();
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === " "){
+    //         nextPosition();
+    //     }
+    // }, false);
 
-    window.addEventListener("dblclick", () => {
-        if(colormode === 1) {
-            revertColors(document);
-            for(var i in paths) {
-                paths[i].visible = true;
-            }
-            colormode = 0
-        }
-        else {
-            changeColorVision();
-            for(var i in paths) {
-                paths[i].visible = false;
-            }
-            colormode = 1
-        }
-    });
+    // window.addEventListener("dblclick", () => {
+    //     if(colormode === 1) {
+    //         revertColors(document);
+    //         for(var i in paths) {
+    //             paths[i].visible = true;
+    //         }
+    //         colormode = 0
+    //     }
+    //     else {
+    //         changeColorVision();
+    //         for(var i in paths) {
+    //             paths[i].visible = false;
+    //         }
+    //         colormode = 1
+    //     }
+    // });
 
     window.addEventListener("mousemove", onMouseMove);
 

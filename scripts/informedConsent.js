@@ -4,7 +4,6 @@ init();
  * Creates event listeners.
  */
 function init() {
-  console.log(window.sessionStorage.getItem('userId'))
   let submit = document.getElementById('submit_button');
   submit.addEventListener('click', submitForm);
 

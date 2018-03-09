@@ -71,7 +71,7 @@ app.get('/panas1', (req, res) => {
   res.sendFile(path.join(__dirname+'/views/panas.html'));
 });
 
-// Panas
+// Panas2
 app.get('/panas2', (req, res) => {
   res.sendFile(path.join(__dirname+'/views/panas.html'));
 });
@@ -86,9 +86,14 @@ app.get('/pre-survey', (req, res) => {
   res.sendFile(path.join(__dirname+'/views/preSurvey.html'));
 });
 
-// Pre-Survey
+// Post-Survey
 app.get('/post-survey', (req, res) => {
   res.sendFile(path.join(__dirname+'/views/postSurvey.html'));
+});
+
+// End screen
+app.get('/end-screen', (req, res) => {
+  res.sendFile(path.join(__dirname+'/views/endscreen.html'));
 });
 
 var port = process.env.PORT || 8080;

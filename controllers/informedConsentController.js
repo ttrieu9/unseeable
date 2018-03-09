@@ -13,7 +13,7 @@ exports.create_informed_consent = (req, res) => {
     informedConsent.create_informed_consent((err, result) => {
       if(err) throw err;
 
-      res.json({result: result, redirect: '/iri'}).end()
+      res.json({result: result, redirect: '/panas1'}).end()
     });
   });
   console.log('Informed Consent created.')

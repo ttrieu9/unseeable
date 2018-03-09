@@ -13,7 +13,7 @@ exports.create_post_survey = (req, res) => {
     postSurvey.create_post_survey((err, result) => {
       if(err) throw err;
 
-      res.json({result: result, redirect: '/post-survey'}).end()
+      res.json({result: result, redirect: '/end-screen'}).end()
     });
   });
   console.log('PostSurvey created.')

@@ -13,7 +13,7 @@ exports.create_pre_survey = (req, res) => {
     preSurvey.create_pre_survey((err, result) => {
       if(err) throw err;
 
-      res.json({result: result, redirect: '/post-survey'}).end()
+      res.json({result: result, redirect: '/unseeable'}).end()
     });
   });
   console.log('PreSurvey created.')
