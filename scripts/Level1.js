@@ -32,6 +32,7 @@ var posted = false;
 var controlsEnabled = true;
 var colorPaperAnswers;
 var colorPaperScore = 0;
+var colorsUsed = [];
 
 var paths = [];
 var splineTargets = [];
@@ -225,6 +226,7 @@ function colorPaper() {
         }
         else if(intersected.name.includes('Paper') && coloredObjects.includes(intersected.name) && !intersected.name.includes("Outline") && currentObject) {
             intersected.material = currentObject.material[0];
+            // colorsUsed.push(currentObject.material[0].name)
             updatePaperScore(intersected.name, currentObject.material[0].name)
             var paperIndex = coloredObjects.findIndex((object) => {
                 return object.includes(intersected.name)
@@ -235,7 +237,7 @@ function colorPaper() {
 
             if(coloredObjects.length === 0) {
                 startCutScene();
-                logger.logTask("Color paper", colorPaperScore / 14);
+                logger.logTask("Color paper", colorPaperScore / 14, colorsUsed);
                 setTimeout(() => {
                     nextPosition();
                 }, 750);
@@ -268,6 +270,11 @@ function updatePaperScore(intersectedName, crayonColor) {
     if(piece.trueColor == crayonColor) {
         colorPaperScore++;
     };
+
+    colorsUsed.push({
+        name: piece.name,
+        colorUsed: crayonColor
+    })
 }
 
 /**
@@ -648,8 +655,6 @@ function playSound(name) {
 }
 
 function nextPage() {
-    console.log('Panas2')
-
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -663,6 +668,7 @@ function nextPage() {
 
 function init() {
     startCutScene();
+
     let cont = document.getElementById('continue')
     cont.addEventListener('click', nextPage)
 
