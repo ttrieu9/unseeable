@@ -11,10 +11,14 @@ exports.create_post_survey = (req, res) => {
   req.on('end', (data) => {
     var postSurvey = new PostSurvey(postSurveyData);
     postSurvey.create_post_survey((err, result) => {
-      if(err) throw err;
+      if(err) {
+        console.log(err);
+        res.json({result: err, redirect: '/post-survey'}).end()
+        return;
+      }
 
       res.json({result: result, redirect: '/end-screen'}).end()
+      console.log('PostSurvey created.')
     });
   });
-  console.log('PostSurvey created.')
 }

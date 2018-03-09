@@ -15,7 +15,11 @@ exports.create_panas = (req, res) => {
   req.on('end', (data) => {
     var panas = new Panas(panasData.results);
     panas.create_panas((err, result) => {
-      if(err) throw err;
+      if(err) {
+        console.log(err);
+        res.json({result: err, redirect: `${panasData.instance}`}).end()
+        return;
+      }
 
       let redirect;
       if(panasData.instance == 'panas1'){
@@ -26,7 +30,7 @@ exports.create_panas = (req, res) => {
       }
       
       res.json({result: result, redirect: redirect}).end()
+      console.log('Panas created.')
     });
   });
-  console.log('Panas created.')
 }
