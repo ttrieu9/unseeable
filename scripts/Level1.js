@@ -184,7 +184,7 @@ function onMouseMove() {
                         var dir = vector.sub( camera.position ).normalize();
                         var distance = - camera.position.z / dir.z;
                         var pos = camera.position.clone().add( dir.multiplyScalar( distance ) );
-                        pos.set(-1.9*(pos.x + 3.9), -1.9*(pos.y - 1.2), pos.z - 7.5);
+                        pos.set(-2.15*(pos.x + 2.75), -2.25*(pos.y - 1.4), pos.z - 7.65);
                         paper.position.copy(pos);
                     }
                     break;
@@ -250,8 +250,15 @@ function colorPaper() {
                     }
                     paper.rotateX(Math.PI/2);
                     paper.rotateY(Math.PI/4);
+                    paper.scale.multiplyScalar(0.8)
                     scene.add(paper);
-                }, 1500);
+                }, 8000);
+
+                // setTimeout(() => {
+                //     for(var i in extraPapers) {
+                //         extraPapers[i].visible = true;
+                //     }
+                // }, 5000)
             }
         }
     }
@@ -888,6 +895,10 @@ function init() {
         setTimeout(() => {
             camera.position.set(0.11333127647429019, 1.5369136371003131, -2.028078509213737);
             camera.rotation.set(0.490486809597034, 0.0016298261023861107, 0);
+            
+            for(var i in extraPapers) {
+                extraPapers[i].visible = true;
+            }
         }, 1000)
 
         setTimeout(() => {
