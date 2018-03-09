@@ -50,13 +50,29 @@ app.get('/unseeable', (req, res) => {
   res.sendFile(path.join(__dirname+'/views/game.html'))
 })
 
+// Request to go to panas from game
+app.get('/unseeable/nextPage', (req, res) => {
+  req.on('data', (data) => {
+
+  })
+
+  req.on('end', (data) => {
+    res.json({redirect: '/panas2'})
+  })
+})
+
 // Informed consent
 app.get('/informed-consent', (req, res) => {
   res.sendFile(path.join(__dirname+'/views/informedConsent.html'));
 });
 
+// Panas1
+app.get('/panas1', (req, res) => {
+  res.sendFile(path.join(__dirname+'/views/panas.html'));
+});
+
 // Panas
-app.get('/panas', (req, res) => {
+app.get('/panas2', (req, res) => {
   res.sendFile(path.join(__dirname+'/views/panas.html'));
 });
 

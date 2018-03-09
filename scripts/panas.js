@@ -128,20 +128,25 @@ function scoreAnswers(answers) {
  * @param {*} score - positive affect and negative affect scores.
  */
 function sendPanas(answers, score) {
-    let results = {
+  let panasInstance = document.location.pathname.replace('/', '')
+  let results = {
+    instance: panasInstance,
+    results: {
       userId: window.sessionStorage.getItem('userId'),
       answers: answers,
       positiveAffect: score.positive,
       negativeAffect: score.negative
     }
+  }
 
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        let response = JSON.parse(this.responseText)
-        document.location.href = response.redirect;
-      }
-    };
-    xhttp.open("POST", "/panas/create", true);
-    xhttp.send(JSON.stringify(results));
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      let response = JSON.parse(this.responseText)
+      document.location.href = response.redirect;
+    }
+  };
+  xhttp.open("POST", "/panas/create", true);
+  xhttp.send(JSON.stringify(results));
 }
+
