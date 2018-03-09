@@ -776,7 +776,7 @@ function init() {
 
     //load and place the children GREEN TABLE
     loadAnimationFBX2("T-Pose (1).fbx",
-        ["Sitting (1).fbx", "Sitting Angry.fbx", "Sitting Disapproval.fbx", "Sitting Idle (1).fbx", "Sitting Laughing.fbx", "Sitting Talking.fbx", "Sitting Victory (1).fbx", "Sitting2.fbx"],
+        ["Sitting (1).fbx"],
         function(object){
             child = object;
             let scale = 2.4;
@@ -788,7 +788,7 @@ function init() {
 
     //load and place the children RED TABLE
     loadAnimationFBX2("T-Pose (1).fbx",
-        ["Sitting (1).fbx", "Sitting Angry.fbx", "Sitting Disapproval.fbx", "Sitting Idle (1).fbx", "Sitting Laughing.fbx", "Sitting Talking.fbx", "Sitting Victory (1).fbx", "Sitting2.fbx"],
+        ["Sitting Idle (1).fbx"],
         function(object){
             child = object;
             let scale = 2.4;
@@ -800,7 +800,7 @@ function init() {
 
     //load and place the children YELLOW TABLE
     loadAnimationFBX2("T-Pose (1).fbx",
-        ["Sitting (1).fbx", "Sitting Angry.fbx", "Sitting Disapproval.fbx", "Sitting Idle (1).fbx", "Sitting Laughing.fbx", "Sitting Talking.fbx", "Sitting Victory (1).fbx", "Sitting2.fbx"],
+        ["Sitting Talking.fbx"],
         function(object){
             child = object;
             let scale = 2.4;
@@ -812,7 +812,7 @@ function init() {
 
     //load and place the children BLUE TABLE
     loadAnimationFBX2("T-Pose (1).fbx",
-        ["Sitting (1).fbx", "Sitting Angry.fbx", "Sitting Disapproval.fbx", "Sitting Idle (1).fbx", "Sitting Laughing.fbx", "Sitting Talking.fbx", "Sitting Victory (1).fbx", "Sitting2.fbx"],
+        ["Sitting2.fbx"],
         function(object){
             child = object;
             let scale = 2.4;

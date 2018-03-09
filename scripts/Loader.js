@@ -14,7 +14,7 @@ function loadJSON(fileName, callback) {
             callback(JSON.parse(this.responseText));
         }
     };
-    xhttp.open("GET", "json/" + fileName + ".json", true);
+    xhttp.open("GET", "../json/" + fileName + ".json", true);
     xhttp.send();
 }
 
@@ -58,7 +58,7 @@ function loadStaticFBX(fileName, onLoad){
  */
 function loadAnimationFBX(fileName, onLoad){
     fbxloader.load(
-        "3dmodels/" + fileName,
+        "../3dmodels/" + fileName,
         function( object ) {
             //set the object to cast shadows
             for(let i in object.children){
@@ -93,7 +93,7 @@ function loadAnimationFBX(fileName, onLoad){
 function loadAnimationFBX2(filename, animations, onLoad){
     //load the T-Pose model
     fbxloader.load(
-        "3dmodels/" + filename,
+        "../3dmodels/" + filename,
         function(object){
             //set the object to cast shadows
             for(let i in object.children){
@@ -104,7 +104,7 @@ function loadAnimationFBX2(filename, animations, onLoad){
             let animationsLoaded = 0;
             for(let i in animations){
                 fbxloader.load(
-                    "3dmodels/animations/" + animations[i],
+                    "../3dmodels/animations/" + animations[i],
                     function(animation){
                         animation.animations[0].name = animations[i];
                         object.animations.push(animation.animations[0]);
@@ -139,7 +139,7 @@ function loadAnimationFBX2(filename, animations, onLoad){
 function loadWorldFBX(fileName, onLoad){
 
     fbxloader.load(
-        "3dmodels/" + fileName,
+        "../3dmodels/" + fileName,
         function( object ) {
             //add shadow casting and receiving for all of the child objects loaded
             for(let i in object.children){
@@ -176,7 +176,7 @@ function loadWorldFBX(fileName, onLoad){
 
             scene.add( object );
         },
-        null, onError
+        onProgress, onError
     );
 }
 
@@ -190,7 +190,7 @@ function loadWorldFBX(fileName, onLoad){
  */
 function loadSound(filename, volume, playImmediately, loop, onEnded){
     audioLoader.load(
-        "audio/" + filename,
+        "../audio/" + filename,
         (audioBuffer) => {
             let song = new THREE.Audio(audioListener);
             scene.add(song);
