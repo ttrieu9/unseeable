@@ -1,0 +1,72 @@
+{
+  "audio": [
+    {
+      "name": "TakeSeats",
+      "lines": [
+        {
+          "text": "Ok, kids take your seats.",
+          "offset": 0
+        },
+        {
+          "text": "Oh Sam, honey, you're going to be sitting at the red table today.",
+          "offset": 2500
+        }
+      ]
+    },
+    {
+      "name": "NotSeatOne",
+      "lines": [
+        {
+          "text": "Oh Sam, that's not your table, sweety.",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "name": "NotSeatTwo",
+      "lines": [
+        {
+          "text": "Um Sam, that's not your table either, sweety.",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "name": "ShowToSeat",
+      "lines": [
+        {
+          "text": "Come here, Sam. I'll show you to your correct seat.",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "name": "HowToDraw",
+      "lines": [
+        {
+          "text": "Alright, kids, now that you're all in your seats, I want you to color in the sheets in front of you by following the colors that go with the numbers.",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "name": "FinishColoring",
+      "lines": [
+        {
+          "text": "If you're done coloring, make sure your name is on your paper and place it on the board.",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "name": "HackJob",
+      "lines": [
+        {
+          "text": "Look at that hackjob!",
+          "offset": 0
+        }
+      ]
+    }
+
+  ]
+}

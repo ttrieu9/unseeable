@@ -4,12 +4,13 @@ var container, stats, controls;
 var camera, scene, renderer, light;
 var teacher = {};
 var child;
-var childanimation = 0;
+var controlsUsed = false;
 
 var audioListener;
 var sounds = [];
 
 var cameraPosition = 1;
+var cameraDirection = null;
 
 var clock = new THREE.Clock();
 
@@ -43,9 +44,14 @@ var currentTable = null;
 var lookatPosition = {x: 5, y: 2, z: 6};
 var lookatRotation;
 
-var camPosIndex;
+var subtitles;
 
 var logger = new Logger('player id', 1);
+
+//TODO: remove when done
+var xoff = 0.06;
+var yoff = 0.05;
+var zoff = -0.03;
 
 init();
 
@@ -56,11 +62,15 @@ loadJSON("colorPaperAnswers", (result) => {
 function disableControls() {
     controlsEnabled = false;
     document.body.style.cursor = 'none';
+    hideCameraControls();
 }
 
 function enableControls() {
     controlsEnabled = true;
     document.body.style.cursor = 'default';
+    if(cameraPosition === 1 && controlsUsed === false){
+        showCameraControls();
+    }
 }
 
 function onMouseMove() {
@@ -151,6 +161,18 @@ function onMouseMove() {
                             currentHover = null
                         }
                     }
+
+                    //if there is a currently selected crayon
+                    // if(currentObject){
+                    //     //make it hover over the mouse position
+                    //     let hoverPoint = intersects.find(function(element){
+                    //         return currentObject.name !== element.object.name;
+                    //     }).point;
+                    //     currentObject.position.set(hoverPoint.x + xoff, hoverPoint.y + yoff, hoverPoint.z + zoff);
+                    //
+                    //     //some weird math stuff to find the point 90% along the raycast
+                    //
+                    // }
                     break;
                 case 3:
                     if(posted === false) {
@@ -175,20 +197,28 @@ function colorPaper() {
     var intersects = raycaster.intersectObjects(intersectableObjects);
 
     if(intersects.length > 0) {
-        var intersected = intersects[0].object;
+        var intersected = intersects.find(function(element){
+            return currentObject !== element.object;
+        }).object;
 
+        //if clicking on crayons or the box
         if (intersected.name.includes('Crayon')) {
+            //if clicking on the box, put the crayon away
             if(intersected.name.includes('Crayon_Box')){
                 currentObject.visible = true;
                 currentObject = null;
             }
+            //else pick up the crayon
             else {
+                //reset the current crayon if there is one
                 if(currentObject && currentObject.visible === false) {
                     currentObject.visible = true;
                 }
 
+                //pick up the crayon
                 currentObject = intersected;
                 currentObject.visible = false;
+                // currentObject.rotation.set(0, Math.PI*5/6, Math.PI*11/6);
             }
 
             playSound("Click");
@@ -276,7 +306,7 @@ function lookAtTeacher(){
  */
 function sitAtTable(){
     setTimeout(function(){
-        new TWEEN.Tween(camera.position).to({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, 2000).onComplete(function(){
+        new TWEEN.Tween(camera.position).to({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, 1000).onComplete(function(){
             lookAtTeacher();
             playSound("HowToDraw");
         }).start();
@@ -299,7 +329,6 @@ function selectTable() {
                 currentHover.material = previousMaterial;
                 currentHover = null
             }
-            //TODO: find a less ugly of selecting which spline to traverse besides all these ifs
             //select the correct spline to move along, depending on the current table you are at
             //starting position
             if(currentTable === null){
@@ -411,10 +440,10 @@ function selectTable() {
  */
 function lookAround(){
     if(controlsEnabled === true && cameraPosition === 1){
-        if(mouse.x > .85){
+        if(cameraDirection === "right"){
             camera.rotation.y -= .005;
         }
-        else if(mouse.x <-.85){
+        else if(cameraDirection === "left"){
             camera.rotation.y += .005;
         }
     }
@@ -445,8 +474,13 @@ function postPaper() {
                     camera.zoom = currentZoom.value
                 });
                 zoomOut.start();
+
+                //mock the player and display their results
                 zoomOut.onComplete(() => {
                     playSound("HackJob");
+                    setTimeout(function(){
+                        showEndScreen();
+                    },10000);
                 })
             }
             posted = true;
@@ -470,7 +504,7 @@ function startCutScene() {
     setTimeout(() => {
         topBar.style.opacity = 1;
         bottomBar.style.opacity = 1;
-    }, 1000);
+    }, 950);
 }
 
 function endCutScene () {
@@ -490,6 +524,72 @@ function endCutScene () {
     }, 950);
 }
 
+/**
+ * Show camera controls when looking around the classroom
+ * @param which Optional "left" or "right" to only show one of the controls on the left or right.
+ */
+function showCameraControls(which){
+    var leftBar = document.getElementById("left_bar");
+    var rightBar = document.getElementById("right_bar");
+
+    if(which === "left") {
+        leftBar.classList.remove("controls-fade-out");
+        leftBar.classList.add("controls-fade-in");
+    }
+    else if(which === "right") {
+        rightBar.classList.remove("controls-fade-out");
+        rightBar.classList.add("controls-fade-in");
+    }
+    else{
+        leftBar.classList.remove("controls-fade-out");
+        rightBar.classList.remove("controls-fade-out");
+        leftBar.classList.add("controls-fade-in");
+        rightBar.classList.add("controls-fade-in");
+    }
+
+    setTimeout(() => {
+        if(which != "right") {
+            leftBar.style.opacity = 0.5;
+        }
+        if(which != "left") {
+            rightBar.style.opacity = 0.5;
+        }
+    }, 950);
+}
+
+/**
+ * Hide camera controls when looking around the classroom
+ * @param which Optional "left" or "right" to only hide one of the controls on the left or right.
+ */
+function hideCameraControls(which){
+    var leftBar = document.getElementById("left_bar");
+    var rightBar = document.getElementById("right_bar");
+
+    if(which === "left"){
+        leftBar.classList.remove("controls-fade-in");
+        leftBar.classList.add("controls-fade-out");
+    }
+    else if(which === "right"){
+        rightBar.classList.remove("controls-fade-in");
+        rightBar.classList.add("controls-fade-out");
+    }
+    else {
+        leftBar.classList.remove("controls-fade-in");
+        rightBar.classList.remove("controls-fade-in");
+        leftBar.classList.add("controls-fade-out");
+        rightBar.classList.add("controls-fade-out");
+    }
+
+    setTimeout(() => {
+        if(which != "right") {
+            leftBar.style.opacity = 0;
+        }
+        if(which != "left") {
+            rightBar.style.opacity = 0;
+        }
+    }, 950);
+}
+
 function fade() {
     var curtain = document.getElementById("curtain");
     curtain.classList.remove("screen-change");
@@ -498,15 +598,51 @@ function fade() {
 }
 
 /**
+ * Shows the end screen with the player's results and gives them the ability to continue or return to the main menu
+ */
+function showEndScreen(){
+    let canvas = document.getElementById("canvas");
+    let endScreen = document.getElementById("endgame");
+    let blur = {blur: 0};
+
+    //slowly blur the screen
+    let blurTween = new TWEEN.Tween(blur).to({blur: 5}, 2000);
+    blurTween.onUpdate(function(object){
+        canvas.style.filter = "blur(" + blur.blur + "px)";
+        endScreen.style.opacity = ""+blur.blur/5;
+    });
+    //make the mouse visible again
+    blurTween.onComplete(function(){
+        document.body.style.cursor = "defualt";
+    })
+    blurTween.start();
+    console.log("level over");
+}
+
+/**
  * Play the given sound
  * @param name String name of the sound to be played
  */
-//TODO: use array.find method would be neater
 function playSound(name) {
-    //fins the sound whose name includes the given string
+    //find the sound whose name includes the given string
     let sound = sounds.find(function(element){
         return element.name.includes(name);
     });
+
+    //add subtitles
+    let subs = subtitles.audio.find(function(element){
+        return element.name.includes(name);
+    });
+
+    if(subs){
+        for(let i in subs.lines){
+            setTimeout(function(){
+                let subtitle = document.getElementById("subs");
+                subtitle.innerText = subs.lines[i].text;
+            }, subs.lines[i].offset);
+        }
+    }
+
     sound.play();
 }
 
@@ -522,17 +658,16 @@ function init() {
     camera.add(audioListener);
 
     // renderer
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.shadowMap.enabled = true;
+    renderer = new THREE.WebGLRenderer({ antialias: true, canvas: document.getElementById("canvas")});
+    renderer.shadowMap.enabled = false;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
-    document.body.appendChild( renderer.domElement );
 
     //camera controls, mostly for debugging purposes
     controls = new THREE.OrbitControls( camera );
     controls.target = new THREE.Vector3(3, 1, 5);
-    controls.enabled = true; //set to false to turn off controls
+    controls.enabled = false; //set to false to turn off controls
 
     //initial camera position
     camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
@@ -543,10 +678,13 @@ function init() {
     //
 
     //load the classroom
-    loadWorldFBX('3dmodels/Preschool_New_1.31.fbx',
+    loadWorldFBX('Preschool_New_1.31.fbx',
         function(object){
+        console.log(object);
             for(let i in object.children) {
                 let child = object.children[i];
+
+                //save the parts of the paper to the appropriate sections
                 if (child.name.includes("MainPaper")) {
                     paperGroup.push(child);
 
@@ -554,6 +692,34 @@ function init() {
                         coloredObjects.push(child.name);
                     }
                 }
+
+                //turn off shadow casting/receiving for the appropriate objects
+                if(child.name.includes("Paper")){
+                    child.castShadow = false;
+                    child.receiveShadow = false;
+                }
+                else if(child.name.includes("Crayon")){
+                    child.receiveShadow = false;
+
+                    //generate the bounding box for it and find the center point
+                    child.geometry.computeBoundingBox();
+                    let box = child.geometry.boundingBox;
+                    let boxPos = {
+                        x: 0.5 * (box.max.x + box.min.x),
+                        y: 0.5 * (box.max.y + box.min.y),
+                        z: 0.5 * (box.max.z + box.min.z)
+                    };
+
+                    //center the geometry and move it back to its original location
+                    child.geometry.center();
+                    child.position.set(boxPos.x, boxPos.y, boxPos.z);
+                }
+                //sky sphere
+                else if(child.name.includes("pSphere10")){
+                    child.castShadow = false;
+                    child.receiveShadow = false;
+                }
+
             }
         });
 
@@ -561,25 +727,65 @@ function init() {
     loadAnimationFBX('Idle.fbx',
         function(object){
             teacher = object;
-            teacher.position.set(4, -.05, -1);
+            teacher.position.set(6, -.05, -3);
             let scale = 2.2;
             teacher.scale.set(scale, scale, scale);
         });
 
-    loadAnimationFBX2("T-Pose_WithSkin.fbx",
-        ["Sitting_Bones.fbx", "Sitting2_Bones.fbx", "Sitting Yell_Bones.fbx"],
+    //load and place the children GREEN TABLE
+    loadAnimationFBX2("T-Pose (1).fbx",
+        ["Sitting (1).fbx", "Sitting Angry.fbx", "Sitting Disapproval.fbx", "Sitting Idle (1).fbx", "Sitting Laughing.fbx", "Sitting Talking.fbx", "Sitting Victory (1).fbx", "Sitting2.fbx"],
         function(object){
             child = object;
             let scale = 2.4;
             object.scale.set(scale, scale, scale);
-            object.position.set(2, .5, 3.4);
-            object.rotation.y = Math.PI;
-            setTimeout(function(){
-                playAnimation(object, 1);
-            }, 1000);
+            object.position.set(3.2, .5, -0.4);
+            object.rotation.y = -Math.PI/8;
+            playAnimation(object, "Sitting (1)");
         });
 
-    //load sounds
+    //load and place the children RED TABLE
+    loadAnimationFBX2("T-Pose (1).fbx",
+        ["Sitting (1).fbx", "Sitting Angry.fbx", "Sitting Disapproval.fbx", "Sitting Idle (1).fbx", "Sitting Laughing.fbx", "Sitting Talking.fbx", "Sitting Victory (1).fbx", "Sitting2.fbx"],
+        function(object){
+            child = object;
+            let scale = 2.4;
+            object.scale.set(scale, scale, scale);
+            object.position.set(9.4, .5, 1);
+            object.rotation.y = -Math.PI/4;
+            playAnimation(object, "Sitting Idle (1)");
+        });
+
+    //load and place the children YELLOW TABLE
+    loadAnimationFBX2("T-Pose (1).fbx",
+        ["Sitting (1).fbx", "Sitting Angry.fbx", "Sitting Disapproval.fbx", "Sitting Idle (1).fbx", "Sitting Laughing.fbx", "Sitting Talking.fbx", "Sitting Victory (1).fbx", "Sitting2.fbx"],
+        function(object){
+            child = object;
+            let scale = 2.4;
+            object.scale.set(scale, scale, scale);
+            object.position.set(7.8, .5, 10.8);
+            object.rotation.y = Math.PI*7/8;
+            playAnimation(object, "Sitting Talking");
+        });
+
+    //load and place the children BLUE TABLE
+    loadAnimationFBX2("T-Pose (1).fbx",
+        ["Sitting (1).fbx", "Sitting Angry.fbx", "Sitting Disapproval.fbx", "Sitting Idle (1).fbx", "Sitting Laughing.fbx", "Sitting Talking.fbx", "Sitting Victory (1).fbx", "Sitting2.fbx"],
+        function(object){
+            child = object;
+            let scale = 2.4;
+            object.scale.set(scale, scale, scale);
+            object.position.set(.6, .5, 11);
+            object.rotation.y = Math.PI/2;
+            playAnimation(object, "Sitting2");
+        });
+
+    //load audio
+
+    // load subtitles
+    loadJSON("level1subs", function(json){
+        subtitles = json;
+    });
 
     //kids playing in background
     loadSound('kids-playing-1.mp3', 0.025, true, true);
@@ -659,6 +865,46 @@ function init() {
         logger.endLog();
     });
 
+    //
+    // LIGHTS
+    //
+
+    light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
+    light.position.set(-4, 9, -1);
+    light.castShadow = true;
+    light.shadow.mapSize.width = 512;
+    light.shadow.mapSize.height = 512;
+    scene.add(light);
+    scene.add(new THREE.PointLightHelper(light));
+
+    light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
+    light.position.set(4, 9, -1);
+    light.castShadow = true;
+    light.shadow.mapSize.width = 512;
+    light.shadow.mapSize.height = 512;
+    scene.add(light);
+    scene.add(new THREE.PointLightHelper(light));
+
+    light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
+    light.position.set(-4, 9, 10);
+    light.castShadow = true;
+    light.shadow.mapSize.width = 512;
+    light.shadow.mapSize.height = 512;
+    scene.add(light);
+    scene.add(new THREE.PointLightHelper(light));
+
+    light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
+    light.position.set(4, 9, 10);
+    light.castShadow = true;
+    light.shadow.mapSize.width = 512;
+    light.shadow.mapSize.height = 512;
+    scene.add(light);
+    scene.add(new THREE.PointLightHelper(light));
+
+    //ambient light to make the shadows not as dark
+    light = new THREE.AmbientLight(0xfff1e0, 0.6);
+    scene.add(light);
+
     //create raycaster for object selection
     raycaster = new THREE.Raycaster();
     container = document.createElement( 'div' );
@@ -670,6 +916,43 @@ function init() {
 
     var element = document.body;
 
+    //
+    // EVENT LISTENERS
+    //
+
+    //event listeners for turning the camera left when looking at tables
+    let leftBar = document.getElementById("left_bar");
+    leftBar.addEventListener("mouseenter", function(){
+        if(cameraPosition === 1) {
+            cameraDirection = "left";
+            showCameraControls("left");
+            if (controlsUsed === false) {
+                hideCameraControls("right");
+                controlsUsed = true;
+            }
+        }
+    });
+    leftBar.addEventListener("mouseleave", function(){
+        cameraDirection = null;
+        hideCameraControls("left");
+    });
+
+    //event listeners for turning the camera right when looking at tables
+    let rightBar = document.getElementById("right_bar");
+    rightBar.addEventListener("mouseenter", function(){
+        if(cameraPosition === 1) {
+            cameraDirection = "right";
+            showCameraControls("right");
+            if (controlsUsed === false) {
+                hideCameraControls("left");
+                controlsUsed = true;
+            }
+        }
+    });
+    rightBar.addEventListener("mouseleave", function(){
+        cameraDirection = null;
+        hideCameraControls("right");
+    });
 
     element.addEventListener("keypress", function(event){
         if(String.fromCharCode(event.keyCode) === "c"){
@@ -681,13 +964,23 @@ function init() {
         else if(String.fromCharCode(event.keyCode) === "t"){
             console.log(coloredObjects)
         }
-        else if(String.fromCharCode(event.keyCode) === "n"){
-            childanimation = (childanimation + 1)%child.animations.length;
-            playAnimation(child, childanimation);
+        else if(String.fromCharCode(event.keyCode) === "o"){
+            controls.enabled = !controls.enabled;
+        }
+        else if(String.fromCharCode(event.keyCode) === "x"){
+            xoff += .01;
+            console.log(xoff);
+        }
+        else if(String.fromCharCode(event.keyCode) === "y"){
+            yoff += .01;
+            console.log(yoff);
+        }
+        else if(String.fromCharCode(event.keyCode) === "z"){
+            zoff -= .01;
+            console.log(zoff);
         }
         else if(String.fromCharCode(event.keyCode) === "m"){
-            childanimation = (childanimation + 1)%child.animations.length;
-            blendIntoAnimation(child, childanimation);
+            showEndScreen();
         }
         else if(String.fromCharCode(event.keyCode) === " "){
             nextPosition();
@@ -735,59 +1028,6 @@ function init() {
 
     window.addEventListener( 'resize', onWindowResize, false );
 
-    light = new THREE.PointLight(0xd6d498, 1, 50, 1);
-    light.position.set(-4, 9, -1);
-    light.castShadow = true;
-    light.shadowMapWidth = 1024;
-    light.shadowMapHeight = 1024;
-    scene.add(light);
-
-    light = new THREE.PointLight(0xd6d498, 1, 50, 1);
-    light.position.set(4, 9, -1);
-    light.castShadow = true;
-    light.shadowMapWidth = 1024;
-    light.shadowMapHeight = 1024;
-    scene.add(light);
-
-    light = new THREE.PointLight(0xd6d498, 1, 50, .7);
-    light.position.set(-4, 9, 10);
-    // light.castShadow = true;
-    // light.shadowMapWidth = 1024;
-    // light.shadowMapHeight = 1024;
-    scene.add(light);
-
-    light = new THREE.PointLight(0xd6d498, 1, 50, .7);
-    light.position.set(4, 9, 10);
-    // light.castShadow = true;
-    // light.shadowMapWidth = 1024;
-    // light.shadowMapHeight = 1024;
-    scene.add(light);
-
-    // light = new THREE.AmbientLight( 0x656565 ); // soft white light
-    // scene.add( light );
-
-    var spotLight = new THREE.SpotLight( 0x222222 );
-    spotLight.position.set( 100, 1000, 100 );
-
-    spotLight.castShadow = true;
-
-    spotLight.shadow.mapSize.width = 1024;
-    spotLight.shadow.mapSize.height = 1024;
-
-    spotLight.shadow.camera.near = 500;
-    spotLight.shadow.camera.far = 4000;
-    spotLight.shadow.camera.fov = 30;
-
-    scene.add( spotLight );
-
-    light = new THREE.AmbientLight(0xd6d498, .1);
-    // /scene.add(light);
-
-    light = new THREE.DirectionalLight(0xffffff, 1.0);
-    light.position.set(0, 10, -50);
-    light.rotation.x = Math.PI / 2;
-    // scene.add(light);
-
     animate();
     startCutScene();
     setTimeout(() => {
@@ -795,14 +1035,11 @@ function init() {
     }, 3000)
 }
 
-// window.onload = changeColorVision();
+window.onload = changeColorVision();
 
 function nextPosition(){
     switch(cameraPosition){
         case 1:
-            //move to looking at the paper
-            // camera.rotation.set(-1.0581080584316573, -0.5617291507874522, 0);
-            // camera.position.set(6.962359430337607, 2.121043760351845, 4.453431362994369);
             cameraPosition = 2;
             break;
         case 2:
@@ -819,6 +1056,8 @@ function nextPosition(){
             var lookAtTeacher = new TWEEN.Tween(camera.rotation).to(teacherView, 1000).onComplete(() => {
                 // teacher makes announcement to place art on board
                 playSound("FinishColoring");
+                //update the art score for the end menu
+                document.getElementById("numCorrect").innerText = colorPaperScore;
             }, 2000);
             lookAtTeacher.start();
 
