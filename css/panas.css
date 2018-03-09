@@ -8,6 +8,13 @@ body {
   font-weight: bold;
 }
 
+#missing_answers_message {
+  display: none;
+  font-weight: bold;
+  font-size: 16pt;
+  color: red;
+}
+
 .feeling {
   font-size: 16pt;
   position: relative;

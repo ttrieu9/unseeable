@@ -42,6 +42,11 @@ function submitForm() {
 }
 
 function markMissingAnswers() {
+  let errorMessage = document.getElementById('missing_answers_message');
+  errorMessage.style.display = 'block';
+  
+  document.body.scrollTop = document.documentElement.scrollTop = 0;
+
   for(var i = 1; i <= 28; i++) {
     let questionId = 'iri_q' + i;
     let radio = document.getElementsByName(questionId);

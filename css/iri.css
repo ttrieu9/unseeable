@@ -4,6 +4,14 @@
   font-weight: bold;
 }
 
+#missing_answers_message {
+  display: none;
+  font-weight: bold;
+  font-size: 16pt;
+  color: red;
+  margin-bottom: 15px;
+}
+
 .rating_left {
   position: relative;
   display: inline-block;
