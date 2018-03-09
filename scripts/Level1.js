@@ -33,6 +33,7 @@ var controlsEnabled = true;
 var colorPaperAnswers;
 var colorPaperScore = 0;
 var colorsUsed = [];
+var extraPapers = []
 
 var paths = [];
 var splineTargets = [];
@@ -702,7 +703,7 @@ function init() {
     //
 
     //load the classroom
-    loadWorldFBX('Preschool_New_1.31.fbx',
+    loadWorldFBX('Preschool_New3.9.18.fbx',
         function(object){
         console.log(object);
             for(let i in object.children) {
@@ -746,6 +747,16 @@ function init() {
 
             }
         });
+
+    loadWorldFBX('Colored Papers.fbx', (object) => {
+        for(i in object.children) {
+            let child = object.children[i];
+
+            child.position.set(child.position.x + 0.5, child.position.y, child.position.z - 3.3);
+            child.visible = false;
+            extraPapers.push(child);
+        }
+    })
 
     //load and place the teacher
     loadAnimationFBX('Idle.fbx',
