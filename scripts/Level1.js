@@ -165,16 +165,16 @@ function onMouseMove() {
                     }
 
                     //if there is a currently selected crayon
-                    // if(currentObject){
-                    //     //make it hover over the mouse position
-                    //     let hoverPoint = intersects.find(function(element){
-                    //         return currentObject.name !== element.object.name;
-                    //     }).point;
-                    //     currentObject.position.set(hoverPoint.x + xoff, hoverPoint.y + yoff, hoverPoint.z + zoff);
-                    //
-                    //     //some weird math stuff to find the point 90% along the raycast
-                    //
-                    // }
+                    if(currentObject){
+                        //make it hover over the mouse position
+                        let hoverPoint = intersects.find(function(element){
+                            return currentObject.name !== element.object.name;
+                        }).point;
+                        currentObject.position.set(hoverPoint.x + xoff, hoverPoint.y + yoff, hoverPoint.z + zoff);
+
+                        //place the crayon at the point that is 90% along the ray cast
+
+                    }
                     break;
                 case 3:
                     if(posted === false) {
@@ -219,8 +219,8 @@ function colorPaper() {
 
                 //pick up the crayon
                 currentObject = intersected;
-                currentObject.visible = false;
-                // currentObject.rotation.set(0, Math.PI*5/6, Math.PI*11/6);
+                // currentObject.visible = false;
+                currentObject.rotation.set(0, Math.PI*5/6, Math.PI*11/6);
             }
 
             playSound("Click");
