@@ -40,9 +40,14 @@ app.use('/preSurvey', preSurvey);
 app.use('/postSurvey', postSurvey);
 app.use(favicon(__dirname + '/favicon.png'));
 
-// Load game
+// Title screen
 app.get('/', (req, res) => {
   res.sendFile('/index.html');
+})
+
+// Load game
+app.get('/unseeable', (req, res) => {
+  res.sendFile(path.join(__dirname+'/views/game.html'))
 })
 
 // Informed consent
