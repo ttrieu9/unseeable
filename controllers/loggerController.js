@@ -42,11 +42,11 @@ exports.create_log = (req, res) => {
     log.create_log((err, result) => {
       if(err) {
         console.log(err)
-        res.json(result).end();
+        res.json({error:result}).end();
         return;
       }
 
-      res.json(result).end();
+      res.json({result:result}).end();
       console.log('Log Created.')
     });
   });
