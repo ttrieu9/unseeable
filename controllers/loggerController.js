@@ -40,15 +40,15 @@ exports.create_log = (req, res) => {
   req.on('end', (data) => {
     console.log(logData)
     var log = new Log(logData);
-    // log.create_log((err, result) => {
-    //   if(err) {
-    //     console.log(err)
-    //     res.json({error:result}).end();
-    //     return;
-    //   }
+    log.create_log((err, result) => {
+      if(err) {
+        console.log(err)
+        res.json({error:result}).end();
+        return;
+      }
 
-    //   res.json({result:result}).end();
-    //   console.log('Log Created.')
+      res.json({result:result}).end();
+      console.log('Log Created.')
     // });
   });
 };
