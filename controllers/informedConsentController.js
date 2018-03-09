@@ -11,10 +11,14 @@ exports.create_informed_consent = (req, res) => {
   req.on('end', (data) => {
     var informedConsent = new InformedConsent(informedConsentData);
     informedConsent.create_informed_consent((err, result) => {
-      if(err) throw err;
+      if(err) {
+        console.log(err);
+        res.json({result: err, redirect: '/informed-consent'}).end()
+        return;
+      }
 
-      res.json({result: result, redirect: '/iri'}).end()
+      res.json({result: result, redirect: '/panas1'}).end()
+      console.log('Informed Consent created.')
     });
   });
-  console.log('Informed Consent created.')
 }

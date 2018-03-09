@@ -34,9 +34,8 @@ function submitForm() {
  * @param {String} signature - Full name of participant.
  */
 function sendInformedConsent(signature) {
-  getUserId((userId) => {
     let results = {
-      userId: userId,
+      userId: window.sessionStorage.getItem('userId'),
       signature: signature,
       date: new Date()
     }
@@ -50,20 +49,4 @@ function sendInformedConsent(signature) {
     };
     xhttp.open("POST", "/informedConsent/create", true);
     xhttp.send(JSON.stringify(results));
-  })
-}
-
-/**
- * Retrieves user id for current session.
- */
-function getUserId(cb) {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      let response = this.responseText
-      cb(response)
-    }
-  };
-  xhttp.open("GET", "/userId/generate", true);
-  xhttp.send();
 }

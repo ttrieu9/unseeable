@@ -13,7 +13,8 @@ var TaskSchema = new Schema({
   grade: {
     type: Number,
     required: [true, 'Required field missing: task "grade".']
-  }
+  },
+  additional: Array
 });
 
 module.exports = TaskSchema;

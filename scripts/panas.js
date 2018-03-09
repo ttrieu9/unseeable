@@ -42,6 +42,11 @@ function submitForm() {
 }
 
 function markMissingAnswers() {
+  let errorMessage = document.getElementById('missing_answers_message');
+  errorMessage.style.display = 'block';
+  
+  document.body.scrollTop = document.documentElement.scrollTop = 0;
+
   for(var i = 0; i < 20; i++) {
     let questionId = 'panas_q' + (i + 1);
     let radio = document.getElementsByName(questionId);
@@ -128,37 +133,25 @@ function scoreAnswers(answers) {
  * @param {*} score - positive affect and negative affect scores.
  */
 function sendPanas(answers, score) {
-  getUserId((userId) => {
-    let results = {
-      userId: userId,
+  let panasInstance = document.location.pathname.replace('/', '')
+  let results = {
+    instance: panasInstance,
+    results: {
+      userId: window.sessionStorage.getItem('userId'),
       answers: answers,
       positiveAffect: score.positive,
       negativeAffect: score.negative
     }
+  }
 
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        let response = JSON.parse(this.responseText)
-        document.location.href = response.redirect;
-      }
-    };
-    xhttp.open("POST", "/panas/create", true);
-    xhttp.send(JSON.stringify(results));
-  })
-}
-
-/**
- * Retrieves user id for current session.
- */
-function getUserId(cb) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      let response = this.responseText
-      cb(response)
+      let response = JSON.parse(this.responseText)
+      document.location.href = response.redirect;
     }
   };
-  xhttp.open("GET", "/userId/retrieve", true);
-  xhttp.send();
+  xhttp.open("POST", "/panas/create", true);
+  xhttp.send(JSON.stringify(results));
 }
+

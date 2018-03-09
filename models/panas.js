@@ -24,4 +24,4 @@ PanasSchema.methods.create_panas = function(cb) {
   return this.save(cb);
 };
 
-module.exports = mongoose.model('Panas', PanasSchema);
+module.exports = PanasSchema;

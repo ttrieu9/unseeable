@@ -11,10 +11,14 @@ exports.create_iri = (req, res) => {
   req.on('end', (data) => {
     var iri = new Iri(iriData);
     iri.create_iri((err, result) => {
-      if(err) throw err;
+      if(err) {
+        console.log(err);
+        res.json({result: err, redirect: '/iri'}).end()
+        return;
+      }
 
-      res.json({result: result, redirect: '/panas'}).end()
+      res.json({result: result, redirect: '/pre-survey'}).end()
+      console.log('Iri created.')
     });
   });
-  console.log('Iri created.')
 }

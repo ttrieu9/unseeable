@@ -32,6 +32,8 @@ var posted = false;
 var controlsEnabled = true;
 var colorPaperAnswers;
 var colorPaperScore = 0;
+var colorsUsed = [];
+var extraPapers = []
 
 var paths = [];
 var splineTargets = [];
@@ -182,7 +184,7 @@ function onMouseMove() {
                         var dir = vector.sub( camera.position ).normalize();
                         var distance = - camera.position.z / dir.z;
                         var pos = camera.position.clone().add( dir.multiplyScalar( distance ) );
-                        pos.set(-1.9*(pos.x + 3.9), -1.9*(pos.y - 1.2), pos.z - 7.5);
+                        pos.set(-2.15*(pos.x + 2.75), -2.25*(pos.y - 1.4), pos.z - 7.65);
                         paper.position.copy(pos);
                     }
                     break;
@@ -225,6 +227,7 @@ function colorPaper() {
         }
         else if(intersected.name.includes('Paper') && coloredObjects.includes(intersected.name) && !intersected.name.includes("Outline") && currentObject) {
             intersected.material = currentObject.material[0];
+            // colorsUsed.push(currentObject.material[0].name)
             updatePaperScore(intersected.name, currentObject.material[0].name)
             var paperIndex = coloredObjects.findIndex((object) => {
                 return object.includes(intersected.name)
@@ -235,7 +238,7 @@ function colorPaper() {
 
             if(coloredObjects.length === 0) {
                 startCutScene();
-                logger.logTask("Color paper", colorPaperScore / 14);
+                logger.logTask("Color paper", colorPaperScore / 14, colorsUsed);
                 setTimeout(() => {
                     nextPosition();
                 }, 750);
@@ -247,8 +250,15 @@ function colorPaper() {
                     }
                     paper.rotateX(Math.PI/2);
                     paper.rotateY(Math.PI/4);
+                    paper.scale.multiplyScalar(0.8)
                     scene.add(paper);
-                }, 1500);
+                }, 8000);
+
+                // setTimeout(() => {
+                //     for(var i in extraPapers) {
+                //         extraPapers[i].visible = true;
+                //     }
+                // }, 5000)
             }
         }
     }
@@ -268,6 +278,11 @@ function updatePaperScore(intersectedName, crayonColor) {
     if(piece.trueColor == crayonColor) {
         colorPaperScore++;
     };
+
+    colorsUsed.push({
+        name: piece.name,
+        colorUsed: crayonColor
+    })
 }
 
 /**
@@ -603,6 +618,7 @@ function fade() {
 function showEndScreen(){
     let canvas = document.getElementById("canvas");
     let endScreen = document.getElementById("endgame");
+    endScreen.style.display = 'block'
     let blur = {blur: 0};
 
     //slowly blur the screen
@@ -613,7 +629,7 @@ function showEndScreen(){
     });
     //make the mouse visible again
     blurTween.onComplete(function(){
-        document.body.style.cursor = "defualt";
+        document.body.style.cursor = "default";
     })
     blurTween.start();
     console.log("level over");
@@ -646,8 +662,24 @@ function playSound(name) {
     sound.play();
 }
 
+function nextPage() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        let response = JSON.parse(this.responseText)
+        document.location.href = response.redirect;
+      }
+    };
+    xhttp.open("GET", "/unseeable/nextPage", true);
+    xhttp.send();
+}
+
 function init() {
     startCutScene();
+
+    let cont = document.getElementById('continue')
+    cont.addEventListener('click', nextPage)
+
     //create the scene
     scene = new THREE.Scene();
 
@@ -678,7 +710,7 @@ function init() {
     //
 
     //load the classroom
-    loadWorldFBX('Preschool_New_1.31.fbx',
+    loadWorldFBX('Preschool_New3.9.18.fbx',
         function(object){
         console.log(object);
             for(let i in object.children) {
@@ -722,6 +754,16 @@ function init() {
 
             }
         });
+
+    loadWorldFBX('Colored Papers.fbx', (object) => {
+        for(i in object.children) {
+            let child = object.children[i];
+
+            child.position.set(child.position.x + 0.5, child.position.y, child.position.z - 3.3);
+            child.visible = false;
+            extraPapers.push(child);
+        }
+    })
 
     //load and place the teacher
     loadAnimationFBX('Idle.fbx',
@@ -853,6 +895,10 @@ function init() {
         setTimeout(() => {
             camera.position.set(0.11333127647429019, 1.5369136371003131, -2.028078509213737);
             camera.rotation.set(0.490486809597034, 0.0016298261023861107, 0);
+            
+            for(var i in extraPapers) {
+                extraPapers[i].visible = true;
+            }
         }, 1000)
 
         setTimeout(() => {
@@ -954,55 +1000,55 @@ function init() {
         hideCameraControls("right");
     });
 
-    element.addEventListener("keypress", function(event){
-        if(String.fromCharCode(event.keyCode) === "c"){
-            console.log(camera);
-        }
-        else if(String.fromCharCode(event.keyCode) === "f"){
-            logger.printLog();
-        }
-        else if(String.fromCharCode(event.keyCode) === "t"){
-            console.log(coloredObjects)
-        }
-        else if(String.fromCharCode(event.keyCode) === "o"){
-            controls.enabled = !controls.enabled;
-        }
-        else if(String.fromCharCode(event.keyCode) === "x"){
-            xoff += .01;
-            console.log(xoff);
-        }
-        else if(String.fromCharCode(event.keyCode) === "y"){
-            yoff += .01;
-            console.log(yoff);
-        }
-        else if(String.fromCharCode(event.keyCode) === "z"){
-            zoff -= .01;
-            console.log(zoff);
-        }
-        else if(String.fromCharCode(event.keyCode) === "m"){
-            showEndScreen();
-        }
-        else if(String.fromCharCode(event.keyCode) === " "){
-            nextPosition();
-        }
-    }, false);
+    // element.addEventListener("keypress", function(event){
+    //     if(String.fromCharCode(event.keyCode) === "c"){
+    //         console.log(camera);
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === "f"){
+    //         logger.printLog();
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === "t"){
+    //         console.log(coloredObjects)
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === "o"){
+    //         controls.enabled = !controls.enabled;
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === "x"){
+    //         xoff += .01;
+    //         console.log(xoff);
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === "y"){
+    //         yoff += .01;
+    //         console.log(yoff);
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === "z"){
+    //         zoff -= .01;
+    //         console.log(zoff);
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === "m"){
+    //         showEndScreen();
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === " "){
+    //         nextPosition();
+    //     }
+    // }, false);
 
-    window.addEventListener("dblclick", () => {
-        if(colormode === 1) {
-            revertColors(document);
-            for(var i in paths) {
-                paths[i].visible = true;
-            }
-            colormode = 0
-        }
-        else {
-            changeColorVision();
-            for(var i in paths) {
-                paths[i].visible = false;
-            }
-            colormode = 1
-        }
-    });
+    // window.addEventListener("dblclick", () => {
+    //     if(colormode === 1) {
+    //         revertColors(document);
+    //         for(var i in paths) {
+    //             paths[i].visible = true;
+    //         }
+    //         colormode = 0
+    //     }
+    //     else {
+    //         changeColorVision();
+    //         for(var i in paths) {
+    //             paths[i].visible = false;
+    //         }
+    //         colormode = 1
+    //     }
+    // });
 
     window.addEventListener("mousemove", onMouseMove);
 

@@ -11,10 +11,14 @@ exports.create_pre_survey = (req, res) => {
   req.on('end', (data) => {
     var preSurvey = new PreSurvey(preSurveyData);
     preSurvey.create_pre_survey((err, result) => {
-      if(err) throw err;
+      if(err) {
+        console.log(err);
+        res.json({result: err, redirect: '/pre-survey'}).end()
+        return;
+      }
 
-      res.json({result: result, redirect: '/post-survey'}).end()
+      res.json({result: result, redirect: '/unseeable'}).end()
+      console.log('PreSurvey created.')
     });
   });
-  console.log('PreSurvey created.')
 }

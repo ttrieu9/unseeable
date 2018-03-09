@@ -36,17 +36,17 @@ class Logger {
    * @param {Number} levelId - An integer representing the level being played.
    */
   constructor(playerId, levelId) {
-    var date = new Date();
-    this.log = {
-      playerId: playerId,
-      levelId: levelId,
-      date: date,
-      startTime: date.getTime(),
-      levelDuration: 0.0,
-      events: [],
-      tasks: []
-    };
-    this.taskStartTime = 0;
+      var date = new Date();
+      this.log = {
+        playerId: window.sessionStorage.getItem('userId'),
+        levelId: levelId,
+        date: date,
+        startTime: date.getTime(),
+        levelDuration: 0.0,
+        events: [],
+        tasks: []
+      };
+      this.taskStartTime = 0;
   }
 
   /**
@@ -81,13 +81,15 @@ class Logger {
    * 
    * @param {String} name - The name of the task.
    * @param {Number} grade - The amount of success achieved by the player in doing the task.
+   * @param {Array} additional - Any additional info to be logged.
    */
-  logTask(name, grade) {
+  logTask(name, grade, additional) {
     this.log.tasks.push(
       {
         name: name,
         duration: new Date().getTime() - this.log.date.getTime(),
-        grade: grade
+        grade: grade,
+        additional: additional
       });
   }
 

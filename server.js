@@ -40,9 +40,25 @@ app.use('/preSurvey', preSurvey);
 app.use('/postSurvey', postSurvey);
 app.use(favicon(__dirname + '/favicon.png'));
 
-// Load game
+// Title screen
 app.get('/', (req, res) => {
   res.sendFile('/index.html');
+})
+
+// Load game
+app.get('/unseeable', (req, res) => {
+  res.sendFile(path.join(__dirname+'/views/game.html'))
+})
+
+// Request to go to panas from game
+app.get('/unseeable/nextPage', (req, res) => {
+  req.on('data', (data) => {
+
+  })
+
+  req.on('end', (data) => {
+    res.json({redirect: '/panas2'})
+  })
 })
 
 // Informed consent
@@ -50,8 +66,13 @@ app.get('/informed-consent', (req, res) => {
   res.sendFile(path.join(__dirname+'/views/informedConsent.html'));
 });
 
-// Panas
-app.get('/panas', (req, res) => {
+// Panas1
+app.get('/panas1', (req, res) => {
+  res.sendFile(path.join(__dirname+'/views/panas.html'));
+});
+
+// Panas2
+app.get('/panas2', (req, res) => {
   res.sendFile(path.join(__dirname+'/views/panas.html'));
 });
 
@@ -65,9 +86,14 @@ app.get('/pre-survey', (req, res) => {
   res.sendFile(path.join(__dirname+'/views/preSurvey.html'));
 });
 
-// Pre-Survey
+// Post-Survey
 app.get('/post-survey', (req, res) => {
   res.sendFile(path.join(__dirname+'/views/postSurvey.html'));
+});
+
+// End screen
+app.get('/end-screen', (req, res) => {
+  res.sendFile(path.join(__dirname+'/views/endscreen.html'));
 });
 
 var port = process.env.PORT || 8080;
