@@ -598,13 +598,19 @@ function fade() {
  */
 function showEndScreen(){
     let canvas = document.getElementById("canvas");
+    let endScreen = document.getElementById("endgame");
     let blur = {blur: 0};
 
     //slowly blur the screen
-    let blurTween = new TWEEN.Tween(blur).to({blur: 5}, 1000);
+    let blurTween = new TWEEN.Tween(blur).to({blur: 5}, 2000);
     blurTween.onUpdate(function(object){
         canvas.style.filter = "blur(" + blur.blur + "px)";
+        endScreen.style.opacity = ""+blur.blur/5;
     });
+    //make the mouse visible again
+    blurTween.onComplete(function(){
+        document.body.style.cursor = "defualt";
+    })
     blurTween.start();
     console.log("level over");
 }
@@ -1046,6 +1052,8 @@ function nextPosition(){
             var lookAtTeacher = new TWEEN.Tween(camera.rotation).to(teacherView, 1000).onComplete(() => {
                 // teacher makes announcement to place art on board
                 playSound("FinishColoring");
+                //update the art score for the end menu
+                document.getElementById("numCorrect").innerText = colorPaperScore;
             }, 2000);
             lookAtTeacher.start();
 
