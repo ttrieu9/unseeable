@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Unseeable Pre-Survey</title>
+    <link rel="stylesheet" href="css/questions.css">
+    <link rel="stylesheet" href="css/survey.css">
+  </head>
+
+  <body>
+    <h1>Unseeable Pre-Survey</h1>
+    <p>Before playing the game, we would like to ask you a few questions. Please answer the questions presented below honestly and thoughtfully. These questions are optional.</p>
+
+    <div class="gray_question">
+      <div class="scenario">Have you been diagnosed with colorblindness?</div>
+      <label class="container"> <input type="radio" name="preSurvey_q1" value="0"> <span class="checkmark" onclick="Q1_Yes()"></span> </label> <span class="answer_label">Yes</span>
+      <br><br>
+      <label class="container"> <input type="radio" name="preSurvey_q1" value="1"> <span class="checkmark" onclick="Q1_No()"></span> </label> <span class="answer_label">No</span>
+
+      <div class="hidden q1_follow_up" id="q1_yes">
+        <div class="scenario">With what type of colorblindness have you been diagnosed with?</div>
+        <select id="colorblindness_selector">
+          <option value="red-green">Red-Green</option>
+          <option value="blue-yellow">Blue-Yellow</option>
+          <option value="monochromacy">Complete (monochromacy)</option>
+          <option>Other...</option>
+          <input id="q1-1_input" class="hidden" type="text" placeholder="Enter type of colorblindness here">
+        </select>
+      </div>
+
+      <div class="hidden q1_follow_up" id="q1_no">
+        <div class="scenario">Have you ever thought about what it's like to be colorblind?</div>
+        <label class="container"> <input type="radio" name="preSurvey_q1.2" value="0"> <span class="checkmark"></span> </label> <span class="answer_label">Yes</span>
+        <br><br>
+        <label class="container"> <input type="radio" name="preSurvey_q1.2" value="1"> <span class="checkmark"></span> </label> <span class="answer_label">No</span>
+      </div>
+    </div>
+
+    <div class="white_question q3">
+      <div class="scenario">Do you have any family or friends that are colorblind?</div>
+      <label class="container"> <input type="radio" name="preSurvey_q2" value="0"> <span class="checkmark"></span> </label> <span class="answer_label">Yes</span>
+      <br><br>
+      <label class="container"> <input type="radio" name="preSurvey_q2" value="1"> <span class="checkmark"></span> </label> <span class="answer_label">No</span>
+    </div>
+
+    <div>
+      <button id="survey_submit_button">Next</button>
+    </div>
+
+  </body>
+  <script type="text/javascript" src="scripts/preSurvey.js"></script>
+</html>

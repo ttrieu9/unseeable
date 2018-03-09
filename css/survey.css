@@ -1,0 +1,85 @@
+textarea {
+  resize: none
+}
+
+.scenario {
+  font-size: 14pt;
+  padding-top: 5px;
+  padding-bottom: 10px;
+  font-weight: bold;
+}
+
+.rating_left {
+  position: relative;
+  display: inline-block;
+  width: 15%;
+  text-align: right;
+  font-size: 13pt;
+  top: 2.5px;
+  right: 0;
+  left: 15px;
+}
+
+.rating_left_overflow {
+  position: relative;
+  display: inline-block;
+  width: 15%;
+  text-align: right;
+  font-size: 13pt;
+  top: 10px;
+  right: 0;
+  left: 15px;
+}
+
+.rating_right {
+  position: relative;
+  display: inline-block;
+  width: 15%;
+  text-align: left;
+  font-size: 13pt;
+  top: 2.5px;
+  left: -10px;
+}
+
+#postSurvey_q4 {
+  width: 95%;
+  height: 100px;
+  padding-top:0;
+  font-size: 11pt;
+}
+
+.answer_label {
+  font-size: 16pt;
+  position: relative;
+  left: -2%;
+  top: 5px;
+}
+
+.q1_follow_up {
+  border-top: 1px dashed black;
+  margin-top: 25px;
+  margin-right: 25px;
+  padding-top: 15px;
+}
+
+.hidden {
+  display: none;
+}
+
+#q1-1_input {
+  width: 200px
+}
+
+.q4_description {
+  margin-bottom: 10px;
+}
+
+#survey_submit_button {
+  float: right;
+  margin: 15px 0;
+  height: 35px;
+  width: 75px;
+  border-radius: 10px;
+  font-size: 14pt;
+  border: 1px solid black;
+}
