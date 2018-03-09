@@ -81,13 +81,15 @@ class Logger {
    * 
    * @param {String} name - The name of the task.
    * @param {Number} grade - The amount of success achieved by the player in doing the task.
+   * @param {Array} additional - Any additional info to be logged.
    */
-  logTask(name, grade) {
+  logTask(name, grade, additional) {
     this.log.tasks.push(
       {
         name: name,
         duration: new Date().getTime() - this.log.date.getTime(),
-        grade: grade
+        grade: grade,
+        additional: additional
       });
   }
 
