@@ -49,6 +49,6 @@ exports.create_log = (req, res) => {
 
       res.json({result:result}).end();
       console.log('Log Created.')
-    // });
+    });
   });
 };
