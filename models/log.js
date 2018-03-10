@@ -17,13 +17,8 @@ var LogSchema = new Schema({
     required: [true, 'Required field missing: "date".']
   },
   levelDuration: {
-    type: Number
-  },
-  events: {
-    type: [EventSchema]
-  },
-  tasks: {
-    type: [TaskSchema]
+    type: Number,
+    required: [true, 'Required field missing: "levelDuration".']
   }
 });
 

@@ -7,17 +7,6 @@
  *    levelId: int representing level,
  *    date: date player started level,
  *    levelDuration: time in milliseconds player took to complete level,
- *    events: [
- *      {
- *        type: e.g. mouseclick, mouseover, etc.,
- *        time: time relative to start of level where event occured,
- *        mouseCoordinate: {
- *          x: x-coordinate of mouse during event,
- *          y: y coordinate of mouse during event
- *        }
- *      },
- *      ...
- *    ],
  *    tasks: [
  *      {
  *        name: name of task,
@@ -43,29 +32,9 @@ class Logger {
         date: date,
         startTime: date.getTime(),
         levelDuration: 0.0,
-        events: [],
         tasks: []
       };
       this.taskStartTime = 0;
-  }
-
-  /**
-   * Adds event to log.
-   * 
-   * @param {String} type - The type of event that occurred (e.g. mouseclick, mouseover, etc.).
-   * @param {Number} x - The x-coordinate of the event.
-   * @param {Number} y - The y-coordiante of the event.
-   */
-  logEvent(type, x, y) {
-    this.log.events.push(
-      {
-        type: type,
-        time: new Date().getTime() - this.log.date.getTime(),
-        mouseCoordinate: {
-          x: x,
-          y: y
-        }
-      });
   }
 
   /**
@@ -99,7 +68,7 @@ class Logger {
    */
   endLog() {
     this.log.levelDuration = new Date().getTime() - this.log.date.getTime();
-    let logString = {data: JSON.stringify(this.log)};
+    let logString = `{'data': ${JSON.stringify(this.log)}}`;
     console.log(logString)
 
     // log is sent to DB

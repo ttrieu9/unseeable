@@ -17,4 +17,8 @@ var TaskSchema = new Schema({
   additional: Array
 });
 
+TaskSchema.methods.create_task = function(cb) {
+  return this.save(cb);
+};
+
 module.exports = TaskSchema;

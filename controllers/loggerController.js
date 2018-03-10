@@ -34,7 +34,8 @@ exports.find_logs = (req, res) => {
 exports.create_log = (req, res) => {
   var logData;
   req.on('data', (data) => {
-    logData = JSON.parse(data.data);
+    console.log(data)
+    logData = JSON.parse(data);
   });
 
   req.on('end', (data) => {
