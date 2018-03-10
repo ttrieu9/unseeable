@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 var LogSchema = new Schema({
   userId: {
     type: String,
+    unique: true,
     required: [true, 'Required field missing: "playerId".']
   },
   levelId: {

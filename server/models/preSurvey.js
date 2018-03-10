@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 var PreSurveySchema = new Schema({
   userId: {
     type: String,
+    unique: true,
     required: [true, 'Required field missing: "userId".']
   },
   q1: String,
