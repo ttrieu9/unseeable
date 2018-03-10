@@ -50,12 +50,6 @@ var subtitles;
 
 var logger = new Logger('player id', 1);
 
-//TODO: remove when done
-var xoff = 0;
-var yoff = 0;
-var zoff = 0;
-var tip;
-
 init();
 
 loadJSON("colorPaperAnswers", (result) => { 
@@ -87,7 +81,10 @@ function onMouseMove() {
         var intersects = raycaster.intersectObjects(intersectableObjects);
 
         if(intersects.length > 0) {
-            var intersected = intersects[0].object;
+            //grab the first object that is no the current object
+            var intersected = intersects.find(function(element){
+                return currentObject !== element.object;
+            }).object;
             switch(cameraPosition) {
                 case 1:
                     if(intersected.name.includes('Table') && !intersected.name.includes('Chair') && !intersected.name.includes('Legs') && !intersected.name.includes("Path")) {
@@ -125,26 +122,16 @@ function onMouseMove() {
                         if(!intersected.name.includes('Box')) {
                             if(!currentHover) {
                                 currentHover = intersected;
-                                previousPosition = {
-                                    x: intersected.position.x,
-                                    y: intersected.position.y,
-                                    z: intersected.position.z
-                                };
-                                currentHover.position.set(previousPosition.x + 0.015, previousPosition.y, previousPosition.z - 0.025)
+                                currentHover.position.set(currentHover.originalPosition.x + 0.015, currentHover.originalPosition.y, currentHover.originalPosition.z - 0.025);
                             }
                             else if(currentHover.name !== intersected.name) {
-                                currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+                                currentHover.position.set(currentHover.originalPosition.x, currentHover.originalPosition.y, currentHover.originalPosition.z);
                                 currentHover = intersected;
-                                previousPosition = {
-                                    x: intersected.position.x,
-                                    y: intersected.position.y,
-                                    z: intersected.position.z
-                                };
-                                currentHover.position.set(previousPosition.x + 0.015, previousPosition.y, previousPosition.z - 0.025)
+                                currentHover.position.set(currentHover.originalPosition.x + 0.015, currentHover.originalPosition.y, currentHover.originalPosition.z - 0.025);
                             }
                         }
                         else if(currentHover) {
-                            currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+                            currentHover.position.set(currentHover.originalPosition.x, currentHover.originalPosition.y, currentHover.originalPosition.z);
                             currentHover = null
                         }
                     }
@@ -160,7 +147,7 @@ function onMouseMove() {
                         document.body.style.cursor = 'default';
 
                         if(currentHover) {
-                            currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+                            currentHover.position.set(currentHover.originalPosition.x, currentHover.originalPosition.y, currentHover.originalPosition.z);
                             currentHover = null
                         }
                     }
@@ -211,25 +198,26 @@ function colorPaper() {
             return currentObject !== element.object;
         }).object;
 
-        //TODO: return the crayon to the box
         //if clicking on crayons or the box
         if (intersected.name.includes('Crayon')) {
             //if clicking on the box, put the crayon away
             if(intersected.name.includes('Crayon_Box')){
-                currentObject.visible = true;
+                currentObject.rotation.set(0, 0, 0);
+                currentObject.position.set(currentObject.originalPosition.x, currentObject.originalPosition.y, currentObject.originalPosition.z);
                 currentObject = null;
             }
             //else pick up the crayon
             else {
                 //reset the current crayon if there is one
-                if(currentObject && currentObject.visible === false) {
-                    currentObject.visible = true;
+                if(currentObject) {
+                    currentObject.rotation.set(0, 0, 0);
+                    currentObject.position.set(currentObject.originalPosition.x, currentObject.originalPosition.y, currentObject.originalPosition.z);
                 }
 
                 //pick up the crayon
                 currentObject = intersected;
-                // currentObject.visible = false;
                 currentObject.rotation.set(0, Math.PI*5/6, Math.PI*11/6);
+                onMouseMove();
             }
 
             playSound("Click");
@@ -714,10 +702,6 @@ function init() {
     camera.position.set(-6.342057562830126, 2.340890947024859, 6.883271833415659);
     camera.rotation.set(-0.09963408823470919, -1.5005061696940256, 2.0920433907298925e-17);
 
-    //TODO: remove after finding the tip
-    tip = new THREE.Mesh(new THREE.SphereGeometry(0.01));
-    scene.add(tip);
-
     //
     // LOADING
     //
@@ -758,6 +742,9 @@ function init() {
                     //center the geometry and move it back to its original location
                     child.geometry.center();
                     child.position.set(boxPos.x, boxPos.y, boxPos.z);
+
+                    //store the original position of the crayon for when placing it back in the box
+                    child.originalPosition = boxPos;
                 }
                 //sky sphere
                 else if(child.name.includes("pSphere10")){
@@ -1013,38 +1000,26 @@ function init() {
         hideCameraControls("right");
     });
 
-    element.addEventListener("keypress", function(event){
-        if(String.fromCharCode(event.keyCode) === "c"){
-            console.log(camera);
-        }
-        else if(String.fromCharCode(event.keyCode) === "f"){
-            logger.printLog();
-        }
-        else if(String.fromCharCode(event.keyCode) === "t"){
-            console.log(coloredObjects)
-        }
-        else if(String.fromCharCode(event.keyCode) === "o"){
-            controls.enabled = !controls.enabled;
-        }
-        else if(String.fromCharCode(event.keyCode) === "x"){
-            xoff -= .01;
-            console.log(xoff);
-        }
-        else if(String.fromCharCode(event.keyCode) === "y"){
-            yoff -= .01;
-            console.log(yoff);
-        }
-        else if(String.fromCharCode(event.keyCode) === "z"){
-            zoff += .01;
-            console.log(zoff);
-        }
-        else if(String.fromCharCode(event.keyCode) === "m"){
-            showEndScreen();
-        }
-        else if(String.fromCharCode(event.keyCode) === " "){
-            nextPosition();
-        }
-    }, false);
+    // element.addEventListener("keypress", function(event){
+    //     if(String.fromCharCode(event.keyCode) === "c"){
+    //         console.log(camera);
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === "f"){
+    //         logger.printLog();
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === "t"){
+    //         console.log(coloredObjects)
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === "o"){
+    //         controls.enabled = !controls.enabled;
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === "m"){
+    //         showEndScreen();
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === " "){
+    //         nextPosition();
+    //     }
+    // }, false);
 
     // window.addEventListener("dblclick", () => {
     //     if(colormode === 1) {
