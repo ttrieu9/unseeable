@@ -39,7 +39,6 @@ exports.create_log = (req, res) => {
   });
 
   req.on('end', (data) => {
-    console.log(logData)
     var log = new Log(logData);
     log.create_log((err, result) => {
       if(err) {
@@ -62,7 +61,6 @@ exports.create_task = (req, res) => {
   });
 
   req.on('end', (data) => {
-    console.log(taskData)
     var task = new Task(taskData);
     task.create_task((err, result) => {
       if(err) {

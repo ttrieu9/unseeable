@@ -52,20 +52,19 @@ class Logger {
    * @param {Array} additional - Any additional info to be logged.
    */
   logTask(name, grade, additional) {
-    let task =
-      {
-        userId: window.sessionStorage.getItem('userId'),
-        levelId: 1,
-        name: name,
-        duration: new Date().getTime() - this.taskStartTime,
-        grade: grade,
-        additional: additional
-      };
+    let task = {
+      userId: window.sessionStorage.getItem('userId'),
+      levelId: 1,
+      name: name,
+      duration: new Date().getTime() - this.taskStartTime,
+      grade: grade,
+      additional: additional
+    };
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        console.log(JSON.parse(this.responseText));
+        response = JSON.parse(this.responseText);
       }
     };
     xhttp.open("POST", "/logger/createTask", true);
@@ -83,7 +82,7 @@ class Logger {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        console.log(JSON.parse(this.responseText));
+        response = JSON.parse(this.responseText);
       }
     };
     xhttp.open("POST", "/logger/createLog", true);
