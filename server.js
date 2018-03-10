@@ -7,13 +7,13 @@ var uuidv4 = require('uuid/v4');
 var favicon = require('express-favicon');
 
 // Import routes
-var logger = require('./routes/logger');
-var userId = require('./routes/userId');
-var informedConsent = require('./routes/informedConsent');
-var iri = require('./routes/iri');
-var panas = require('./routes/panas');
-var preSurvey = require('./routes/preSurvey');
-var postSurvey = require('./routes/postSurvey');
+var logger = require('./server/routes/logger');
+var userId = require('./server/routes/userId');
+var informedConsent = require('./server/routes/informedConsent');
+var iri = require('./server/routes/iri');
+var panas = require('./server/routes/panas');
+var preSurvey = require('./server/routes/preSurvey');
+var postSurvey = require('./server/routes/postSurvey');
 
 // Set up mongo connection
 mongoose.connect(mongoUrl, () => {
@@ -47,7 +47,7 @@ app.get('/', (req, res) => {
 
 // Load game
 app.get('/unseeable', (req, res) => {
-  res.sendFile(path.join(__dirname+'/views/game.html'))
+  res.sendFile(path.join(__dirname+'/client/views/game.html'))
 })
 
 // Request to go to panas from game
@@ -63,37 +63,37 @@ app.get('/unseeable/nextPage', (req, res) => {
 
 // Informed consent
 app.get('/informed-consent', (req, res) => {
-  res.sendFile(path.join(__dirname+'/views/informedConsent.html'));
+  res.sendFile(path.join(__dirname+'/client/views/informedConsent.html'));
 });
 
 // Panas1
 app.get('/panas1', (req, res) => {
-  res.sendFile(path.join(__dirname+'/views/panas.html'));
+  res.sendFile(path.join(__dirname+'/client/views/panas.html'));
 });
 
 // Panas2
 app.get('/panas2', (req, res) => {
-  res.sendFile(path.join(__dirname+'/views/panas.html'));
+  res.sendFile(path.join(__dirname+'/client/views/panas.html'));
 });
 
 // IRI
 app.get('/iri', (req, res) => {
-  res.sendFile(path.join(__dirname+'/views/iri.html'));
+  res.sendFile(path.join(__dirname+'/client/views/iri.html'));
 });
 
 // Pre-Survey
 app.get('/pre-survey', (req, res) => {
-  res.sendFile(path.join(__dirname+'/views/preSurvey.html'));
+  res.sendFile(path.join(__dirname+'/client/views/preSurvey.html'));
 });
 
 // Post-Survey
 app.get('/post-survey', (req, res) => {
-  res.sendFile(path.join(__dirname+'/views/postSurvey.html'));
+  res.sendFile(path.join(__dirname+'/client/views/postSurvey.html'));
 });
 
 // End screen
 app.get('/end-screen', (req, res) => {
-  res.sendFile(path.join(__dirname+'/views/endscreen.html'));
+  res.sendFile(path.join(__dirname+'/client/views/endscreen.html'));
 });
 
 var port = process.env.PORT || 8080;
