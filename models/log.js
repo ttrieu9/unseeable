@@ -1,6 +1,4 @@
 var mongoose = require('mongoose');
-var EventSchema = require('./event');
-var TaskSchema = require('./task');
 var Schema = mongoose.Schema;
 
 var LogSchema = new Schema({

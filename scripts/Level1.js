@@ -1058,15 +1058,12 @@ function init() {
                 case 1:
                     selectTable();
                     playSound("Click.mp3");
-                    logger.logEvent("mousedown", mouse.x, mouse.y);
                     break;
                 case 2:
                     colorPaper();
-                    logger.logEvent("mousedown", mouse.x, mouse.y);
                     break;
                 case 3:
                     postPaper();
-                    logger.logEvent("mousedown", mouse.x, mouse.y);
                     break;
             }
         }
