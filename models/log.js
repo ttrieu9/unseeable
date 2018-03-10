@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var LogSchema = new Schema({
-  playerId: {
+  userId: {
     type: String,
     required: [true, 'Required field missing: "playerId".']
   },

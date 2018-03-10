@@ -27,12 +27,11 @@ class Logger {
   constructor(playerId, levelId) {
       var date = new Date();
       this.log = {
-        playerId: window.sessionStorage.getItem('userId'),
+        userId: window.sessionStorage.getItem('userId'),
         levelId: levelId,
         date: date,
         startTime: date.getTime(),
-        levelDuration: 0.0,
-        tasks: []
+        levelDuration: 0.0
       };
       this.taskStartTime = 0;
   }
@@ -53,13 +52,24 @@ class Logger {
    * @param {Array} additional - Any additional info to be logged.
    */
   logTask(name, grade, additional) {
-    this.log.tasks.push(
+    let task =
       {
+        userId: window.sessionStorage.getItem('userId'),
+        levelId: 1,
         name: name,
         duration: new Date().getTime() - this.taskStartTime,
         grade: grade,
         additional: additional
-      });
+      };
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        console.log(JSON.parse(this.responseText));
+      }
+    };
+    xhttp.open("POST", "/logger/createTask", true);
+    xhttp.send(JSON.stringify(task));
   }
 
   /**
@@ -76,7 +86,7 @@ class Logger {
         console.log(JSON.parse(this.responseText));
       }
     };
-    xhttp.open("POST", "/logger/create", true);
+    xhttp.open("POST", "/logger/createLog", true);
     xhttp.send(JSON.stringify(this.log));
   }
 

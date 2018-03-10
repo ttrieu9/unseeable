@@ -1,4 +1,5 @@
 var Log = require('../models/log');
+var Task = require('../models/task')
 
 // Display all logs in database
 exports.read_logs = (req, res) => {
@@ -49,6 +50,29 @@ exports.create_log = (req, res) => {
 
       res.json({result:result}).end();
       console.log('Log Created.')
+    });
+  });
+};
+
+// Create a task
+exports.create_task = (req, res) => {
+  var taskData;
+  req.on('data', (data) => {
+    taskData = JSON.parse(data);
+  });
+
+  req.on('end', (data) => {
+    console.log(taskData)
+    var task = new Task(taskData);
+    task.create_task((err, result) => {
+      if(err) {
+        console.log(err)
+        res.json({error:result}).end();
+        return;
+      }
+
+      res.json({result:result}).end();
+      console.log('Task Created.')
     });
   });
 };
