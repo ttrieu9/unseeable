@@ -99,9 +99,9 @@ class Logger {
    */
   endLog() {
     this.log.levelDuration = new Date().getTime() - this.log.date.getTime();
-    let logString = JSON.stringify(this.log);
+    let logString = {data: JSON.stringify(this.log)};
     console.log(logString)
-    
+
     // log is sent to DB
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
