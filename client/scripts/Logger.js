@@ -64,7 +64,7 @@ class Logger {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        response = JSON.parse(this.responseText);
+        let response = JSON.parse(this.responseText);
       }
     };
     xhttp.open("POST", "/logger/createTask", true);
@@ -82,7 +82,7 @@ class Logger {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        response = JSON.parse(this.responseText);
+        let response = JSON.parse(this.responseText);
       }
     };
     xhttp.open("POST", "/logger/createLog", true);

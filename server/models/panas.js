@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 var PanasSchema = new Schema({
   userId: {
     type: String,
+    unique: true,
     required: [true, 'Required field missing: "userId".']
   },
   answers: {
