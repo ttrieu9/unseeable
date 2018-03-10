@@ -2,6 +2,14 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var TaskSchema = new Schema({
+  userId: {
+    type: String,
+    required: [true, 'Required field missing: "userId".']
+  },
+  levelId: {
+    type: String,
+    required: [true, 'Required field missing: "levelId".']
+  },
   name: {
     type: String,
     required: [true, 'Required field missing: task "name".']
@@ -17,4 +25,8 @@ var TaskSchema = new Schema({
   additional: Array
 });
 
-module.exports = TaskSchema;
+TaskSchema.methods.create_task = function(cb) {
+  return this.save(cb);
+};
+
+module.exports = mongoose.model('Task', TaskSchema);

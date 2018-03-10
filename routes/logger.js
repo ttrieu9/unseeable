@@ -16,6 +16,9 @@ router.get('/levels/:levelId', logger_controller.find_logs);
 router.get('/players/:playerId', logger_controller.find_logs)
 
 // POST log to database
-router.post('/create', logger_controller.create_log);
+router.post('/createLog', logger_controller.create_log);
+
+// POST log to database
+router.post('/createTask', logger_controller.create_task);
 
 module.exports = router;

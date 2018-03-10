@@ -7,17 +7,6 @@
  *    levelId: int representing level,
  *    date: date player started level,
  *    levelDuration: time in milliseconds player took to complete level,
- *    events: [
- *      {
- *        type: e.g. mouseclick, mouseover, etc.,
- *        time: time relative to start of level where event occured,
- *        mouseCoordinate: {
- *          x: x-coordinate of mouse during event,
- *          y: y coordinate of mouse during event
- *        }
- *      },
- *      ...
- *    ],
  *    tasks: [
  *      {
  *        name: name of task,
@@ -38,34 +27,13 @@ class Logger {
   constructor(playerId, levelId) {
       var date = new Date();
       this.log = {
-        playerId: window.sessionStorage.getItem('userId'),
+        userId: window.sessionStorage.getItem('userId'),
         levelId: levelId,
         date: date,
         startTime: date.getTime(),
-        levelDuration: 0.0,
-        events: [],
-        tasks: []
+        levelDuration: 0.0
       };
       this.taskStartTime = 0;
-  }
-
-  /**
-   * Adds event to log.
-   * 
-   * @param {String} type - The type of event that occurred (e.g. mouseclick, mouseover, etc.).
-   * @param {Number} x - The x-coordinate of the event.
-   * @param {Number} y - The y-coordiante of the event.
-   */
-  logEvent(type, x, y) {
-    this.log.events.push(
-      {
-        type: type,
-        time: new Date().getTime() - this.log.date.getTime(),
-        mouseCoordinate: {
-          x: x,
-          y: y
-        }
-      });
   }
 
   /**
@@ -84,13 +52,23 @@ class Logger {
    * @param {Array} additional - Any additional info to be logged.
    */
   logTask(name, grade, additional) {
-    this.log.tasks.push(
-      {
-        name: name,
-        duration: new Date().getTime() - this.taskStartTime,
-        grade: grade,
-        additional: additional
-      });
+    let task = {
+      userId: window.sessionStorage.getItem('userId'),
+      levelId: 1,
+      name: name,
+      duration: new Date().getTime() - this.taskStartTime,
+      grade: grade,
+      additional: additional
+    };
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        response = JSON.parse(this.responseText);
+      }
+    };
+    xhttp.open("POST", "/logger/createTask", true);
+    xhttp.send(JSON.stringify(task));
   }
 
   /**
@@ -104,10 +82,10 @@ class Logger {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        console.log(JSON.parse(this.responseText));
+        response = JSON.parse(this.responseText);
       }
     };
-    xhttp.open("POST", "/logger/create", true);
+    xhttp.open("POST", "/logger/createLog", true);
     xhttp.send(JSON.stringify(this.log));
   }
 

@@ -9,7 +9,6 @@ exports.create_panas = (req, res) => {
   req.on('data', (data) => {
     panasData = JSON.parse(data);
     Panas = mongoose.model(`${panasData.instance}`, PanasSchema)
-    console.log(panasData)
   });
 
   req.on('end', (data) => {

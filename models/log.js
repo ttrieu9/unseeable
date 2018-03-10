@@ -1,10 +1,8 @@
 var mongoose = require('mongoose');
-var EventSchema = require('./event');
-var TaskSchema = require('./task');
 var Schema = mongoose.Schema;
 
 var LogSchema = new Schema({
-  playerId: {
+  userId: {
     type: String,
     required: [true, 'Required field missing: "playerId".']
   },
@@ -17,13 +15,8 @@ var LogSchema = new Schema({
     required: [true, 'Required field missing: "date".']
   },
   levelDuration: {
-    type: Number
-  },
-  events: {
-    type: [EventSchema]
-  },
-  tasks: {
-    type: [TaskSchema]
+    type: Number,
+    required: [true, 'Required field missing: "levelDuration".']
   }
 });
 
