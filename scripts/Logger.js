@@ -99,7 +99,9 @@ class Logger {
    */
   endLog() {
     this.log.levelDuration = new Date().getTime() - this.log.date.getTime();
-
+    let logString = JSON.stringify(this.log);
+    console.log(logString)
+    
     // log is sent to DB
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -108,7 +110,7 @@ class Logger {
       }
     };
     xhttp.open("POST", "/logger/create", true);
-    xhttp.send(JSON.stringify(this.log));
+    xhttp.send(logString);
   }
 
   /**
