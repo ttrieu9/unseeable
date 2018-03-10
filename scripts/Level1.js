@@ -50,11 +50,6 @@ var subtitles;
 
 var logger = new Logger('player id', 1);
 
-//TODO: remove when done
-var xoff = 0.06;
-var yoff = 0.05;
-var zoff = -0.03;
-
 init();
 
 loadJSON("colorPaperAnswers", (result) => { 
@@ -86,7 +81,10 @@ function onMouseMove() {
         var intersects = raycaster.intersectObjects(intersectableObjects);
 
         if(intersects.length > 0) {
-            var intersected = intersects[0].object;
+            //grab the first object that is no the current object
+            var intersected = intersects.find(function(element){
+                return currentObject !== element.object;
+            }).object;
             switch(cameraPosition) {
                 case 1:
                     if(intersected.name.includes('Table') && !intersected.name.includes('Chair') && !intersected.name.includes('Legs') && !intersected.name.includes("Path")) {
@@ -124,26 +122,16 @@ function onMouseMove() {
                         if(!intersected.name.includes('Box')) {
                             if(!currentHover) {
                                 currentHover = intersected;
-                                previousPosition = {
-                                    x: intersected.position.x,
-                                    y: intersected.position.y,
-                                    z: intersected.position.z
-                                };
-                                currentHover.position.set(previousPosition.x + 0.015, previousPosition.y, previousPosition.z - 0.025)
+                                currentHover.position.set(currentHover.originalPosition.x + 0.015, currentHover.originalPosition.y, currentHover.originalPosition.z - 0.025);
                             }
                             else if(currentHover.name !== intersected.name) {
-                                currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+                                currentHover.position.set(currentHover.originalPosition.x, currentHover.originalPosition.y, currentHover.originalPosition.z);
                                 currentHover = intersected;
-                                previousPosition = {
-                                    x: intersected.position.x,
-                                    y: intersected.position.y,
-                                    z: intersected.position.z
-                                };
-                                currentHover.position.set(previousPosition.x + 0.015, previousPosition.y, previousPosition.z - 0.025)
+                                currentHover.position.set(currentHover.originalPosition.x + 0.015, currentHover.originalPosition.y, currentHover.originalPosition.z - 0.025);
                             }
                         }
                         else if(currentHover) {
-                            currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+                            currentHover.position.set(currentHover.originalPosition.x, currentHover.originalPosition.y, currentHover.originalPosition.z);
                             currentHover = null
                         }
                     }
@@ -159,22 +147,29 @@ function onMouseMove() {
                         document.body.style.cursor = 'default';
 
                         if(currentHover) {
-                            currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+                            currentHover.position.set(currentHover.originalPosition.x, currentHover.originalPosition.y, currentHover.originalPosition.z);
                             currentHover = null
                         }
                     }
 
-                    //if there is a currently selected crayon
-                    // if(currentObject){
-                    //     //make it hover over the mouse position
-                    //     let hoverPoint = intersects.find(function(element){
-                    //         return currentObject.name !== element.object.name;
-                    //     }).point;
-                    //     currentObject.position.set(hoverPoint.x + xoff, hoverPoint.y + yoff, hoverPoint.z + zoff);
-                    //
-                    //     //some weird math stuff to find the point 90% along the raycast
-                    //
-                    // }
+                    //if there is a currently selected crayon, make it hover over the mouse position
+                    if(currentObject){
+                        //the hover point is the first object in the intersection array
+                        let hoverPoint = intersects.find(function(element){
+                            return currentObject.name !== element.object.name;
+                        }).point;
+
+                        //find the point that is 90% of the way along the ray cast
+                        let crayonPos = {
+                            x: camera.position.x + (hoverPoint.x - camera.position.x)*.9,
+                            y: camera.position.y + (hoverPoint.y - camera.position.y)*.9,
+                            z: camera.position.z + (hoverPoint.z - camera.position.z)*.9
+                        };
+
+                        //place the crayon at that position, plus some offset to place the tip at the mouse pointer
+                        currentObject.position.set(crayonPos.x+.07, crayonPos.y+.025, crayonPos.z-.04);
+
+                    }
                     break;
                 case 3:
                     if(posted === false) {
@@ -207,20 +202,22 @@ function colorPaper() {
         if (intersected.name.includes('Crayon')) {
             //if clicking on the box, put the crayon away
             if(intersected.name.includes('Crayon_Box')){
-                currentObject.visible = true;
+                currentObject.rotation.set(0, 0, 0);
+                currentObject.position.set(currentObject.originalPosition.x, currentObject.originalPosition.y, currentObject.originalPosition.z);
                 currentObject = null;
             }
             //else pick up the crayon
             else {
                 //reset the current crayon if there is one
-                if(currentObject && currentObject.visible === false) {
-                    currentObject.visible = true;
+                if(currentObject) {
+                    currentObject.rotation.set(0, 0, 0);
+                    currentObject.position.set(currentObject.originalPosition.x, currentObject.originalPosition.y, currentObject.originalPosition.z);
                 }
 
                 //pick up the crayon
                 currentObject = intersected;
-                currentObject.visible = false;
-                // currentObject.rotation.set(0, Math.PI*5/6, Math.PI*11/6);
+                currentObject.rotation.set(0, Math.PI*5/6, Math.PI*11/6);
+                onMouseMove();
             }
 
             playSound("Click");
@@ -745,6 +742,9 @@ function init() {
                     //center the geometry and move it back to its original location
                     child.geometry.center();
                     child.position.set(boxPos.x, boxPos.y, boxPos.z);
+
+                    //store the original position of the crayon for when placing it back in the box
+                    child.originalPosition = boxPos;
                 }
                 //sky sphere
                 else if(child.name.includes("pSphere10")){
@@ -776,7 +776,7 @@ function init() {
 
     //load and place the children GREEN TABLE
     loadAnimationFBX2("T-Pose (1).fbx",
-        ["Sitting (1).fbx", "Sitting Angry.fbx", "Sitting Disapproval.fbx", "Sitting Idle (1).fbx", "Sitting Laughing.fbx", "Sitting Talking.fbx", "Sitting Victory (1).fbx", "Sitting2.fbx"],
+        ["Sitting (1).fbx"],
         function(object){
             child = object;
             let scale = 2.4;
@@ -788,7 +788,7 @@ function init() {
 
     //load and place the children RED TABLE
     loadAnimationFBX2("T-Pose (1).fbx",
-        ["Sitting (1).fbx", "Sitting Angry.fbx", "Sitting Disapproval.fbx", "Sitting Idle (1).fbx", "Sitting Laughing.fbx", "Sitting Talking.fbx", "Sitting Victory (1).fbx", "Sitting2.fbx"],
+        ["Sitting Idle (1).fbx"],
         function(object){
             child = object;
             let scale = 2.4;
@@ -800,7 +800,7 @@ function init() {
 
     //load and place the children YELLOW TABLE
     loadAnimationFBX2("T-Pose (1).fbx",
-        ["Sitting (1).fbx", "Sitting Angry.fbx", "Sitting Disapproval.fbx", "Sitting Idle (1).fbx", "Sitting Laughing.fbx", "Sitting Talking.fbx", "Sitting Victory (1).fbx", "Sitting2.fbx"],
+        ["Sitting Talking.fbx"],
         function(object){
             child = object;
             let scale = 2.4;
@@ -812,7 +812,7 @@ function init() {
 
     //load and place the children BLUE TABLE
     loadAnimationFBX2("T-Pose (1).fbx",
-        ["Sitting (1).fbx", "Sitting Angry.fbx", "Sitting Disapproval.fbx", "Sitting Idle (1).fbx", "Sitting Laughing.fbx", "Sitting Talking.fbx", "Sitting Victory (1).fbx", "Sitting2.fbx"],
+        ["Sitting2.fbx"],
         function(object){
             child = object;
             let scale = 2.4;
@@ -1012,18 +1012,6 @@ function init() {
     //     }
     //     else if(String.fromCharCode(event.keyCode) === "o"){
     //         controls.enabled = !controls.enabled;
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === "x"){
-    //         xoff += .01;
-    //         console.log(xoff);
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === "y"){
-    //         yoff += .01;
-    //         console.log(yoff);
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === "z"){
-    //         zoff -= .01;
-    //         console.log(zoff);
     //     }
     //     else if(String.fromCharCode(event.keyCode) === "m"){
     //         showEndScreen();
