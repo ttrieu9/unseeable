@@ -196,7 +196,7 @@ function loadSound(filename, volume, playImmediately, loop, onEnded){
             scene.add(song);
             sounds.push(song);
             song.setBuffer(audioBuffer);
-            if(volume !== null){
+            if(volume){
                 song.setVolume(volume);
             }
             if(loop === true){

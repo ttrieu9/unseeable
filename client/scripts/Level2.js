@@ -17,7 +17,7 @@ var mouse = new THREE.Vector2();
 var currentObject;
 var currentHover;
 var previousPosition;
-var attempts = 0;
+var attempts = 1;
 var colormode = 1;
 var intersectableObjects = [];
 var controlsEnabled = true;
@@ -188,12 +188,7 @@ function buildBlock() {
 
         //if clicking on a block
         if(blocks.includes(intersected) && intersected.placed === false){
-            //if there is already a selected block, make if visible
-            if(currentObject){
-                currentObject.visible = true;
-            }
-
-            //select the block and make it invisible
+            //select the block
             currentObject = intersected;
         }
         //if placing the piece inside of the box
@@ -208,6 +203,7 @@ function buildBlock() {
  * Place the selected block in the building box
  */
 function placeBlock(){
+    getAngry();
 
     //depending on which step it is, calculate the offset to place the piece correctly
     let offset;
@@ -270,6 +266,12 @@ function placeBlock(){
     buildingStep += 1;
 }
 
+
+function getAngry(){
+    playSound("anger " + attempts);
+    attempts += 1;
+}
+
 //TODO: update score for building instead of coloring
 /**
  * Updates player score when building.
@@ -329,19 +331,20 @@ function playSound(name) {
         return element.name.includes(name);
     });
 
+    //TODO: make subtitles for the level
     //add subtitles
-    let subs = subtitles.audio.find(function(element){
-        return element.name.includes(name);
-    });
-
-    if(subs){
-        for(let i in subs.lines){
-            setTimeout(function(){
-                let subtitle = document.getElementById("subs");
-                subtitle.innerText = subs.lines[i].text;
-            }, subs.lines[i].offset);
-        }
-    }
+    // let subs = subtitles.audio.find(function(element){
+    //     return element.name.includes(name);
+    // });
+    //
+    // if(subs){
+    //     for(let i in subs.lines){
+    //         setTimeout(function(){
+    //             let subtitle = document.getElementById("subs");
+    //             subtitle.innerText = subs.lines[i].text;
+    //         }, subs.lines[i].offset);
+    //     }
+    // }
 
     sound.play();
 }
@@ -427,6 +430,12 @@ function init() {
         });
 
     //load audio
+
+    loadSound('anger 1.m4a');
+    loadSound('anger 2.m4a');
+    loadSound('anger 3.m4a');
+    loadSound('anger 4.m4a');
+    loadSound('anger 5.m4a');
 
     //TODO: create subtitles for dialogue for level 2
     // load subtitles
