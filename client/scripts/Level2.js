@@ -532,7 +532,6 @@ function init() {
     window.addEventListener("mousedown", () => {
         if(controlsEnabled) {
             buildBlock();
-            logger.logEvent("mousedown", mouse.x, mouse.y);
         }
     });
 
