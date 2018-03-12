@@ -72,7 +72,7 @@ function onMouseMove(event) {
         var intersected = intersects[0].object;
 
         //if mouse is over a blocko
-        if(intersected.name.includes('Blockos') && intersected.placed === false) {
+        if(blocks.includes(intersected) && intersected.placed === false) {
             document.body.style.cursor = 'pointer';
 
             //if there is no already hovering piece
@@ -114,8 +114,9 @@ function onMouseMove(event) {
         //if there is a selected piece, make it follow the mouse on the rug
         //TODO: it might be cleaner using the point the raycaster is at, looking at blocks as well as the rug
         if(currentObject){
+            console.log("current")
             let rug = intersects.find(function(element){
-                return element.object.name.includes("pCylinder1");
+                return element.object.name.includes("Rug");
             })
             if(rug){
                 let point = rug.point;
@@ -189,7 +190,7 @@ function buildBlock() {
         console.log(intersected);
 
         //if clicking on a block
-        if(intersected.name.includes("Blockos") && intersected.placed === false){
+        if(blocks.includes(intersected) && intersected.placed === false){
             //if there is already a selected block, make if visible
             if(currentObject){
                 currentObject.visible = true;
@@ -388,14 +389,20 @@ function init() {
     //
 
     //load the bedroom
-    loadWorldFBX('Newest.2.26.18.fbx',
+    loadWorldFBX('Newest.3.11.18.fbx',
         function(object){
             console.log(object);
             for(let i in object.children){
                 let child = object.children[i];
 
                 //center the geometries for the blockos in the room
-                if(child.name.includes("BlockosScene") && child.geometry){
+                //TODO ask Isaiah to include "Blockos" or something in the names of the blocks
+                if((child.name.includes("Foundation") ||
+                    child.name.includes("Door_") ||
+                    child.name.includes("Stairs") ||
+                    child.name.includes("Window_") ||
+                    child.name.includes("Chimney") ||
+                    child.name.includes("Roof")) && child.geometry){
 
                     //add the blocks to the array of blocks
                     blocks.push(child);
