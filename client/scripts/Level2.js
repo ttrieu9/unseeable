@@ -115,9 +115,18 @@ function onMouseMove(event) {
         //TODO: it might be cleaner using the point the raycaster is at, looking at blocks as well as the rug
         if(currentObject){
             console.log("current");
-            let point = intersects.find(function(element){
-                return currentObject !== element.object;
+            //find the point of intersection that isn't the current object or the building box
+            let rayPoint = intersects.find(function(element){
+                return currentObject !== element.object && !element.object.name.includes("buildingBox");
             }).point;
+
+            //position that is 90% along the ray cast
+            let point = {
+                x: camera.position.x + (rayPoint.x - camera.position.x)*.9,
+                y: camera.position.y + (rayPoint.y - camera.position.y)*.9,
+                z: camera.position.z + (rayPoint.z - camera.position.z)*.9
+            }
+
             currentObject.position.set(point.x, point.y, point.z);
 
         }
