@@ -114,23 +114,11 @@ function onMouseMove(event) {
         //if there is a selected piece, make it follow the mouse on the rug
         //TODO: it might be cleaner using the point the raycaster is at, looking at blocks as well as the rug
         if(currentObject){
-            console.log("current")
-            let rug = intersects.find(function(element){
-                return element.object.name.includes("Rug");
-            })
-            if(rug){
-                let point = rug.point;
-                currentObject.position.set(point.x, point.y + currentObject.hoverHeight, point.z);
-
-                let intersect = blocks.find(function(element){
-                    return currentObject !== element &&
-                        doesIntersect(currentObject, element);
-                });
-
-                if(intersect){
-                    currentObject.position.y = currentObject.hoverHeight + intersect.position.y + intersect.geometry.boundingBox.max.y;
-                }
-            }
+            console.log("current");
+            let point = intersects.find(function(element){
+                return currentObject !== element.object;
+            }).point;
+            currentObject.position.set(point.x, point.y, point.z);
 
         }
     }
@@ -419,9 +407,6 @@ function init() {
                     //center the geometry and move it back to its original location
                     child.geometry.center();
                     child.position.set(boxPos.x, boxPos.y, boxPos.z);
-
-                    //hoverHeight is the offset for the block to hover over an object without intersecting
-                    child.hoverHeight = (box.max.y - box.min.y)/2 + 0.1;
 
                     //boolean field that tells whther the piece has been placed or not
                     child.placed = false;
