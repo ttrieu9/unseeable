@@ -28,9 +28,22 @@ function onProgress( xhr ) {
 
         var percentComplete = xhr.loaded / xhr.total * 100;
         console.log( Math.round( percentComplete, 2 ) + '% downloaded' );
-
+        updateProgress(Math.round(percentComplete, 2));
     }
 
+}
+
+/**
+ * Updates the progress bar with the current load percentage
+ * @param perc
+ */
+function updateProgress(perc){
+    var elm = document.getElementById("myBar");
+    var width = perc;
+    if(width <= 100){
+        elm.style.width = width + '%';
+        elm.innerText = width + '%';
+    }
 }
 
 /**
@@ -164,7 +177,6 @@ function loadWorldFBX(fileName, onLoad){
                     intersectableObjects.push(object.children[i]);
                 }
             }
-
             //perform the onLoad function, if one is specified
             if(onLoad) {
                 onLoad(object);
@@ -175,6 +187,7 @@ function loadWorldFBX(fileName, onLoad){
             object.receiveShadow = true;
 
             scene.add( object );
+
         },
         onProgress, onError
     );

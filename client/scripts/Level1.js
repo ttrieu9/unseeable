@@ -751,7 +751,26 @@ function init() {
                     child.castShadow = false;
                     child.receiveShadow = false;
                 }
+            
+            }
 
+            var loadingScreen = document.getElementById("loading");
+            var progressBar = document.getElementById("myProgress")
+            var loadingBar = document.getElementById("myBar");
+            if(loadingBar.innerText === "100%"){
+                loadingScreen.offsetWidth;
+                loadingBar.offsetWidth;
+                progressBar.offsetWidth;
+                loadingScreen.classList.add("fade-out-loading");
+                loadingBar.classList.add("fade-out-loading");
+                progressBar.classList.add("face-out-loading");
+            
+                setTimeout(() => {
+                    loadingScreen.style.opacity = 0;
+                    loadingBar.style.opacity = 0;
+                    progressBar.style.opacity = 0;
+                    playSound("TakeSeats");
+                }, 950);
             }
         });
 
@@ -841,6 +860,8 @@ function init() {
     //teacher dialogue to sit
     loadSound('TakeSeats.ogg', 0.4, false, false, () => {
         endCutScene();
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("myProgress").style.display = "none";
         setTimeout(() => {
             logger.recordTaskStartTime();
         }, 950);
@@ -1061,9 +1082,6 @@ function init() {
 
     animate();
     startCutScene();
-    setTimeout(() => {
-        playSound("TakeSeats");
-    }, 3000)
 }
 
 window.onload = changeColorVision();
