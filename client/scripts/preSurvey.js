@@ -4,7 +4,7 @@ init()
  * Create event listeners.
  */
 function init() {
-  var submit = document.getElementById('survey_submit_button');
+  var submit = document.getElementById('pre_survey_submit_button');
   submit.addEventListener('click', submitForm)
 
   var selector = document.getElementById('colorblindness_selector');
