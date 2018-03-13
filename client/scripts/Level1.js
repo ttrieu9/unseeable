@@ -117,7 +117,17 @@ function onMouseMove() {
                     break;
                 case 2:
                     if(intersected.name.includes('Crayon')) {
-                        document.body.style.cursor = 'pointer';
+                        if(currentHover && currentHover.name.includes('Paper')) {
+                            currentHover.material = previousMaterial;
+                            currentHover = null;
+                        }
+
+                        if(!currentObject) {
+                            document.body.style.cursor = 'pointer';
+                        }
+                        else {
+                            document.body.style.cursor = 'none';
+                        }
 
                         if(!intersected.name.includes('Box')) {
                             if(!currentHover) {
@@ -136,19 +146,66 @@ function onMouseMove() {
                         }
                     }
                     else if(intersected.name.includes('Paper')) {
-                        if(!intersected.name.includes('Outline')) {
-                            document.body.style.cursor = 'pointer'
+                        if(!currentObject) {
+                            document.body.style.cursor = 'default';
                         }
                         else {
-                            document.body.style.cursor = 'default'
+                            document.body.style.cursor = 'none';
+                        }
+                        
+                        if(currentHover && currentHover.name.includes('Crayon')) {
+                            currentHover.position.set(currentHover.originalPosition.x, currentHover.originalPosition.y, currentHover.originalPosition.z);
+                            currentHover = null
+                        }
+                        else if(!intersected.name.includes('Outline')) {
+                            if(currentObject) {
+                                if(coloredObjects.includes(intersected.name)) {
+                                    if(!currentHover) {
+                                        currentHover = intersected;
+                                        newMaterial = currentObject.material[0].clone();
+                                        previousMaterial = currentHover.material.clone();
+                                        currentHover.material = newMaterial;
+                                    }
+                                    else {
+                                        currentHover.material = previousMaterial;
+                                        currentHover = intersected;
+                                        newMaterial = currentObject.material[0].clone();
+                                        previousMaterial = currentHover.material.clone();
+                                        currentHover.material = newMaterial;
+                                    }
+                                }
+                                else if(currentHover) {
+                                    if(coloredObjects.includes(currentHover.name)) {
+                                        currentHover.material = previousMaterial;
+                                    }
+                                    currentHover = null;
+                                }
+                            }
+                        }
+                        else {
+                            if(currentHover) {
+                                if(coloredObjects.includes(currentHover.name)) {
+                                    currentHover.material = previousMaterial;
+                                }
+                                currentHover = null;
+                            }
                         }
                     }
                     else {
-                        document.body.style.cursor = 'default';
+                        if(!currentObject) {
+                            document.body.style.cursor = 'default';
+                        }
+                        else {
+                            document.body.style.cursor = 'none';
+                        }
 
-                        if(currentHover) {
+                        if(currentHover && currentHover.name.includes('Crayon')) {
                             currentHover.position.set(currentHover.originalPosition.x, currentHover.originalPosition.y, currentHover.originalPosition.z);
                             currentHover = null
+                        }
+                        else if(currentHover && currentHover.name.includes('Paper')) {
+                            currentHover.material = previousMaterial;
+                            currentHover = null;
                         }
                     }
 
