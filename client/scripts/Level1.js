@@ -86,6 +86,7 @@ function onMouseMove() {
             var intersected = intersects.find(function(element){
                 return currentObject !== element.object;
             }).object;
+
             switch(cameraPosition) {
                 case 1:
                     if(intersected.name.includes('Table') && !intersected.name.includes('Chair') && !intersected.name.includes('Legs') && !intersected.name.includes("Path")) {
@@ -175,18 +176,21 @@ function onMouseMove() {
                             currentHover = null
                         }
                         else if(!intersected.name.includes('Outline')) {
+                            console.log(intersected)
                             if(currentObject) {
                                 if(coloredObjects.includes(intersected.name)) {
                                     if(!currentHover) {
                                         currentHover = intersected;
-                                        newMaterial = currentObject.material[0].clone();
+                                        newMaterial = currentHover.material.clone();
+                                        newMaterial.color = currentObject.material[0].color;
                                         previousMaterial = currentHover.material.clone();
                                         currentHover.material = newMaterial;
                                     }
                                     else {
                                         currentHover.material = previousMaterial;
                                         currentHover = intersected;
-                                        newMaterial = currentObject.material[0].clone();
+                                        newMaterial = currentHover.material.clone();
+                                        newMaterial.color = currentObject.material[0].color;
                                         previousMaterial = currentHover.material.clone();
                                         currentHover.material = newMaterial;
                                     }
@@ -301,7 +305,7 @@ function colorPaper() {
             playSound("Click");
         }
         else if(intersected.name.includes('Paper') && coloredObjects.includes(intersected.name) && !intersected.name.includes("Outline") && currentObject) {
-            intersected.material = currentObject.material[0];
+            intersected.material.color = currentObject.material[0].color;
             // colorsUsed.push(currentObject.material[0].name)
             updatePaperScore(intersected.name, currentObject.material[0].name)
             var paperIndex = coloredObjects.findIndex((object) => {
