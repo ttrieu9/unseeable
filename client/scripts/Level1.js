@@ -19,6 +19,7 @@ var mixers = [];
 var raycaster;
 var mouse = new THREE.Vector2();
 var currentObject;
+var currentObjectClone
 var currentHover;
 var previousMaterial;
 var previousPosition;
@@ -117,6 +118,22 @@ function onMouseMove() {
                     break;
                 case 2:
                     if(intersected.name.includes('Crayon')) {
+                        if(currentObjectClone) {
+                            scene.remove(currentObjectClone)
+                        }
+
+                        if(currentObject) {
+                            currentObjectClone = currentObject.clone()
+                            currentObjectClone.material = [currentObject.material[0].clone(),currentObject.material[1].clone()]
+                            currentObjectClone.material[0].opacity = 0.3
+                            currentObjectClone.material[1].opacity = 0.3
+                            currentObjectClone.material[0].transparent = true
+                            currentObjectClone.material[1].transparent = true
+                            currentObjectClone.position.set(currentObject.originalPosition.x, currentObject.originalPosition.y, currentObject.originalPosition.z)
+                            currentObjectClone.rotation.set(0,0,0)
+                            scene.add(currentObjectClone)
+                        }
+
                         if(currentHover && currentHover.name.includes('Paper')) {
                             currentHover.material = previousMaterial;
                             currentHover = null;
@@ -152,7 +169,7 @@ function onMouseMove() {
                         else {
                             document.body.style.cursor = 'none';
                         }
-                        
+
                         if(currentHover && currentHover.name.includes('Crayon')) {
                             currentHover.position.set(currentHover.originalPosition.x, currentHover.originalPosition.y, currentHover.originalPosition.z);
                             currentHover = null
@@ -192,6 +209,10 @@ function onMouseMove() {
                         }
                     }
                     else {
+                        if(currentObjectClone) {
+                            scene.remove(currentObjectClone)
+                        }
+                        
                         if(!currentObject) {
                             document.body.style.cursor = 'default';
                         }
