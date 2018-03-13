@@ -188,6 +188,24 @@ function loadWorldFBX(fileName, onLoad){
 
             scene.add( object );
 
+            var loadingScreen = document.getElementById("loading");
+            var progressBar = document.getElementById("myProgress")
+            var loadingBar = document.getElementById("myBar");
+            if(loadingBar.innerText === "100%"){
+                loadingScreen.offsetWidth;
+                loadingBar.offsetWidth;
+                progressBar.offsetWidth;
+                loadingScreen.classList.add("fade-out-loading");
+                loadingBar.classList.add("fade-out-loading");
+                progressBar.classList.add("face-out-loading");
+
+                setTimeout(() => {
+                    loadingScreen.style.opacity = 0;
+                    loadingBar.style.opacity = 0;
+                    progressBar.style.opacity = 0;
+                }, 950);
+            }
+
         },
         onProgress, onError
     );
