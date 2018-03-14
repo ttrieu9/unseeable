@@ -224,24 +224,7 @@ function onMouseMove() {
                         }
                     }
 
-                    //if there is a currently selected crayon, make it hover over the mouse position
-                    if(currentObject){
-                        //the hover point is the first object in the intersection array
-                        let hoverPoint = intersects.find(function(element){
-                            return currentObject.name !== element.object.name;
-                        }).point;
-
-                        //find the point that is 90% of the way along the ray cast
-                        let crayonPos = {
-                            x: camera.position.x + (hoverPoint.x - camera.position.x)*.9,
-                            y: camera.position.y + (hoverPoint.y - camera.position.y)*.9,
-                            z: camera.position.z + (hoverPoint.z - camera.position.z)*.9
-                        };
-
-                        //place the crayon at that position, plus some offset to place the tip at the mouse pointer
-                        currentObject.position.set(crayonPos.x+.07, crayonPos.y+.025, crayonPos.z-.04);
-
-                    }
+                    moveCrayon(intersects);
                     break;
                 case 3:
                     if(posted === false) {
@@ -257,6 +240,27 @@ function onMouseMove() {
                     break;
             }
         }
+    }
+}
+
+function moveCrayon(intersects) {
+    //if there is a currently selected crayon, make it hover over the mouse position
+    if(currentObject){
+        //the hover point is the first object in the intersection array
+        let hoverPoint = intersects.find(function(element){
+            return currentObject.name !== element.object.name;
+        }).point;
+
+        //find the point that is 90% of the way along the ray cast
+        let crayonPos = {
+            x: camera.position.x + (hoverPoint.x - camera.position.x)*.9,
+            y: camera.position.y + (hoverPoint.y - camera.position.y)*.9,
+            z: camera.position.z + (hoverPoint.z - camera.position.z)*.9
+        };
+
+        //place the crayon at that position, plus some offset to place the tip at the mouse pointer
+        currentObject.position.set(crayonPos.x+.07, crayonPos.y+.025, crayonPos.z-.04);
+
     }
 }
 
@@ -296,7 +300,7 @@ function colorPaper() {
                 //pick up the crayon
                 currentObject = intersected;
                 currentObject.rotation.set(0, Math.PI*5/6, Math.PI*11/6);
-                // onMouseMove();
+                moveCrayon(intersects)
             }
 
             playSound("Click");
