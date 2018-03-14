@@ -71,7 +71,7 @@ function onMouseMove(event) {
     if(intersects.length > 0) {
         var intersected = intersects[0].object;
 
-        //if mouse is over a blocko
+        //if mouse is over a block
         if(blocks.includes(intersected) && intersected.placed === false) {
             document.body.style.cursor = 'pointer';
 
@@ -93,7 +93,7 @@ function onMouseMove(event) {
                 currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
                 currentHover = intersected;
 
-                //move the piece up slightly
+                //make the piece hover if mouse is on it
                 previousPosition = {
                     x: intersected.position.x,
                     y: intersected.position.y,
@@ -127,6 +127,14 @@ function onMouseMove(event) {
             }
 
             currentObject.position.set(point.x, point.y, point.z);
+
+            //make the ghost appear if the block is close to the original position
+            if(currentObject.position.distanceTo(currentObject.ghost.position) < 1){
+                currentObject.ghost.visible = true;
+            }
+            else{
+                currentObject.ghost.visible = false;
+            }
 
         }
     }
@@ -182,13 +190,21 @@ function buildBlock() {
     var intersects = raycaster.intersectObjects(intersectableObjects);
 
     if(intersects.length > 0) {
-        var intersected = intersects[0].object;
+        var intersected = intersects.find(function(element){
+            return currentObject !== element.object;
+        }).object;
         console.log(intersected);
 
         //if clicking on a block
         if(blocks.includes(intersected) && intersected.placed === false){
             //select the block
             currentObject = intersected;
+        }
+        //place the block in the same position as its ghost
+        else if(currentObject && currentObject.ghost.visible === true){
+            currentObject.position.copy(currentObject.ghost.position);
+            currentObject.ghost.visible = false;
+            currentObject = null;
         }
         //if placing the piece inside of the box
         else if(currentObject && intersected === box){
@@ -429,7 +445,7 @@ function init() {
                     //copy the materials and make them transparent
                     //some blocks have multiple materials
                     if(ghost.material.length){
-                        //for some reason, this is the only way that
+                        //for some reason, this is the only way that works, and not material[i] = material[i].clone()
                         ghost.material = [];
                         for(let i in child.material){
                             ghost.material.push(child.material[i].clone());
@@ -443,6 +459,7 @@ function init() {
                         ghost.material.transparent = true;
                         ghost.material.opacity = 0.3;
                     }
+                    ghost.visible = false;
 
                     //give block a reference to its ghost
                     child.ghost = ghost;
