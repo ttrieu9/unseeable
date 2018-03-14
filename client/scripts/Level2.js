@@ -114,7 +114,6 @@ function onMouseMove(event) {
         //if there is a selected piece, make it follow the mouse on the rug
         //TODO: it might be cleaner using the point the raycaster is at, looking at blocks as well as the rug
         if(currentObject){
-            console.log("current");
             //find the point of intersection that isn't the current object or the building box
             let rayPoint = intersects.find(function(element){
                 return currentObject !== element.object && !element.object.name.includes("buildingBox");
@@ -424,6 +423,31 @@ function init() {
                     child.placed = false;
 
                     //TODO: add random rotation to puzzle pieces
+                    //create the ghosts that will be displayed in the original
+                    let ghost = child.clone();
+
+                    //copy the materials and make them transparent
+                    //some blocks have multiple materials
+                    if(ghost.material.length){
+                        //for some reason, this is the only way that
+                        ghost.material = [];
+                        for(let i in child.material){
+                            ghost.material.push(child.material[i].clone());
+                            ghost.material[i].transparent = true;
+                            ghost.material[i].opacity = 0.3;
+                        }
+                    }
+                    //otherwise there is one material
+                    else{
+                        ghost.material = child.material.clone();
+                        ghost.material.transparent = true;
+                        ghost.material.opacity = 0.3;
+                    }
+
+                    //give block a reference to its ghost
+                    child.ghost = ghost;
+
+                    scene.add(ghost);
 
                 }
             }
