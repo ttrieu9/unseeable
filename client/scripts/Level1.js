@@ -19,7 +19,7 @@ var mixers = [];
 var raycaster;
 var mouse = new THREE.Vector2();
 var currentObject;
-var currentObjectClone
+var ghostCrayons = []
 var currentHover;
 var previousMaterial;
 var previousPosition;
@@ -119,32 +119,21 @@ function onMouseMove() {
                     break;
                 case 2:
                     if(intersected.name.includes('Crayon')) {
-                        if(currentObjectClone) {
-                            scene.remove(currentObjectClone)
-                        }
-
                         if(currentObject) {
-                            currentObjectClone = currentObject.clone()
-                            currentObjectClone.material = [currentObject.material[0].clone(),currentObject.material[1].clone()]
-                            currentObjectClone.material[0].opacity = 0.3
-                            currentObjectClone.material[1].opacity = 0.3
-                            currentObjectClone.material[0].transparent = true
-                            currentObjectClone.material[1].transparent = true
-                            currentObjectClone.position.set(currentObject.originalPosition.x, currentObject.originalPosition.y, currentObject.originalPosition.z)
-                            currentObjectClone.rotation.set(0,0,0)
-                            scene.add(currentObjectClone)
+                            document.body.style.cursor = 'none';
+
+                            let ghostCrayon = ghostCrayons.find((ghostCrayon) => {
+                                return ghostCrayon.name == currentObject.name
+                            })
+                            ghostCrayon.visible = true;
+                        }
+                        else {
+                            document.body.style.cursor = 'pointer';
                         }
 
                         if(currentHover && currentHover.name.includes('Paper')) {
                             currentHover.material = previousMaterial;
                             currentHover = null;
-                        }
-
-                        if(!currentObject) {
-                            document.body.style.cursor = 'pointer';
-                        }
-                        else {
-                            document.body.style.cursor = 'none';
                         }
 
                         if(!intersected.name.includes('Box')) {
@@ -176,7 +165,6 @@ function onMouseMove() {
                             currentHover = null
                         }
                         else if(!intersected.name.includes('Outline')) {
-                            console.log(intersected)
                             if(currentObject) {
                                 if(coloredObjects.includes(intersected.name)) {
                                     if(!currentHover) {
@@ -213,15 +201,17 @@ function onMouseMove() {
                         }
                     }
                     else {
-                        if(currentObjectClone) {
-                            scene.remove(currentObjectClone)
-                        }
                         
                         if(!currentObject) {
                             document.body.style.cursor = 'default';
                         }
                         else {
                             document.body.style.cursor = 'none';
+                            
+                            let ghostCrayon = ghostCrayons.find((ghostCrayon) => {
+                                return ghostCrayon.name == currentObject.name
+                            })
+                            ghostCrayon.visible = false;
                         }
 
                         if(currentHover && currentHover.name.includes('Crayon')) {
@@ -282,6 +272,13 @@ function colorPaper() {
 
         //if clicking on crayons or the box
         if (intersected.name.includes('Crayon')) {
+            if(currentObject) {
+                let ghostCrayon = ghostCrayons.find((ghostCrayon) => {
+                    return ghostCrayon.name == currentObject.name
+                })
+                ghostCrayon.visible = false;
+            }
+
             //if clicking on the box, put the crayon away
             if(intersected.name.includes('Crayon_Box')){
                 currentObject.rotation.set(0, 0, 0);
@@ -299,7 +296,7 @@ function colorPaper() {
                 //pick up the crayon
                 currentObject = intersected;
                 currentObject.rotation.set(0, Math.PI*5/6, Math.PI*11/6);
-                onMouseMove();
+                // onMouseMove();
             }
 
             playSound("Click");
@@ -827,6 +824,20 @@ function init() {
 
                     //store the original position of the crayon for when placing it back in the box
                     child.originalPosition = boxPos;
+
+                    if(child.name.includes('Main') && !child.name.includes('Box')) {
+                        let currentObjectClone = child.clone()
+                        currentObjectClone.material = [child.material[0].clone(),child.material[1].clone()]
+                        currentObjectClone.material[0].opacity = 0.3
+                        currentObjectClone.material[1].opacity = 0.3
+                        currentObjectClone.material[0].transparent = true
+                        currentObjectClone.material[1].transparent = true
+                        currentObjectClone.position.set(child.originalPosition.x, child.originalPosition.y, child.originalPosition.z)
+                        currentObjectClone.rotation.set(0,0,0)
+                        currentObjectClone.visible = false;
+                        scene.add(currentObjectClone)
+                        ghostCrayons.push(currentObjectClone);
+                    }
                 }
                 //sky sphere
                 else if(child.name.includes("pSphere10")){
