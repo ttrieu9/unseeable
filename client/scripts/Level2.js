@@ -16,7 +16,6 @@ var raycaster;
 var mouse = new THREE.Vector2();
 var currentObject;
 var currentHover;
-var previousPosition;
 var attempts = 1;
 var colormode = 1;
 var intersectableObjects = [];
@@ -80,34 +79,24 @@ function onMouseMove(event) {
                 currentHover = intersected;
 
                 //move the piece up slightly
-                previousPosition = {
-                    x: intersected.position.x,
-                    y: intersected.position.y,
-                    z: intersected.position.z
-                };
-                currentHover.position.set(previousPosition.x, previousPosition.y+.1, previousPosition.z);
+                currentHover.position.set(currentHover.ghost.position.x, currentHover.ghost.position.y+.1, currentHover.ghost.position.z);
             }
             //if mouse hovers over a new piece
             else if(currentHover.name !== intersected.name){
                 //return the previous piece back and select the new one
-                currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+                currentHover.position.set(currentHover.ghost.position.x, currentHover.ghost.position.y, currentHover.ghost.position.z);
                 currentHover = intersected;
 
                 //make the piece hover if mouse is on it
-                previousPosition = {
-                    x: intersected.position.x,
-                    y: intersected.position.y,
-                    z: intersected.position.z
-                };
-                currentHover.position.set(previousPosition.x, previousPosition.y+.1, previousPosition.z);
+                currentHover.position.set(currentHover.ghost.position.x, currentHover.ghost.position.y+.1, currentHover.ghost.position.z);
             }
 
 
         }
-        //if not hovering over a piece
+        //if not hovering over a piece, return the hover piece to its original position
         else if(currentHover){
             document.body.style.cursor = 'default';
-            currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+            currentHover.position.set(currentHover.ghost.position.x, currentHover.ghost.position.y, currentHover.ghost.position.z);
             currentHover = null;
         }
 
@@ -422,6 +411,8 @@ function init() {
                     //add the blocks to the array of blocks
                     blocks.push(child);
 
+                    //TODO: add random rotation to puzzle pieces
+
                     //generate the bounding box for it and find the center point, using the position as the offset
                     child.geometry.computeBoundingBox();
                     let box = child.geometry.boundingBox;
@@ -438,7 +429,6 @@ function init() {
                     //boolean field that tells whther the piece has been placed or not
                     child.placed = false;
 
-                    //TODO: add random rotation to puzzle pieces
                     //create the ghosts that will be displayed in the original
                     let ghost = child.clone();
 
