@@ -422,18 +422,18 @@ function init() {
                     //add the blocks to the array of blocks
                     blocks.push(child);
 
-                    //generate the bounding box for it and find the center point
+                    //generate the bounding box for it and find the center point, using the position as the offset
                     child.geometry.computeBoundingBox();
                     let box = child.geometry.boundingBox;
-                    let boxPos = {
-                        x: 0.5 * (box.max.x + box.min.x),
-                        y: 0.5 * (box.max.y + box.min.y),
-                        z: 0.5 * (box.max.z + box.min.z)
+                    let resetPos = {
+                        x: 0.5 * (box.max.x + box.min.x) + child.position.x,
+                        y: 0.5 * (box.max.y + box.min.y) + child.position.y,
+                        z: 0.5 * (box.max.z + box.min.z) + child.position.z
                     };
 
                     //center the geometry and move it back to its original location
                     child.geometry.center();
-                    child.position.set(boxPos.x, boxPos.y, boxPos.z);
+                    child.position.copy(resetPos);
 
                     //boolean field that tells whther the piece has been placed or not
                     child.placed = false;
