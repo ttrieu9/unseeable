@@ -404,7 +404,7 @@ function init() {
     //
 
     //load the bedroom
-    loadWorldFBX('Newest.3.14.18.fbx',
+    loadWorldFBX('Newest.3.15.18.fbx',
         function(object){
             console.log(object);
             for(let i in object.children){
