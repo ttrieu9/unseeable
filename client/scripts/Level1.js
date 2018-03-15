@@ -19,7 +19,6 @@ var mixers = [];
 var raycaster;
 var mouse = new THREE.Vector2();
 var currentObject;
-var ghostCrayons = []
 var currentHover;
 var previousMaterial;
 var previousPosition;
@@ -121,11 +120,7 @@ function onMouseMove() {
                     if(intersected.name.includes('Crayon')) {
                         if(currentObject) {
                             document.body.style.cursor = 'none';
-
-                            let ghostCrayon = ghostCrayons.find((ghostCrayon) => {
-                                return ghostCrayon.name == currentObject.name
-                            })
-                            ghostCrayon.visible = true;
+                            currentObject.ghost.visible = true;
                         }
                         else {
                             document.body.style.cursor = 'pointer';
@@ -207,11 +202,7 @@ function onMouseMove() {
                         }
                         else {
                             document.body.style.cursor = 'none';
-                            
-                            let ghostCrayon = ghostCrayons.find((ghostCrayon) => {
-                                return ghostCrayon.name == currentObject.name
-                            })
-                            ghostCrayon.visible = false;
+                            currentObject.ghost.visible = false;
                         }
 
                         if(currentHover && currentHover.name.includes('Crayon')) {
@@ -276,13 +267,6 @@ function colorPaper() {
 
         //if clicking on crayons or the box
         if (intersected.name.includes('Crayon')) {
-            if(currentObject) {
-                let ghostCrayon = ghostCrayons.find((ghostCrayon) => {
-                    return ghostCrayon.name == currentObject.name
-                })
-                ghostCrayon.visible = false;
-            }
-
             //if clicking on the box, put the crayon away
             if(intersected.name.includes('Crayon_Box')){
                 currentObject.rotation.set(0, 0, 0);
@@ -307,7 +291,6 @@ function colorPaper() {
         }
         else if(intersected.name.includes('Paper') && coloredObjects.includes(intersected.name) && !intersected.name.includes("Outline") && currentObject) {
             intersected.material.color = currentObject.material[0].color;
-            // colorsUsed.push(currentObject.material[0].name)
             updatePaperScore(intersected.name, currentObject.material[0].name)
             var paperIndex = coloredObjects.findIndex((object) => {
                 return object.includes(intersected.name)
@@ -830,17 +813,17 @@ function init() {
                     child.originalPosition = boxPos;
 
                     if(child.name.includes('Main') && !child.name.includes('Box')) {
-                        let currentObjectClone = child.clone()
-                        currentObjectClone.material = [child.material[0].clone(),child.material[1].clone()]
-                        currentObjectClone.material[0].opacity = 0.3
-                        currentObjectClone.material[1].opacity = 0.3
-                        currentObjectClone.material[0].transparent = true
-                        currentObjectClone.material[1].transparent = true
-                        currentObjectClone.position.set(child.originalPosition.x, child.originalPosition.y, child.originalPosition.z)
-                        currentObjectClone.rotation.set(0,0,0)
+                        let currentObjectClone = child.clone();
+                        currentObjectClone.material = [child.material[0].clone(),child.material[1].clone()];
+                        currentObjectClone.material[0].opacity = 0.3;
+                        currentObjectClone.material[1].opacity = 0.3;
+                        currentObjectClone.material[0].transparent = true;
+                        currentObjectClone.material[1].transparent = true;
+                        currentObjectClone.position.set(child.originalPosition.x, child.originalPosition.y, child.originalPosition.z);
+                        currentObjectClone.rotation.set(0,0,0);
                         currentObjectClone.visible = false;
-                        scene.add(currentObjectClone)
-                        ghostCrayons.push(currentObjectClone);
+                        scene.add(currentObjectClone);
+                        child.ghost = currentObjectClone;
                     }
                 }
                 //sky sphere
