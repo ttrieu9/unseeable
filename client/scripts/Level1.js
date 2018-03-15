@@ -761,7 +761,7 @@ function init() {
 
         });
 
-    loadWorldFBX('Colored Papers.fbx', (object) => {
+    loadStaticFBX('Colored Papers.fbx', (object) => {
         for(i in object.children) {
             let child = object.children[i];
 

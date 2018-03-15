@@ -62,6 +62,18 @@ function onError( xhr ) {
  * @param onLoad function to be executed on file load
  */
 function loadStaticFBX(fileName, onLoad){
+    fbxloader.load(
+        "assets/models/" + fileName,
+        function( object ) {
+            //execute onLoad function if there is one
+            if(onLoad){
+                onLoad(object);
+            }
+
+            scene.add( object );
+        },
+        null, onError
+    );
 }
 
 /**
