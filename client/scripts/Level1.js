@@ -842,16 +842,16 @@ function init() {
                     child.receiveShadow = false;
                 }
                 else if(child.name == 'Table_Red') {
-                    createOutline(child ,-0.4, -0.7, -0.15);
+                    createOutline(child ,-0.4, -0.725, -0.15);
                 }
                 else if(child.name == 'Table_Green') {
-                    createOutline(child, -0.15, -0.7, 0);
+                    createOutline(child, -0.15, -0.725, 0);
                 }
                 else if(child.name == 'Table_Yellow') {
-                    createOutline(child, -0.5, -0.7, -0.5);
+                    createOutline(child, -0.4, -0.725, -0.45);
                 }
                 else if(child.name == 'Table_Blue') {
-                    createOutline(child, -0.25, -0.7, -0.65);
+                    createOutline(child, -0.15, -0.725, -0.575);
                 }
                 else if(child.name.includes('Table') && child.name.includes('Leg')) {
                     // var outlineMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.BackSide });
