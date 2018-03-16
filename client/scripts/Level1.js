@@ -737,11 +737,21 @@ function nextPage() {
     xhttp.send();
 }
 
+function createOutline(object, dx, dy, dz) {
+    var outlineMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.BackSide });
+    var outlineMesh = new THREE.Mesh(object.geometry, outlineMaterial);
+    outlineMesh.position.set(outlineMesh.position.x + dx, outlineMesh.position.y + dy, outlineMesh.position.z + dz);
+    outlineMesh.scale.multiplyScalar(1.05);
+    outlineMesh.scale.setY(outlineMesh.scale.y + 0.5);
+    scene.add(outlineMesh);
+}
+
 function init() {
     startCutScene();
 
-    let cont = document.getElementById('continue')
-    cont.addEventListener('click', nextPage)
+    // adding event listener to continue button
+    let cont = document.getElementById('continue');
+    cont.addEventListener('click', nextPage);
 
     //create the scene
     scene = new THREE.Scene();
@@ -830,6 +840,29 @@ function init() {
                 else if(child.name.includes("pSphere10")){
                     child.castShadow = false;
                     child.receiveShadow = false;
+                }
+                else if(child.name == 'Table_Red') {
+                    createOutline(child ,-0.75, -0.7, 0);
+                }
+                else if(child.name == 'Table_Green') {
+                    createOutline(child, -0.25, -0.7, 0);
+                }
+                else if(child.name == 'Table_Yellow') {
+                    createOutline(child, -0.5, -0.7, -0.5);
+                }
+                else if(child.name == 'Table_Blue') {
+                    createOutline(child, -0.25, -0.7, -0.65);
+                }
+                else if(child.name.includes('Table') && child.name.includes('Leg')) {
+                    // var outlineMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.BackSide });
+                    // var outlineMesh = new THREE.Mesh(child.geometry, outlineMaterial);
+                    // outlineMesh.position = child.position;
+                    // outlineMesh.position.setX(outlineMesh.position.x - 0.75)
+                    // outlineMesh.position.setY(outlineMesh.position.y - 0.7)
+                    // console.log(outlineMesh)
+                    // outlineMesh.scale.multiplyScalar(1.05);
+                    // outlineMesh.scale.setY(outlineMesh.scale.y + 0.5)
+                    // scene.add(outlineMesh);
                 }
             
             }
