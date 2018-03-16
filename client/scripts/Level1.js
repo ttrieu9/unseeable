@@ -739,11 +739,15 @@ function nextPage() {
 
 function createOutline(object, dx, dy, dz) {
     var outlineMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.BackSide });
+    outlineMaterial.transparent = true;
+    outlineMaterial.opacity = 0.9;
     var outlineMesh = new THREE.Mesh(object.geometry, outlineMaterial);
     outlineMesh.position.set(outlineMesh.position.x + dx, outlineMesh.position.y + dy, outlineMesh.position.z + dz);
     outlineMesh.scale.multiplyScalar(1.05);
     outlineMesh.scale.setY(outlineMesh.scale.y + 0.5);
+    outlineMesh.visible = false;
     scene.add(outlineMesh);
+    object.highlight = outlineMesh;
 }
 
 function init() {
@@ -843,6 +847,7 @@ function init() {
                 }
                 else if(child.name == 'Table_Red') {
                     createOutline(child ,-0.4, -0.725, -0.15);
+
                 }
                 else if(child.name == 'Table_Green') {
                     createOutline(child, -0.15, -0.725, 0);
@@ -852,17 +857,6 @@ function init() {
                 }
                 else if(child.name == 'Table_Blue') {
                     createOutline(child, -0.15, -0.725, -0.575);
-                }
-                else if(child.name.includes('Table') && child.name.includes('Leg')) {
-                    // var outlineMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.BackSide });
-                    // var outlineMesh = new THREE.Mesh(child.geometry, outlineMaterial);
-                    // outlineMesh.position = child.position;
-                    // outlineMesh.position.setX(outlineMesh.position.x - 0.75)
-                    // outlineMesh.position.setY(outlineMesh.position.y - 0.7)
-                    // console.log(outlineMesh)
-                    // outlineMesh.scale.multiplyScalar(1.05);
-                    // outlineMesh.scale.setY(outlineMesh.scale.y + 0.5)
-                    // scene.add(outlineMesh);
                 }
             
             }
