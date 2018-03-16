@@ -335,7 +335,13 @@ function init() {
                     child.name.includes("Stairs") ||
                     child.name.includes("Window_") ||
                     child.name.includes("Chimney") ||
-                    child.name.includes("Roof")) && child.geometry){
+                    child.name.includes("Roof") ||
+                    child.name.includes("polySurface187")) && child.geometry){
+
+                    //rename the walls piece
+                    if(child.name === "polySurface187"){
+                        child.name === "Walls"
+                    }
 
                     //add the blocks to the array of blocks
                     blocks.push(child);
@@ -401,8 +407,38 @@ function init() {
                         child.name.includes("polySurface92") || //step
                         child.name.includes("polySurface189")){ //base
 
-                    if(child.name === "polySurface189"){
-                        base = child;
+                    //rename these element to be easier to work with
+                    switch(child.name){
+                        case "polySurface124":
+                            child.name = "Chimney_Final";
+                            break;
+                        case "polySurface72":
+                            child.name = "Roof_Final";
+                            break;
+                        case "polySurface183":
+                            child.name = "SmallRoof_Final";
+                            break;
+                        case "polySurface87":
+                            child.name = "Window_Back_Final";
+                            break;
+                        case "polySurface116":
+                            child.name = "Window_Side_Final";
+                            break;
+                        case "polySurface122":
+                            child.name = "Window_Front_Final";
+                            break;
+                        case "polySurface83":
+                            child.name = "Door_Final";
+                            break;
+                        case "polySurface109":
+                            child.name = "Walls_Final";
+                            break;
+                        case "polySurface92":
+                            child.name = "Step_Final";
+                            break;
+                        case "polySurface189":
+                            child.name = "Foundation_Final";
+                            break;
                     }
 
                     child.geometry.computeBoundingBox();
@@ -423,6 +459,11 @@ function init() {
                     child.position.y += 1.5;
                     child.position.z -= 26;
                 }
+            }
+
+            //add references to the final positions to the blocks that you build with
+            for(let i in blocks){
+
             }
         });
 
