@@ -22,7 +22,7 @@ var intersectableObjects = [];
 var controlsEnabled = true;
 
 var blocks = [];
-var base;
+var finalBlocks = [];
 
 var paths = [];
 var splineTargets = [];
@@ -123,6 +123,14 @@ function onMouseMove(event) {
             }
             else{
                 currentObject.ghost.visible = false;
+            }
+
+            //make the ghost appear if the block is close to the original position
+            if(currentObject.position.distanceTo(currentObject.finalGhost.position) < 1){
+                currentObject.finalGhost.visible = true;
+            }
+            else{
+                currentObject.finalGhost.visible = false;
             }
 
         }
@@ -340,7 +348,7 @@ function init() {
 
                     //rename the walls piece
                     if(child.name === "polySurface187"){
-                        child.name === "Walls"
+                        child.name = "Walls";
                     }
 
                     //add the blocks to the array of blocks
@@ -407,6 +415,8 @@ function init() {
                         child.name.includes("polySurface92") || //step
                         child.name.includes("polySurface189")){ //base
 
+                    finalBlocks.push(child);
+
                     //rename these element to be easier to work with
                     switch(child.name){
                         case "polySurface124":
@@ -434,7 +444,7 @@ function init() {
                             child.name = "Walls_Final";
                             break;
                         case "polySurface92":
-                            child.name = "Step_Final";
+                            child.name = "Stairs_Final";
                             break;
                         case "polySurface189":
                             child.name = "Foundation_Final";
@@ -452,18 +462,72 @@ function init() {
                     //center the geometry and move it back to its original location
                     child.geometry.center();
                     child.position.copy(resetPos);
-                    console.log(child.name);
 
                     //move the pieces into the building area
                     child.position.x -= 1.5;
                     child.position.y += 1.5;
                     child.position.z -= 26;
+
+                    //make them invisible
+                    child.visible = false;
                 }
             }
 
             //add references to the final positions to the blocks that you build with
             for(let i in blocks){
+                let block = blocks[i];
 
+                //references are all added by name
+                if(block.name.includes("Foundation")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "Foundation_Final";
+                    })
+                }
+                else if(block.name.includes("Door")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "Door_Final";
+                    })
+                }
+                else if(block.name.includes("Stairs")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "Stairs_Final";
+                    })
+                }
+                else if(block.name.includes("Window_Smallest")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "Window_Front_Final";
+                    })
+                }
+                else if(block.name.includes("Window_Medium")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "Window_Side_Final";
+                    })
+                }
+                else if(block.name.includes("Window_Large")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "Window_Back_Final";
+                    })
+                }
+                else if(block.name.includes("Chimney")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "Chimney_Final";
+                    })
+                }
+                else if(block.name.includes("SmallRoof")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "SmallRoof_Final";
+                    })
+                }
+                else if(block.name.includes("Roof")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "Roof_Final";
+                    })
+                }
+                else if(block.name.includes("Walls")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "Walls_Final";
+                    })
+                }
             }
         });
 
@@ -545,15 +609,6 @@ function init() {
         }
         else if(String.fromCharCode(event.keyCode) === "o"){
             controls.enabled = !controls.enabled;
-        }
-        else if(String.fromCharCode(event.keyCode) === "p"){
-            console.log(base.position);
-        }
-        else if(String.fromCharCode(event.keyCode) === "x"){
-            base.position.x -= .1;
-        }
-        else if(String.fromCharCode(event.keyCode) === "z"){
-            base.position.z -= .1;
         }
         else if(String.fromCharCode(event.keyCode) === " "){
             nextPosition();
