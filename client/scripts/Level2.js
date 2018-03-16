@@ -22,6 +22,7 @@ var intersectableObjects = [];
 var controlsEnabled = true;
 
 var blocks = [];
+var house = [];
 
 var paths = [];
 var splineTargets = [];
@@ -396,6 +397,7 @@ function init() {
     loadWorldFBX('Newest.3.15.18.fbx',
         function(object){
             console.log(object);
+
             for(let i in object.children){
                 let child = object.children[i];
 
@@ -456,8 +458,36 @@ function init() {
 
                     scene.add(ghost);
 
+
+
+
+                }
+                //add the parts of the house to the house object for later
+                else if(child.name.includes("polySurface124") || //chimney
+                        child.name.includes("polySurface72") || //roof
+                        child.name.includes("polySurface183")|| //smaller roof
+                        child.name.includes("polySurface87") || //back window
+                        child.name.includes("polySurface116") || //side window
+                        child.name.includes("polySurface122") || //front window
+                        child.name.includes("polySurface83") || //door
+                        child.name.includes("polySurface109") || //walls
+                        child.name.includes("polySurface92") || //step
+                        child.name.includes("polySurface189")){ //base
+
+                    child.geometry.computeBoundingBox();
+                    let box = child.geometry.boundingBox;
+                    let resetPos = {
+                        x: 0.5 * (box.max.x + box.min.x) + child.position.x,
+                        y: 0.5 * (box.max.y + box.min.y) + child.position.y,
+                        z: 0.5 * (box.max.z + box.min.z) + child.position.z
+                    };
+
+                    //center the geometry and move it back to its original location
+                    child.geometry.center();
+                    child.position.copy(resetPos);
                 }
             }
+            // console.log(house);
         });
 
     //load audio
