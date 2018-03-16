@@ -32,7 +32,6 @@ var subtitles;
 var logger = new Logger('player id', 1);
 
 //TODO: not necessary any more, delete
-var box;
 var buildingStep = 0;
 
 init();
@@ -106,7 +105,7 @@ function onMouseMove(event) {
         if(currentObject){
             //find the point of intersection that isn't the current object or the building box
             let rayPoint = intersects.find(function(element){
-                return currentObject !== element.object && !element.object.name.includes("buildingBox");
+                return currentObject !== element.object;
             }).point;
 
             //position that is 90% along the ray cast
@@ -196,79 +195,15 @@ function buildBlock() {
             currentObject.ghost.visible = false;
             currentObject = null;
         }
-        //if placing the piece inside of the box
-        else if(currentObject && intersected === box){
-            placeBlock();
-        }
     }
 }
 
-//TODO: update the function to work with new blocko names
+//TODO: update function to work with the building of the house
 /**
- * Place the selected block in the building box
+ * Place the selected block on the building
  */
 function placeBlock(){
-    getAngry();
 
-    //depending on which step it is, calculate the offset to place the piece correctly
-    let offset;
-    switch(buildingStep){
-        case 0: //base
-            offset = {
-                x: 0,
-                y: -0.51,
-                z: 0
-            };
-            break;
-        case 1: //second layer of wall
-            offset = {
-                x: 0,
-                y: -0.17,
-                z: 0
-            };
-            break;
-        case 2: //third layer of wall
-            offset = {
-                x: 0,
-                y: 0.17,
-                z: 0
-            };
-            break;
-        case 3: //third layer of wall
-            offset = {
-                x: 0,
-                y: 0.51,
-                z: 0
-            };
-            break;
-        case 4: //door
-            offset = {
-                x: -0.17,
-                y: 0.08,
-                z: 0.71
-            };
-            break;
-        case 5: //flat roof piece
-            offset = {
-                x: 0.855,
-                y: 0.765,
-                z: -0.085
-            };
-            break;
-        case 6: //roof
-            offset = {
-                x: -0.17,
-                y: 1.02,
-                z: 0.08
-            };
-            break;
-    }
-
-    //place the block inside inside of the box
-    currentObject.position.set(box.position.x + offset.x, box.position.y + offset.y, box.position.z + offset.z);
-    currentObject.placed = true;
-    currentObject = null;
-    buildingStep += 1;
 }
 
 
@@ -379,15 +314,7 @@ function init() {
 
     //TODO: find initial camera position
     //initial camera position
-    camera.position.set(-13, 4.5, 11.6);
-
-    //TODO: remove box helper when done
-    box = new THREE.Mesh(new THREE.BoxGeometry(4, 3, 3), new THREE.MeshBasicMaterial({color:0xdddddd, visible:false}));
-    box.name = "buildingBox";
-    box.position.set(-13, 1, 6.5);
-    intersectableObjects.push(box);
-    scene.add(box);
-    scene.add(new THREE.BoxHelper(box));
+    camera.position.set(-13.1, 6.8, 10.3);
 
     //
     // LOADING
