@@ -22,7 +22,8 @@ var intersectableObjects = [];
 var controlsEnabled = true;
 
 var blocks = [];
-var house = [];
+var house;
+var houseParts = [];
 
 var paths = [];
 var splineTargets = [];
@@ -398,6 +399,9 @@ function init() {
         function(object){
             console.log(object);
 
+            house = new THREE.Object3D();
+            scene.add(house);
+
             for(let i in object.children){
                 let child = object.children[i];
 
@@ -485,9 +489,22 @@ function init() {
                     //center the geometry and move it back to its original location
                     child.geometry.center();
                     child.position.copy(resetPos);
+                    console.log(child.name);
+
+                    let sphere = new THREE.Mesh(new THREE.SphereGeometry(0.1));
+                    sphere.position.copy(child.position);
+                    scene.add(sphere);
+
+                    //black magic: not all children are added properly without this
+                    setTimeout(function(){
+                        house.add(child);
+                        if(house.children.length === 10){
+                            console.log(house);
+                            house.position.set(0, 10, 0);
+                        }
+                    }, 0);
                 }
             }
-            // console.log(house);
         });
 
     //load audio
