@@ -91,28 +91,15 @@ function onMouseMove() {
                     if(intersected.name.includes('Table') && !intersected.name.includes('Chair') && !intersected.name.includes('Legs') && !intersected.name.includes("Path")) {
                         document.body.style.cursor = 'pointer';
 
-                        if(!currentHover) {
-                            currentHover = intersected;
-                            newMaterial = currentHover.material[0].clone();
-                            previousMaterial = [currentHover.material[0].clone(),currentHover.material[1].clone()];
-                            newMaterial.color.setHex('0xffffff');
-                            currentHover.material = newMaterial
-                        }
-                        else {
-                            currentHover.material = previousMaterial;
-                            currentHover = intersected;
-                            newMaterial = currentHover.material[0].clone();
-                            previousMaterial = [currentHover.material[0].clone(),currentHover.material[1].clone()];
-                            newMaterial.color.setHex('0xffffff');
-                            currentHover.material = newMaterial
-                        }
+                        currentHover = intersected;
+                        intersected.highlight.visible = true;
                     }
                     else {
                         document.body.style.cursor = 'default';
 
                         if(currentHover) {
-                            currentHover.material = previousMaterial;
-                            currentHover = null
+                            currentHover.highlight.visible = false;
+                            currentHover = null;
                         }
                     }
                     break;
@@ -402,9 +389,9 @@ function selectTable() {
         var intersected = intersects[0].object;
         if(intersected.name.includes("Table") && !intersected.name.includes("Path")){
             startCutScene();
-            console.log(intersected);
+
             if(currentHover) {
-                currentHover.material = previousMaterial;
+                currentHover.highlight.visible = false;
                 currentHover = null
             }
             //select the correct spline to move along, depending on the current table you are at
@@ -412,7 +399,6 @@ function selectTable() {
             if(currentTable === null){
                 if(intersected.name.includes("Green")){
                     currentTable = "Green";
-                    console.log(currentTable);
                     moveAlongSpline(0, -1, 3);
                 }
                 else if(intersected.name.includes("Red")){
@@ -754,8 +740,8 @@ function init() {
     startCutScene();
 
     // adding event listener to continue button
-    // let cont = document.getElementById('continue');
-    // cont.addEventListener('click', nextPage);
+    let cont = document.getElementById('continue');
+    cont.addEventListener('click', nextPage);
 
     //create the scene
     scene = new THREE.Scene();
@@ -861,19 +847,19 @@ function init() {
             
             }
 
-            // var loadingScreen = document.getElementById("loading");
+            var loadingScreen = document.getElementById("loading");
             var progressBar = document.getElementById("myProgress")
             var loadingBar = document.getElementById("myBar");
             if(loadingBar.innerText === "100%"){
-                // loadingScreen.offsetWidth;
+                loadingScreen.offsetWidth;
                 loadingBar.offsetWidth;
                 progressBar.offsetWidth;
-                // loadingScreen.classList.add("fade-out-loading");
+                loadingScreen.classList.add("fade-out-loading");
                 loadingBar.classList.add("fade-out-loading");
                 progressBar.classList.add("face-out-loading");
             
                 setTimeout(() => {
-                    // loadingScreen.style.opacity = 0;
+                    loadingScreen.style.opacity = 0;
                     loadingBar.style.opacity = 0;
                     progressBar.style.opacity = 0;
                     playSound("TakeSeats");
