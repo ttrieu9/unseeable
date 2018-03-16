@@ -105,7 +105,7 @@ function onMouseMove(event) {
         if(currentObject){
             //find the point of intersection that isn't the current object or the building box
             let rayPoint = intersects.find(function(element){
-                return currentObject !== element.object;
+                return currentObject !== element.object && currentObject.finalGhost !== element.object;
             }).point;
 
             //position that is 90% along the ray cast
@@ -201,6 +201,13 @@ function buildBlock() {
         else if(currentObject && currentObject.ghost.visible === true){
             currentObject.position.copy(currentObject.ghost.position);
             currentObject.ghost.visible = false;
+            currentObject = null;
+        }
+        //place the block in the same position as its final ghost
+        else if(currentObject && currentObject.finalGhost.visible === true){
+            currentObject.position.copy(currentObject.finalGhost.position);
+            currentObject.finalGhost.visible = false;
+            currentObject.placed = true;
             currentObject = null;
         }
     }
@@ -468,7 +475,22 @@ function init() {
                     child.position.y += 1.5;
                     child.position.z -= 26;
 
-                    //make them invisible
+                    //make them opaque and invisible
+                    if(child.material.length){
+                        //for some reason, this is the only way that works, and not material[i] = material[i].clone()
+                        child.material = [];
+                        for(let i in child.material){
+                            child.material.push(child.material[i].clone());
+                            child.material[i].transparent = true;
+                            child.material[i].opacity = 0.3;
+                        }
+                    }
+                    //otherwise there is one material
+                    else{
+                        child.material = child.material.clone();
+                        child.material.transparent = true;
+                        child.material.opacity = 0.3;
+                    }
                     child.visible = false;
                 }
             }
