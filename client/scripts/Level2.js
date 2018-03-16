@@ -22,8 +22,7 @@ var intersectableObjects = [];
 var controlsEnabled = true;
 
 var blocks = [];
-var house;
-var houseParts = [];
+var base;
 
 var paths = [];
 var splineTargets = [];
@@ -32,7 +31,7 @@ var subtitles;
 
 var logger = new Logger('player id', 1);
 
-//TODO: probably only temporary for building
+//TODO: not necessary any more, delete
 var box;
 var buildingStep = 0;
 
@@ -399,9 +398,6 @@ function init() {
         function(object){
             console.log(object);
 
-            house = new THREE.Object3D();
-            scene.add(house);
-
             for(let i in object.children){
                 let child = object.children[i];
 
@@ -478,6 +474,10 @@ function init() {
                         child.name.includes("polySurface92") || //step
                         child.name.includes("polySurface189")){ //base
 
+                    if(child.name === "polySurface189"){
+                        base = child;
+                    }
+
                     child.geometry.computeBoundingBox();
                     let box = child.geometry.boundingBox;
                     let resetPos = {
@@ -491,18 +491,10 @@ function init() {
                     child.position.copy(resetPos);
                     console.log(child.name);
 
-                    let sphere = new THREE.Mesh(new THREE.SphereGeometry(0.1));
-                    sphere.position.copy(child.position);
-                    scene.add(sphere);
-
-                    //black magic: not all children are added properly without this
-                    setTimeout(function(){
-                        house.add(child);
-                        if(house.children.length === 10){
-                            console.log(house);
-                            house.position.set(0, 10, 0);
-                        }
-                    }, 0);
+                    //move the pieces into the building area
+                    child.position.x -= 1.5;
+                    child.position.y += 1.5;
+                    child.position.z -= 26;
                 }
             }
         });
@@ -587,7 +579,13 @@ function init() {
             controls.enabled = !controls.enabled;
         }
         else if(String.fromCharCode(event.keyCode) === "p"){
-            currentObject.position.y -= .01;
+            console.log(base.position);
+        }
+        else if(String.fromCharCode(event.keyCode) === "x"){
+            base.position.x -= .1;
+        }
+        else if(String.fromCharCode(event.keyCode) === "z"){
+            base.position.z -= .1;
         }
         else if(String.fromCharCode(event.keyCode) === " "){
             nextPosition();
