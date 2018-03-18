@@ -133,8 +133,6 @@ function onMouseMove(event) {
             document.body.style.cursor = 'default';
             currentHover.position.copy(currentHover.ghost.position);
             currentHover = null;
-            //TODO: this is where the piece accidentally gets replaced
-            console.log("jklhbzdfg")
         }
 
 
@@ -208,6 +206,7 @@ function buildBlock() {
             currentObject.ghost.visible = false;
             currentObject = null;
         }
+        //TODO: add the placing pieces and getting angry here
         //place the block in the same position as its final position ghost
         else if(currentObject && currentObject.finalGhost.visible === true){
             currentObject.position.copy(currentObject.finalGhost.position);
@@ -482,10 +481,7 @@ function init() {
 
                     //make them opaque and invisible
                     if(child.material.length){
-                        //for some reason, this is the only way that works, and not material[i] = material[i].clone()
-                        child.material = [];
                         for(let i in child.material){
-                            child.material.push(child.material[i].clone());
                             child.material[i].transparent = true;
                             child.material[i].opacity = 0.3;
                         }
