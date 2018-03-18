@@ -70,38 +70,7 @@ function onMouseMove(event) {
     if(intersects.length > 0) {
         var intersected = intersects[0].object;
 
-        //if mouse is over a block
-        if(blocks.includes(intersected) && intersected.placed === false) {
-            document.body.style.cursor = 'pointer';
-
-            //if there is no already hovering piece
-            if(!currentHover){
-                currentHover = intersected;
-
-                //move the piece up slightly
-                currentHover.position.set(currentHover.ghost.position.x, currentHover.ghost.position.y+.1, currentHover.ghost.position.z);
-            }
-            //if mouse hovers over a new piece
-            else if(currentHover.name !== intersected.name){
-                //return the previous piece back and select the new one
-                currentHover.position.set(currentHover.ghost.position.x, currentHover.ghost.position.y, currentHover.ghost.position.z);
-                currentHover = intersected;
-
-                //make the piece hover if mouse is on it
-                currentHover.position.set(currentHover.ghost.position.x, currentHover.ghost.position.y+.1, currentHover.ghost.position.z);
-            }
-
-
-        }
-        //if not hovering over a piece, return the hover piece to its original position
-        else if(currentHover){
-            document.body.style.cursor = 'default';
-            currentHover.position.set(currentHover.ghost.position.x, currentHover.ghost.position.y, currentHover.ghost.position.z);
-            currentHover = null;
-        }
-
         //if there is a selected piece, make it follow the mouse on the rug
-        //TODO: it might be cleaner using the point the raycaster is at, looking at blocks as well as the rug
         if(currentObject){
             //find the point of intersection that isn't the current object or the building box
             let rayPoint = intersects.find(function(element){
@@ -125,7 +94,7 @@ function onMouseMove(event) {
                 currentObject.ghost.visible = false;
             }
 
-            //make the ghost appear if the block is close to the original position
+            //make the ghost appear if the block is close to the final position
             if(currentObject.position.distanceTo(currentObject.finalGhost.position) < 1){
                 currentObject.finalGhost.visible = true;
             }
@@ -134,6 +103,41 @@ function onMouseMove(event) {
             }
 
         }
+        //if mouse is over a block
+        else if(blocks.includes(intersected) && intersected.placed === false) {
+            document.body.style.cursor = 'pointer';
+
+            //if there is no already hovering piece
+            if(!currentHover){
+                currentHover = intersected;
+
+                //move the piece up slightly
+                currentHover.position.copy(currentHover.ghost.position);
+                currentHover.position.y += 0.1;
+            }
+            //if mouse hovers over a new piece
+            else if(currentHover.name !== intersected.name){
+                //return the previous piece back and select the new one
+                currentHover.position.copy(currentHover.ghost.position);
+                currentHover = intersected;
+
+                //make the piece hover if mouse is on it
+                currentHover.position.copy(currentHover.ghost.position);
+                currentHover.position.y += 0.1;
+            }
+
+
+        }
+        //if not hovering over a piece, return the hover piece to its original position
+        else if(currentHover){
+            document.body.style.cursor = 'default';
+            currentHover.position.copy(currentHover.ghost.position);
+            currentHover = null;
+            //TODO: this is where the piece accidentally gets replaced
+            console.log("jklhbzdfg")
+        }
+
+
     }
 }
 
@@ -196,14 +200,15 @@ function buildBlock() {
         if(blocks.includes(intersected) && intersected.placed === false){
             //select the block
             currentObject = intersected;
+            currentHover = null;
         }
-        //place the block in the same position as its ghost
+        //place the block in the same position as its original position ghost
         else if(currentObject && currentObject.ghost.visible === true){
             currentObject.position.copy(currentObject.ghost.position);
             currentObject.ghost.visible = false;
             currentObject = null;
         }
-        //place the block in the same position as its final ghost
+        //place the block in the same position as its final position ghost
         else if(currentObject && currentObject.finalGhost.visible === true){
             currentObject.position.copy(currentObject.finalGhost.position);
             currentObject.finalGhost.visible = false;

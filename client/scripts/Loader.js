@@ -173,7 +173,7 @@ function loadWorldFBX(fileName, onLoad){
                 object.children[i].receiveShadow = true;
 
                 //convert the paths in the scene into splines
-                if(object.children[i].name.includes("Path")) {
+                if(object.children[i].name.includes("Path") || object.children[i].name.includes("curve")) {
                     object.children[i].visible = false;
                     paths.push(object.children[i]);
                     let points = object.children[i].geometry.attributes.position.array;
