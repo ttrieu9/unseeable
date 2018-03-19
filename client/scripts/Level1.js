@@ -91,28 +91,15 @@ function onMouseMove() {
                     if(intersected.name.includes('Table') && !intersected.name.includes('Chair') && !intersected.name.includes('Legs') && !intersected.name.includes("Path")) {
                         document.body.style.cursor = 'pointer';
 
-                        if(!currentHover) {
-                            currentHover = intersected;
-                            newMaterial = currentHover.material[0].clone();
-                            previousMaterial = [currentHover.material[0].clone(),currentHover.material[1].clone()];
-                            newMaterial.color.setHex('0xffffff');
-                            currentHover.material = newMaterial
-                        }
-                        else {
-                            currentHover.material = previousMaterial;
-                            currentHover = intersected;
-                            newMaterial = currentHover.material[0].clone();
-                            previousMaterial = [currentHover.material[0].clone(),currentHover.material[1].clone()];
-                            newMaterial.color.setHex('0xffffff');
-                            currentHover.material = newMaterial
-                        }
+                        currentHover = intersected;
+                        intersected.highlight.visible = true;
                     }
                     else {
                         document.body.style.cursor = 'default';
 
                         if(currentHover) {
-                            currentHover.material = previousMaterial;
-                            currentHover = null
+                            currentHover.highlight.visible = false;
+                            currentHover = null;
                         }
                     }
                     break;
@@ -165,7 +152,8 @@ function onMouseMove() {
                                     if(!currentHover) {
                                         currentHover = intersected;
                                         newMaterial = currentHover.material.clone();
-                                        newMaterial.color = currentObject.material[0].color;
+                                        newMaterial.color = currentObject.material[0].clone().color;
+                                        newMaterial.color.multiplyScalar(1.75)
                                         previousMaterial = currentHover.material.clone();
                                         currentHover.material = newMaterial;
                                     }
@@ -173,7 +161,8 @@ function onMouseMove() {
                                         currentHover.material = previousMaterial;
                                         currentHover = intersected;
                                         newMaterial = currentHover.material.clone();
-                                        newMaterial.color = currentObject.material[0].color;
+                                        newMaterial.color = currentObject.material[0].clone().color;
+                                        newMaterial.color.multiplyScalar(1.75)
                                         previousMaterial = currentHover.material.clone();
                                         currentHover.material = newMaterial;
                                     }
@@ -402,9 +391,9 @@ function selectTable() {
         var intersected = intersects[0].object;
         if(intersected.name.includes("Table") && !intersected.name.includes("Path")){
             startCutScene();
-            console.log(intersected);
+
             if(currentHover) {
-                currentHover.material = previousMaterial;
+                currentHover.highlight.visible = false;
                 currentHover = null
             }
             //select the correct spline to move along, depending on the current table you are at
@@ -412,7 +401,6 @@ function selectTable() {
             if(currentTable === null){
                 if(intersected.name.includes("Green")){
                     currentTable = "Green";
-                    console.log(currentTable);
                     moveAlongSpline(0, -1, 3);
                 }
                 else if(intersected.name.includes("Red")){
@@ -737,11 +725,25 @@ function nextPage() {
     xhttp.send();
 }
 
+function createOutline(object, dx, dy, dz) {
+    var outlineMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.BackSide });
+    outlineMaterial.transparent = true;
+    outlineMaterial.opacity = 0.9;
+    var outlineMesh = new THREE.Mesh(object.geometry, outlineMaterial);
+    outlineMesh.position.set(outlineMesh.position.x + dx, outlineMesh.position.y + dy, outlineMesh.position.z + dz);
+    outlineMesh.scale.multiplyScalar(1.05);
+    outlineMesh.scale.setY(outlineMesh.scale.y + 0.5);
+    outlineMesh.visible = false;
+    scene.add(outlineMesh);
+    object.highlight = outlineMesh;
+}
+
 function init() {
     startCutScene();
 
-    let cont = document.getElementById('continue')
-    cont.addEventListener('click', nextPage)
+    // adding event listener to continue button
+    let cont = document.getElementById('continue');
+    cont.addEventListener('click', nextPage);
 
     //create the scene
     scene = new THREE.Scene();
@@ -830,6 +832,19 @@ function init() {
                 else if(child.name.includes("pSphere10")){
                     child.castShadow = false;
                     child.receiveShadow = false;
+                }
+                else if(child.name == 'Table_Red') {
+                    createOutline(child ,-0.4, -0.725, -0.15);
+
+                }
+                else if(child.name == 'Table_Green') {
+                    createOutline(child, -0.15, -0.725, 0);
+                }
+                else if(child.name == 'Table_Yellow') {
+                    createOutline(child, -0.4, -0.725, -0.45);
+                }
+                else if(child.name == 'Table_Blue') {
+                    createOutline(child, -0.15, -0.725, -0.575);
                 }
             
             }
