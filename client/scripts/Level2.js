@@ -95,7 +95,7 @@ function onMouseMove(event) {
             }
 
             //make the ghost appear if the block is close to the final position
-            if(currentObject.position.distanceTo(currentObject.finalGhost.position) < 1){
+            if(currentObject.finalGhost.placed === false && currentObject.position.distanceTo(currentObject.finalGhost.position) < 1){
                 currentObject.finalGhost.visible = true;
             }
             else{
@@ -211,6 +211,7 @@ function buildBlock() {
         else if(currentObject && currentObject.finalGhost.visible === true){
             currentObject.position.copy(currentObject.finalGhost.position);
             currentObject.finalGhost.visible = false;
+            currentObject.finalGhost.placed = true;
             currentObject.placed = true;
             currentObject = null;
         }
@@ -492,6 +493,7 @@ function init() {
                         child.material.transparent = true;
                         child.material.opacity = 0.3;
                     }
+                    child.placed = false;
                     child.visible = false;
                 }
             }
