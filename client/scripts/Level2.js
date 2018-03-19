@@ -237,36 +237,62 @@ function placeBlock(){
         case 0: //blue base
             if(!currentObject.name.includes("Foundation") || !currentObject.name.includes("Blue")){
                 getAngry();
-                isCorrectColor = false;
+                return;
             }
             break;
         case 1: //orange stairs
+            if(!currentObject.name.includes("Stairs") || !currentObject.name.includes("Orange")){
+                getAngry();
+                return;
+            }
             break;
         case 2: //walls
+            if(!currentObject.name.includes("Walls")){
+                getAngry();
+                return;
+            }
             break;
         case 3: //green door
+            if(!currentObject.name.includes("Door") || !currentObject.name.includes("Green")){
+                getAngry();
+                return;
+            }
             break;
         case 4: //orange window frames
         case 5:
         case 6:
+            if(!currentObject.name.includes("Window") || !currentObject.name.includes("Orange")){
+                getAngry();
+                return;
+            }
             break;
         case 7: //small purple roof
+            if(!currentObject.name.includes("SmallRoof") || !currentObject.name.includes("Purple")){
+                getAngry();
+                return;
+            }
             break;
         case 8: //red large roof
+            if(currentObject.name.substring(0, 4) !== "Roof" || !currentObject.name.includes("Red")){
+                getAngry();
+                return;
+            }
             break;
         case 9: //yellow chimney
+            if(!currentObject.name.includes("Chimney") || !currentObject.name.includes("Yellow")){
+                getAngry();
+                return;
+            }
             break;
     }
 
     //if everything is correct, place the piece
-    if(isCorrectColor){
-        currentObject.position.copy(currentObject.finalGhost.position);
-        currentObject.finalGhost.visible = false;
-        currentObject.finalGhost.placed = true;
-        currentObject.placed = true;
-        currentObject = null;
-        buildingStep += 1;
-    }
+    currentObject.position.copy(currentObject.finalGhost.position);
+    currentObject.finalGhost.visible = false;
+    currentObject.finalGhost.placed = true;
+    currentObject.placed = true;
+    currentObject = null;
+    buildingStep += 1;
 
 }
 
