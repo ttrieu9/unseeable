@@ -152,7 +152,8 @@ function onMouseMove() {
                                     if(!currentHover) {
                                         currentHover = intersected;
                                         newMaterial = currentHover.material.clone();
-                                        newMaterial.color = currentObject.material[0].color;
+                                        newMaterial.color = currentObject.material[0].clone().color;
+                                        newMaterial.color.multiplyScalar(1.75)
                                         previousMaterial = currentHover.material.clone();
                                         currentHover.material = newMaterial;
                                     }
@@ -160,7 +161,8 @@ function onMouseMove() {
                                         currentHover.material = previousMaterial;
                                         currentHover = intersected;
                                         newMaterial = currentHover.material.clone();
-                                        newMaterial.color = currentObject.material[0].color;
+                                        newMaterial.color = currentObject.material[0].clone().color;
+                                        newMaterial.color.multiplyScalar(1.75)
                                         previousMaterial = currentHover.material.clone();
                                         currentHover.material = newMaterial;
                                     }
