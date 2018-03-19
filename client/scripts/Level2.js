@@ -194,8 +194,23 @@ function buildBlock() {
         }).object;
         console.log(intersected);
 
+        //place the block in the same position as its original position ghost
+        if(currentObject && currentObject.ghost.visible === true){
+            currentObject.position.copy(currentObject.ghost.position);
+            currentObject.ghost.visible = false;
+            currentObject = null;
+        }
+        //TODO: add the placing pieces and getting angry here
+        //place the block in the same position as its final position ghost
+        else if(currentObject && currentObject.finalGhost.visible === true){
+            currentObject.position.copy(currentObject.finalGhost.position);
+            currentObject.finalGhost.visible = false;
+            currentObject.finalGhost.placed = true;
+            currentObject.placed = true;
+            currentObject = null;
+        }
         //if clicking on a block
-        if(blocks.includes(intersected) && intersected.placed === false){
+        else if(blocks.includes(intersected) && intersected.placed === false){
             //select the block
             currentObject = intersected;
             currentHover = null;
@@ -209,21 +224,6 @@ function buildBlock() {
             else{
                 currentObject.finalGhost.material.color = currentObject.material.color;
             }
-        }
-        //place the block in the same position as its original position ghost
-        else if(currentObject && currentObject.ghost.visible === true){
-            currentObject.position.copy(currentObject.ghost.position);
-            currentObject.ghost.visible = false;
-            currentObject = null;
-        }
-        //TODO: add the placing pieces and getting angry here
-        //place the block in the same position as its final position ghost
-        else if(currentObject && currentObject.finalGhost.visible === true){
-            currentObject.position.copy(currentObject.finalGhost.position);
-            currentObject.finalGhost.visible = false;
-            currentObject.finalGhost.placed = true;
-            currentObject.placed = true;
-            currentObject = null;
         }
     }
 }
