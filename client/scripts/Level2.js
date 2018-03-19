@@ -199,6 +199,16 @@ function buildBlock() {
             //select the block
             currentObject = intersected;
             currentHover = null;
+
+            //make the colors of the ghost match the colors of the current object
+            if(currentObject.material.length){
+                for(let i in currentObject.material){
+                    currentObject.finalGhost.material[i].color = currentObject.material[i].color;
+                }
+            }
+            else{
+                currentObject.finalGhost.material.color = currentObject.material.color;
+            }
         }
         //place the block in the same position as its original position ghost
         else if(currentObject && currentObject.ghost.visible === true){
