@@ -16,7 +16,8 @@ var raycaster;
 var mouse = new THREE.Vector2();
 var currentObject;
 var currentHover;
-var attempts = 1;
+var colorAttempts = 1;
+var blockAttempts = 1;
 var colormode = 1;
 var intersectableObjects = [];
 var controlsEnabled = true;
@@ -203,11 +204,7 @@ function buildBlock() {
         //TODO: add the placing pieces and getting angry here
         //place the block in the same position as its final position ghost
         else if(currentObject && currentObject.finalGhost.visible === true){
-            currentObject.position.copy(currentObject.finalGhost.position);
-            currentObject.finalGhost.visible = false;
-            currentObject.finalGhost.placed = true;
-            currentObject.placed = true;
-            currentObject = null;
+            placeBlock();
         }
         //if clicking on a block
         else if(blocks.includes(intersected) && intersected.placed === false){
@@ -230,16 +227,53 @@ function buildBlock() {
 
 //TODO: update function to work with the building of the house
 /**
- * Place the selected block on the building
+ * Place the selected block on the building, if it is the correct one, otherwise the friend gets angry.
  */
 function placeBlock(){
+
+    let isCorrectColor = true;
+
+    switch(buildingStep){
+        case 0: //blue base
+            if(!currentObject.name.includes("Foundation") || !currentObject.name.includes("Blue")){
+                getAngry();
+                isCorrectColor = false;
+            }
+            break;
+        case 1: //orange stairs
+            break;
+        case 2: //walls
+            break;
+        case 3: //green door
+            break;
+        case 4: //orange window frames
+        case 5:
+        case 6:
+            break;
+        case 7: //small purple roof
+            break;
+        case 8: //red large roof
+            break;
+        case 9: //yellow chimney
+            break;
+    }
+
+    //if everything is correct, place the piece
+    if(isCorrectColor){
+        currentObject.position.copy(currentObject.finalGhost.position);
+        currentObject.finalGhost.visible = false;
+        currentObject.finalGhost.placed = true;
+        currentObject.placed = true;
+        currentObject = null;
+        buildingStep += 1;
+    }
 
 }
 
 
 function getAngry(){
-    playSound("anger " + attempts);
-    attempts += 1;
+    playSound("anger " + colorAttempts);
+    colorAttempts += 1;
 }
 
 //TODO: update score for building instead of coloring
