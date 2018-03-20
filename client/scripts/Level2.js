@@ -411,7 +411,7 @@ function init() {
     //
 
     //load the bedroom
-    loadWorldFBX('Newest.3.15.18.fbx',
+    loadWorldFBX('Newest.3.19.18.fbx',
         function(object){
             console.log(object);
 
@@ -546,9 +546,9 @@ function init() {
                     child.position.copy(resetPos);
 
                     //move the pieces into the building area
-                    child.position.x -= 1.5;
+                    child.position.x += 1;
                     child.position.y += 1.5;
-                    child.position.z -= 26;
+                    child.position.z -= 18;
 
                     //make them opaque and invisible
                     if(child.material.length){
