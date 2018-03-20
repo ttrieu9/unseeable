@@ -73,9 +73,11 @@ function onMouseMove(event) {
 
         //if there is a selected piece, make it follow the mouse on the rug
         if(currentObject){
-            //find the point of intersection that isn't the current object or the building box
+            //find the point of intersection that isn't the current object or any other blocks
             let rayPoint = intersects.find(function(element){
-                return currentObject !== element.object && currentObject.finalGhost !== element.object;
+                return currentObject !== element.object &&
+                    !blocks.includes(element.object) &&
+                    !finalBlocks.includes(element.object);
             }).point;
 
             //position that is 90% along the ray cast
@@ -197,8 +199,13 @@ function buildBlock() {
 
         //place the block in the same position as its original position ghost
         if(currentObject && currentObject.ghost.visible === true){
+            //reset current object stuff
             currentObject.position.copy(currentObject.ghost.position);
             currentObject.ghost.visible = false;
+
+            currentObject.renderOrder = 0;
+            currentObject.onBeforeRender = function(){};
+
             currentObject = null;
         }
         //TODO: add the placing pieces and getting angry here
@@ -210,6 +217,11 @@ function buildBlock() {
         else if(blocks.includes(intersected) && intersected.placed === false){
             //select the block
             currentObject = intersected;
+
+            //make the block be rendered over the other blocks
+            currentObject.renderOrder = 1;
+            currentObject.onBeforeRender = function( renderer ) { renderer.clearDepth(); };
+
             currentHover = null;
 
             //make the colors of the ghost match the colors of the current object
@@ -291,6 +303,11 @@ function placeBlock(){
     currentObject.finalGhost.visible = false;
     currentObject.finalGhost.placed = true;
     currentObject.placed = true;
+
+    //reset the rendering of the selected piece
+    currentObject.renderOrder = 0;
+    currentObject.onBeforeRender = function(){};
+
     currentObject = null;
     buildingStep += 1;
 
