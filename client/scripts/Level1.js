@@ -85,39 +85,38 @@ function onMouseMove() {
             var intersected = intersects.find(function(element){
                 return currentObject !== element.object;
             }).object;
+
             switch(cameraPosition) {
                 case 1:
                     if(intersected.name.includes('Table') && !intersected.name.includes('Chair') && !intersected.name.includes('Legs') && !intersected.name.includes("Path")) {
                         document.body.style.cursor = 'pointer';
 
-                        if(!currentHover) {
-                            currentHover = intersected;
-                            newMaterial = currentHover.material[0].clone();
-                            previousMaterial = [currentHover.material[0].clone(),currentHover.material[1].clone()];
-                            newMaterial.color.setHex('0xffffff');
-                            currentHover.material = newMaterial
-                        }
-                        else {
-                            currentHover.material = previousMaterial;
-                            currentHover = intersected;
-                            newMaterial = currentHover.material[0].clone();
-                            previousMaterial = [currentHover.material[0].clone(),currentHover.material[1].clone()];
-                            newMaterial.color.setHex('0xffffff');
-                            currentHover.material = newMaterial
-                        }
+                        currentHover = intersected;
+                        intersected.highlight.visible = true;
                     }
                     else {
                         document.body.style.cursor = 'default';
 
                         if(currentHover) {
-                            currentHover.material = previousMaterial;
-                            currentHover = null
+                            currentHover.highlight.visible = false;
+                            currentHover = null;
                         }
                     }
                     break;
                 case 2:
                     if(intersected.name.includes('Crayon')) {
-                        document.body.style.cursor = 'pointer';
+                        if(currentObject) {
+                            document.body.style.cursor = 'none';
+                            currentObject.ghost.visible = true;
+                        }
+                        else {
+                            document.body.style.cursor = 'pointer';
+                        }
+
+                        if(currentHover && currentHover.name.includes('Paper')) {
+                            currentHover.material = previousMaterial;
+                            currentHover = null;
+                        }
 
                         if(!intersected.name.includes('Box')) {
                             if(!currentHover) {
@@ -136,40 +135,76 @@ function onMouseMove() {
                         }
                     }
                     else if(intersected.name.includes('Paper')) {
-                        if(!intersected.name.includes('Outline')) {
-                            document.body.style.cursor = 'pointer'
+                        if(!currentObject) {
+                            document.body.style.cursor = 'default';
                         }
                         else {
-                            document.body.style.cursor = 'default'
+                            document.body.style.cursor = 'none';
                         }
-                    }
-                    else {
-                        document.body.style.cursor = 'default';
 
-                        if(currentHover) {
+                        if(currentHover && currentHover.name.includes('Crayon')) {
                             currentHover.position.set(currentHover.originalPosition.x, currentHover.originalPosition.y, currentHover.originalPosition.z);
                             currentHover = null
                         }
+                        else if(!intersected.name.includes('Outline')) {
+                            if(currentObject) {
+                                if(coloredObjects.includes(intersected.name)) {
+                                    if(!currentHover) {
+                                        currentHover = intersected;
+                                        newMaterial = currentHover.material.clone();
+                                        newMaterial.color = currentObject.material[0].clone().color;
+                                        newMaterial.color.multiplyScalar(1.75)
+                                        previousMaterial = currentHover.material.clone();
+                                        currentHover.material = newMaterial;
+                                    }
+                                    else {
+                                        currentHover.material = previousMaterial;
+                                        currentHover = intersected;
+                                        newMaterial = currentHover.material.clone();
+                                        newMaterial.color = currentObject.material[0].clone().color;
+                                        newMaterial.color.multiplyScalar(1.75)
+                                        previousMaterial = currentHover.material.clone();
+                                        currentHover.material = newMaterial;
+                                    }
+                                }
+                                else if(currentHover) {
+                                    if(coloredObjects.includes(currentHover.name)) {
+                                        currentHover.material = previousMaterial;
+                                    }
+                                    currentHover = null;
+                                }
+                            }
+                        }
+                        else {
+                            if(currentHover) {
+                                if(coloredObjects.includes(currentHover.name)) {
+                                    currentHover.material = previousMaterial;
+                                }
+                                currentHover = null;
+                            }
+                        }
+                    }
+                    else {
+                        
+                        if(!currentObject) {
+                            document.body.style.cursor = 'default';
+                        }
+                        else {
+                            document.body.style.cursor = 'none';
+                            currentObject.ghost.visible = false;
+                        }
+
+                        if(currentHover && currentHover.name.includes('Crayon')) {
+                            currentHover.position.set(currentHover.originalPosition.x, currentHover.originalPosition.y, currentHover.originalPosition.z);
+                            currentHover = null
+                        }
+                        else if(currentHover && currentHover.name.includes('Paper')) {
+                            currentHover.material = previousMaterial;
+                            currentHover = null;
+                        }
                     }
 
-                    //if there is a currently selected crayon, make it hover over the mouse position
-                    if(currentObject){
-                        //the hover point is the first object in the intersection array
-                        let hoverPoint = intersects.find(function(element){
-                            return currentObject.name !== element.object.name;
-                        }).point;
-
-                        //find the point that is 90% of the way along the ray cast
-                        let crayonPos = {
-                            x: camera.position.x + (hoverPoint.x - camera.position.x)*.9,
-                            y: camera.position.y + (hoverPoint.y - camera.position.y)*.9,
-                            z: camera.position.z + (hoverPoint.z - camera.position.z)*.9
-                        };
-
-                        //place the crayon at that position, plus some offset to place the tip at the mouse pointer
-                        currentObject.position.set(crayonPos.x+.07, crayonPos.y+.025, crayonPos.z-.04);
-
-                    }
+                    moveCrayon(intersects);
                     break;
                 case 3:
                     if(posted === false) {
@@ -185,6 +220,27 @@ function onMouseMove() {
                     break;
             }
         }
+    }
+}
+
+function moveCrayon(intersects) {
+    //if there is a currently selected crayon, make it hover over the mouse position
+    if(currentObject){
+        //the hover point is the first object in the intersection array
+        let hoverPoint = intersects.find(function(element){
+            return currentObject.name !== element.object.name;
+        }).point;
+
+        //find the point that is 90% of the way along the ray cast
+        let crayonPos = {
+            x: camera.position.x + (hoverPoint.x - camera.position.x)*.9,
+            y: camera.position.y + (hoverPoint.y - camera.position.y)*.9,
+            z: camera.position.z + (hoverPoint.z - camera.position.z)*.9
+        };
+
+        //place the crayon at that position, plus some offset to place the tip at the mouse pointer
+        currentObject.position.set(crayonPos.x+.07, crayonPos.y+.025, crayonPos.z-.04);
+
     }
 }
 
@@ -217,14 +273,13 @@ function colorPaper() {
                 //pick up the crayon
                 currentObject = intersected;
                 currentObject.rotation.set(0, Math.PI*5/6, Math.PI*11/6);
-                onMouseMove();
+                moveCrayon(intersects)
             }
 
             playSound("Click");
         }
         else if(intersected.name.includes('Paper') && coloredObjects.includes(intersected.name) && !intersected.name.includes("Outline") && currentObject) {
-            intersected.material = currentObject.material[0];
-            // colorsUsed.push(currentObject.material[0].name)
+            intersected.material.color = currentObject.material[0].color;
             updatePaperScore(intersected.name, currentObject.material[0].name)
             var paperIndex = coloredObjects.findIndex((object) => {
                 return object.includes(intersected.name)
@@ -336,9 +391,9 @@ function selectTable() {
         var intersected = intersects[0].object;
         if(intersected.name.includes("Table") && !intersected.name.includes("Path")){
             startCutScene();
-            console.log(intersected);
+
             if(currentHover) {
-                currentHover.material = previousMaterial;
+                currentHover.highlight.visible = false;
                 currentHover = null
             }
             //select the correct spline to move along, depending on the current table you are at
@@ -346,7 +401,6 @@ function selectTable() {
             if(currentTable === null){
                 if(intersected.name.includes("Green")){
                     currentTable = "Green";
-                    console.log(currentTable);
                     moveAlongSpline(0, -1, 3);
                 }
                 else if(intersected.name.includes("Red")){
@@ -671,11 +725,25 @@ function nextPage() {
     xhttp.send();
 }
 
+function createOutline(object, dx, dy, dz) {
+    var outlineMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.BackSide });
+    outlineMaterial.transparent = true;
+    outlineMaterial.opacity = 0.9;
+    var outlineMesh = new THREE.Mesh(object.geometry, outlineMaterial);
+    outlineMesh.position.set(outlineMesh.position.x + dx, outlineMesh.position.y + dy, outlineMesh.position.z + dz);
+    outlineMesh.scale.multiplyScalar(1.05);
+    outlineMesh.scale.setY(outlineMesh.scale.y + 0.5);
+    outlineMesh.visible = false;
+    scene.add(outlineMesh);
+    object.highlight = outlineMesh;
+}
+
 function init() {
     startCutScene();
 
-    let cont = document.getElementById('continue')
-    cont.addEventListener('click', nextPage)
+    // adding event listener to continue button
+    let cont = document.getElementById('continue');
+    cont.addEventListener('click', nextPage);
 
     //create the scene
     scene = new THREE.Scene();
@@ -745,11 +813,38 @@ function init() {
 
                     //store the original position of the crayon for when placing it back in the box
                     child.originalPosition = boxPos;
+
+                    if(child.name.includes('Main') && !child.name.includes('Box')) {
+                        let currentObjectClone = child.clone();
+                        currentObjectClone.material = [child.material[0].clone(),child.material[1].clone()];
+                        currentObjectClone.material[0].opacity = 0.3;
+                        currentObjectClone.material[1].opacity = 0.3;
+                        currentObjectClone.material[0].transparent = true;
+                        currentObjectClone.material[1].transparent = true;
+                        currentObjectClone.position.set(child.originalPosition.x, child.originalPosition.y, child.originalPosition.z);
+                        currentObjectClone.rotation.set(0,0,0);
+                        currentObjectClone.visible = false;
+                        scene.add(currentObjectClone);
+                        child.ghost = currentObjectClone;
+                    }
                 }
                 //sky sphere
                 else if(child.name.includes("pSphere10")){
                     child.castShadow = false;
                     child.receiveShadow = false;
+                }
+                else if(child.name == 'Table_Red') {
+                    createOutline(child ,-0.4, -0.725, -0.15);
+
+                }
+                else if(child.name == 'Table_Green') {
+                    createOutline(child, -0.15, -0.725, 0);
+                }
+                else if(child.name == 'Table_Yellow') {
+                    createOutline(child, -0.4, -0.725, -0.45);
+                }
+                else if(child.name == 'Table_Blue') {
+                    createOutline(child, -0.15, -0.725, -0.575);
                 }
             
             }
