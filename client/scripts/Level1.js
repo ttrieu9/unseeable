@@ -208,14 +208,21 @@ function onMouseMove() {
                     break;
                 case 3:
                     if(posted === false) {
-                        document.body.style.cursor = 'pointer'
-                        var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
-                        vector.unproject(camera);
-                        var dir = vector.sub( camera.position ).normalize();
-                        var distance = - camera.position.z / dir.z;
-                        var pos = camera.position.clone().add( dir.multiplyScalar( distance ) );
-                        pos.set(-2.15*(pos.x + 2.75), -2.25*(pos.y - 1.4), pos.z - 7.65);
-                        paper.position.copy(pos);
+                        let whiteboard = intersects.find((element) => {
+                            return element.object.name == 'WhiteBoard_WhiteArea'
+                        });
+
+                        if(whiteboard) {
+                            let raypoint = whiteboard.point;
+
+                            let paperPos = {
+                                x: camera.position.x + (raypoint.x - camera.position.x),
+                                y: camera.position.y + (raypoint.y - camera.position.y),
+                                z: camera.position.z + (raypoint.z - camera.position.z)
+                            };
+
+                            paper.position.set((paperPos.x - 7.8), (paperPos.y - 2.125), paperPos.z - 1.4);
+                        }
                     }
                     break;
             }
@@ -302,7 +309,7 @@ function colorPaper() {
                     }
                     paper.rotateX(Math.PI/2);
                     paper.rotateY(Math.PI/4);
-                    paper.scale.multiplyScalar(0.8)
+                    // paper.scale.multiplyScalar(0.8);
                     scene.add(paper);
                 }, 8000);
 
@@ -527,18 +534,15 @@ function postPaper() {
 
         if(whiteBoardIndex >= 0) {
             if(!posted) {
-                var currentZoom = {
-                    value: camera.zoom
-                };
+                var currentZoom = camera.position
 
                 var nextZoom = {
-                    value: camera.zoom * 0.65
+                    x: camera.position.x,
+                    y: camera.position.y,
+                    z: camera.position.z + 5
                 };
 
-                var zoomOut = new TWEEN.Tween(currentZoom).to(nextZoom, 750);
-                zoomOut.onUpdate(() => {
-                    camera.zoom = currentZoom.value
-                });
+                var zoomOut = new TWEEN.Tween(camera.position).to(nextZoom, 2000);
                 zoomOut.start();
 
                 //mock the player and display their results
@@ -1007,8 +1011,9 @@ function init() {
         // fade to view of whiteboard after audio ends
         fade();
         setTimeout(() => {
-            camera.position.set(0.11333127647429019, 1.5369136371003131, -2.028078509213737);
-            camera.rotation.set(0.490486809597034, 0.0016298261023861107, 0);
+            // camera.position.set(0.04086591888159326, 5.158584010827303, -0.9422941174966866);
+            camera.position.set(0.04086591888159326, 5.158584010827303, -6.5);
+            camera.rotation.set(-0.01600612417375022, -0.006151586325047644, 0);
             
             for(var i in extraPapers) {
                 extraPapers[i].visible = true;
@@ -1114,26 +1119,17 @@ function init() {
         hideCameraControls("right");
     });
 
-    // element.addEventListener("keypress", function(event){
-    //     if(String.fromCharCode(event.keyCode) === "c"){
-    //         console.log(camera);
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === "f"){
-    //         logger.printLog();
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === "t"){
-    //         console.log(coloredObjects)
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === "o"){
-    //         controls.enabled = !controls.enabled;
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === "m"){
-    //         showEndScreen();
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === " "){
-    //         nextPosition();
-    //     }
-    // }, false);
+    element.addEventListener("keypress", function(event){
+        if(String.fromCharCode(event.keyCode) === "c"){
+            console.log(camera);
+        }
+        else if(String.fromCharCode(event.keyCode) === "o"){
+            controls.enabled = !controls.enabled;
+        }
+        else if(String.fromCharCode(event.keyCode) === " "){
+            nextPosition();
+        }
+    }, false);
 
     // window.addEventListener("dblclick", () => {
     //     if(colormode === 1) {
