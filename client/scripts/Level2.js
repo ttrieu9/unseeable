@@ -24,6 +24,7 @@ var controlsEnabled = true;
 
 var blocks = [];
 var finalBlocks = [];
+var instructions = [];
 
 var paths = [];
 var splineTargets = [];
@@ -246,6 +247,13 @@ function buildBlock() {
             else{
                 currentObject.finalGhost.material.color = currentObject.material.color;
             }
+        }
+        //if clicking on the instructions, make them move in front of the camera
+        else if(!currentObject && instructions.includes(intersected)){
+            intersected.quaternion.copy(camera.quaternion);
+            // intersected.rotation.x += Math.PI/2;
+            console.log(intersected.rotation)
+
         }
     }
 }
@@ -595,6 +603,26 @@ function init() {
                     }
                     child.placed = false;
                     child.visible = false;
+                }
+                //the instructions
+                else if(child.name.includes("pPlane")){
+                    instructions.push(child);
+
+                    //compute the bounding box
+                    child.geometry.computeBoundingBox();
+                    let box = child.geometry.boundingBox;
+                    let resetPos = {
+                        x: 0.5 * (box.max.x + box.min.x) + child.position.x,
+                        y: 0.5 * (box.max.y + box.min.y) + child.position.y,
+                        z: 0.5 * (box.max.z + box.min.z) + child.position.z
+                    };
+
+                    //center the geometry and move it back to its original location
+                    child.geometry.center();
+                    child.position.copy(resetPos);
+
+                    //used for easier rotation of the paper to bring it in front of the camera
+                    child.rotation.reorder( "YXZ" );
                 }
             }
 
