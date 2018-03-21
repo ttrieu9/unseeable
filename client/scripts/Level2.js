@@ -210,13 +210,27 @@ function buildBlock() {
 
         //if the instructions are open, return them to their original position
         if(currentInstruction){
-            // currentInstruction.position.copy(currentInstruction.originalPosition);
-            currentInstruction.rotation.set(0, 0, 0);
+            let rot = currentInstruction.rotation.clone();
 
-            let tween = new TWEEN.Tween(currentInstruction.position).to(currentInstruction.originalPosition, 1000);
-            tween.start();
+            //rotation tween
+            let rotTween = new TWEEN.Tween().to(null, 1000);
+            rotTween.onUpdate(function(object) {
+                currentInstruction.rotation.set(
+                    rot.x * (1-object),
+                    rot.y * (1-object),
+                    rot.z * (1-object)
+                );
+            });
+            rotTween.onComplete(function(){
+                currentInstruction = null;
+            });
 
-            currentInstruction = null;
+            //position tween
+            let posTween = new TWEEN.Tween(currentInstruction.position).to(currentInstruction.originalPosition, 1000);
+
+            //start the tweens
+            posTween.start();
+            rotTween.start();
         }
         //place the block in the same position as its original position ghost
         else if(currentObject && currentObject.ghost.visible === true){
@@ -271,6 +285,18 @@ function buildBlock() {
             //rotate the paper the same as the camera
             page.quaternion.copy(camera.quaternion);
             page.rotation.x += Math.PI/2;
+            let rot = page.rotation.clone();
+            page.rotation.set(0, 0, 0);
+
+            //tween for rotation
+            let rotTween = new TWEEN.Tween().to(null, 1000);
+            rotTween.onUpdate(function(object){
+                page.rotation.set(
+                    rot.x * object,
+                    rot.y * object,
+                    rot.z * object
+                );
+            })
 
             //move the paper in front of the camera
             let vec = new THREE.Vector3(0,0,-5);
@@ -280,9 +306,11 @@ function buildBlock() {
                 vec.y + camera.position.y,
                 vec.z + camera.position.z
             );
+            let posTween = new TWEEN.Tween(page.position).to(vec, 1000);
 
-            let tween = new TWEEN.Tween(page.position).to(vec, 1000);
-            tween.start();
+            //start the tweens
+            posTween.start();
+            rotTween.start();
         }
     }
 }
