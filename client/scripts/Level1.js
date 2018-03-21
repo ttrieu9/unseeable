@@ -1056,7 +1056,6 @@ function init() {
     light.shadow.mapSize.width = 512;
     light.shadow.mapSize.height = 512;
     scene.add(light);
-    scene.add(new THREE.PointLightHelper(light));
 
     light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
     light.position.set(4, 9, -1);
@@ -1064,7 +1063,6 @@ function init() {
     light.shadow.mapSize.width = 512;
     light.shadow.mapSize.height = 512;
     scene.add(light);
-    scene.add(new THREE.PointLightHelper(light));
 
     light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
     light.position.set(-4, 9, 10);
@@ -1072,7 +1070,6 @@ function init() {
     light.shadow.mapSize.width = 512;
     light.shadow.mapSize.height = 512;
     scene.add(light);
-    scene.add(new THREE.PointLightHelper(light));
 
     light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
     light.position.set(4, 9, 10);
@@ -1080,7 +1077,6 @@ function init() {
     light.shadow.mapSize.width = 512;
     light.shadow.mapSize.height = 512;
     scene.add(light);
-    scene.add(new THREE.PointLightHelper(light));
 
     //ambient light to make the shadows not as dark
     light = new THREE.AmbientLight(0xfff1e0, 0.6);
