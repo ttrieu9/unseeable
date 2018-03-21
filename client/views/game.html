@@ -83,6 +83,15 @@
 				display: table;
 			}
 
+			#objective_box{
+				left: 7.5%;
+				width: 85%;
+				top: 5%;
+				position: absolute;
+				z-index: 0;
+				display: table;
+			}
+
 			#continue:hover {
 				cursor: pointer;
 				font-size: 35pt;
@@ -135,6 +144,18 @@
 				display: table-cell;
 			}
 
+			#objs{
+				color: white;
+				text-shadow:
+					-1px -1px 0 #000,
+					1px -1px 0 #000,
+					-1px 1px 0 #000,
+					1px 1px 0 #000;
+				font-size: 30px;
+				text-align:center;
+				display: table-cell;
+			}
+
 			#loading{
 				background-image: url("https://i.imgur.com/X6Jdcxl.jpg");
 				width: 100%;
@@ -174,7 +195,7 @@
 				box-shadow: 1px 2px black;
 			}
 
-			#Continue{
+			#ContinueButton{
 				opacity: 0;
 				z-index: 30;
 				position: absolute;
@@ -240,6 +261,11 @@
 			.fade-out {
 				animation-name: fade-out;
 				animation-duration: 1s;
+			}
+
+			.fade-out-objective{
+				animation-name: fade-out;
+				animation-duration: 15s;
 			}
 
 			.fade-out-loading{
@@ -311,6 +337,7 @@
 				</ul>
 			</div>
 		</div>
+		<div id="objective_box"><p id="objs"></p></div>
 		<div id="subtitle_box"><p id="subs"></p></div>
 		<div id="loading"></div>
 		<div id="myProgress">
@@ -321,7 +348,7 @@
 				<div class="summary-text" id="LineTwo" style="top: 70%">However, you will soon realize that your first day won't be as easy as you first thought.</div>
 				<div class="summary-text" id="LineThree" style="top: 75%">Follow the instructions from your teacher and try to make it through the day!</div>
 		</div>
-		<div id="Continue">
+		<div id="ContinueButton">
 			<button id="Continue_Text" type="button" onclick="startGame">Continue</button>
 		</div>
 		

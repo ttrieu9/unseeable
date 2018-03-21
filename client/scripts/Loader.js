@@ -202,8 +202,8 @@ function loadWorldFBX(fileName, onLoad, startFunc){
 
             var loadingBar = document.getElementById("myBar");
             if(loadingBar.innerText === "100%"){
-                document.getElementById("Continue").style.opacity = 1;
-                document.getElementById("Continue").addEventListener("mousedown", function(){
+                document.getElementById("ContinueButton").style.opacity = 1;
+                document.getElementById("ContinueButton").addEventListener("mousedown", function(){
                     startGame(startFunc);
                 });
             }
@@ -256,7 +256,7 @@ function startGame(startFunc){
     var loadingScreen = document.getElementById("loading");
     var progressBar = document.getElementById("myProgress");
     var loadingBar = document.getElementById("myBar");
-    var continueButton = document.getElementById("Continue");
+    var continueButton = document.getElementById("ContinueButton");
     var lineOne = document.getElementById("LineOne");
     var lineTwo = document.getElementById("LineTwo");
     var lineThree = document.getElementById("LineThree");

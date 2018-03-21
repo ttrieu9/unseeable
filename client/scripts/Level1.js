@@ -872,9 +872,18 @@ function init() {
         endCutScene();
         document.getElementById("loading").style.display = "none";
         document.getElementById("myProgress").style.display = "none";
+        document.getElementById("ContinueButton").style.display = "none";
+        document.getElementById("Continue_Text").style.display = "none";
         setTimeout(() => {
             logger.recordTaskStartTime();
         }, 950);
+        var objectiveText = document.getElementById("objs");
+        objectiveText.innerHTML = "Sit at the red table";
+        objectiveText.offsetWidth;
+        objectiveText.classList.add("fade-out-objective")
+        setTimeout(() => {
+            objectiveText.style.opacity = 0;
+        }, 5000);
     });
 
     //teacher dialogue with first wrong attempt
@@ -917,6 +926,15 @@ function init() {
         new TWEEN.Tween(camera.rotation).to({x: -1.0581080584316573, y: -0.5617291507874522, z: 0}, 1300).start();
         endCutScene();
         logger.recordTaskStartTime();
+        var objectiveText = document.getElementById("objs");
+        objectiveText.classList.remove("fade-out-objective");
+        objectiveText.style.opacity = 1;
+        objectiveText.innerHTML = "Color using the Krans";
+        objectiveText.offsetWidth;
+        objectiveText.classList.add("fade-out-objective");
+        setTimeout(() => {
+            objectiveText.style.opacity = 0;
+        }, 5000);
     });
 
     //teacher dialogue when coloring is finished
@@ -935,6 +953,15 @@ function init() {
         setTimeout(() => {
             endCutScene();
         }, 2000);
+        var objectiveText = document.getElementById("objs");
+        objectiveText.classList.remove("fade-out-objective");
+        objectiveText.style.opacity = 1;
+        objectiveText.innerHTML = "Place your paper on the board";
+        objectiveText.offsetWidth;
+        objectiveText.classList.add("fade-out-objective")
+        setTimeout(() => {
+            objectiveText.style.opacity = 0;
+        }, 5000);
     });
 
     //kids mocking the bad painting

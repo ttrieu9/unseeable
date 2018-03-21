@@ -1,0 +1,31 @@
+{
+  "objective": [
+    {
+      "name": "FindSeat",
+      "lines": [
+        {
+          "text": "Sit at the red table",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "name": "ColorSheet",
+      "lines": [
+        {
+          "text": "Color using the crayons",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "name": "PlacePaper",
+      "lines": [
+        {
+          "text": "Place your paper on the board",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}
