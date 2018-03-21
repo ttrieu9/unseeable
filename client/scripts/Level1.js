@@ -683,12 +683,12 @@ function fade() {
             raycaster.setFromCamera(mouse, camera);
             var intersects = raycaster.intersectObjects(intersectableObjects);
             movePaper(intersects)
+    
+            for(var i in extraPapers) {
+                extraPapers[i].visible = true;
+            }
         }, 50)
-        
-        for(var i in extraPapers) {
-            extraPapers[i].visible = true;
-        }
-    }, 450)
+    }, 400)
 }
 
 /**
@@ -1034,8 +1034,6 @@ function init() {
     loadSound('FinishColoring.ogg', 0.3, false, false, () => {
         // fade to view of whiteboard after audio ends
         fade();
-        
-
         setTimeout(() => {
             endCutScene();
         }, 2000);
