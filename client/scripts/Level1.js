@@ -285,15 +285,17 @@ function colorPaper() {
             //else pick up the crayon
             else {
                 //reset the current crayon if there is one
-                if(currentObject) {
-                    currentObject.rotation.set(0, 0, 0);
-                    currentObject.position.set(currentObject.originalPosition.x, currentObject.originalPosition.y, currentObject.originalPosition.z);
-                }
+                // if(currentObject) {
+                //     currentObject.rotation.set(0, 0, 0);
+                //     currentObject.position.set(currentObject.originalPosition.x, currentObject.originalPosition.y, currentObject.originalPosition.z);
+                // }
 
                 //pick up the crayon
-                currentObject = intersected;
-                currentObject.rotation.set(0, Math.PI*5/6, Math.PI*11/6);
-                moveCrayon(intersects)
+                if(!currentObject) {
+                    currentObject = intersected;
+                    currentObject.rotation.set(0, Math.PI*5/6, Math.PI*11/6);
+                    moveCrayon(intersects)
+                }
             }
 
             playSound("Click");
