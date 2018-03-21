@@ -16,13 +16,14 @@ var raycaster;
 var mouse = new THREE.Vector2();
 var currentObject;
 var currentHover;
-var previousPosition;
-var attempts = 0;
+var colorAttempts = 1;
+var blockAttempts = 1;
 var colormode = 1;
 var intersectableObjects = [];
 var controlsEnabled = true;
 
 var blocks = [];
+var finalBlocks = [];
 
 var paths = [];
 var splineTargets = [];
@@ -31,8 +32,7 @@ var subtitles;
 
 var logger = new Logger('player id', 1);
 
-//TODO: probably only temporary for building
-var box;
+//TODO: not necessary any more, delete
 var buildingStep = 0;
 
 init();
@@ -71,8 +71,43 @@ function onMouseMove(event) {
     if(intersects.length > 0) {
         var intersected = intersects[0].object;
 
-        //if mouse is over a blocko
-        if(intersected.name.includes('Blockos') && intersected.placed === false) {
+        //if there is a selected piece, make it follow the mouse on the rug
+        if(currentObject){
+            //find the point of intersection that isn't the current object or any other blocks
+            let rayPoint = intersects.find(function(element){
+                return currentObject !== element.object &&
+                    !blocks.includes(element.object) &&
+                    !finalBlocks.includes(element.object);
+            }).point;
+
+            //position that is 90% along the ray cast
+            let point = {
+                x: camera.position.x + (rayPoint.x - camera.position.x)*.9,
+                y: camera.position.y + (rayPoint.y - camera.position.y)*.9,
+                z: camera.position.z + (rayPoint.z - camera.position.z)*.9
+            }
+
+            currentObject.position.set(point.x, point.y, point.z);
+
+            //make the ghost appear if the block is close to the original position
+            if(currentObject.position.distanceTo(currentObject.ghost.position) < 1){
+                currentObject.ghost.visible = true;
+            }
+            else{
+                currentObject.ghost.visible = false;
+            }
+
+            //make the ghost appear if the block is close to the final position
+            if(currentObject.finalGhost.placed === false && currentObject.position.distanceTo(currentObject.finalGhost.position) < 1){
+                currentObject.finalGhost.visible = true;
+            }
+            else{
+                currentObject.finalGhost.visible = false;
+            }
+
+        }
+        //if mouse is over a block
+        else if(blocks.includes(intersected) && intersected.placed === false) {
             document.body.style.cursor = 'pointer';
 
             //if there is no already hovering piece
@@ -80,58 +115,30 @@ function onMouseMove(event) {
                 currentHover = intersected;
 
                 //move the piece up slightly
-                previousPosition = {
-                    x: intersected.position.x,
-                    y: intersected.position.y,
-                    z: intersected.position.z
-                };
-                currentHover.position.set(previousPosition.x, previousPosition.y+.1, previousPosition.z);
+                currentHover.position.copy(currentHover.ghost.position);
+                currentHover.position.y += 0.1;
             }
             //if mouse hovers over a new piece
             else if(currentHover.name !== intersected.name){
                 //return the previous piece back and select the new one
-                currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+                currentHover.position.copy(currentHover.ghost.position);
                 currentHover = intersected;
 
-                //move the piece up slightly
-                previousPosition = {
-                    x: intersected.position.x,
-                    y: intersected.position.y,
-                    z: intersected.position.z
-                };
-                currentHover.position.set(previousPosition.x, previousPosition.y+.1, previousPosition.z);
+                //make the piece hover if mouse is on it
+                currentHover.position.copy(currentHover.ghost.position);
+                currentHover.position.y += 0.1;
             }
 
 
         }
-        //if not hovering over a piece
+        //if not hovering over a piece, return the hover piece to its original position
         else if(currentHover){
             document.body.style.cursor = 'default';
-            currentHover.position.set(previousPosition.x, previousPosition.y, previousPosition.z);
+            currentHover.position.copy(currentHover.ghost.position);
             currentHover = null;
         }
 
-        //if there is a selected piece, make it follow the mouse on the rug
-        //TODO: it might be cleaner using the point the raycaster is at, looking at blocks as well as the rug
-        if(currentObject){
-            let rug = intersects.find(function(element){
-                return element.object.name.includes("pCylinder1");
-            })
-            if(rug){
-                let point = rug.point;
-                currentObject.position.set(point.x, point.y + currentObject.hoverHeight, point.z);
 
-                let intersect = blocks.find(function(element){
-                    return currentObject !== element &&
-                        doesIntersect(currentObject, element);
-                });
-
-                if(intersect){
-                    currentObject.position.y = currentObject.hoverHeight + intersect.position.y + intersect.geometry.boundingBox.max.y;
-                }
-            }
-
-        }
     }
 }
 
@@ -185,91 +192,131 @@ function buildBlock() {
     var intersects = raycaster.intersectObjects(intersectableObjects);
 
     if(intersects.length > 0) {
-        var intersected = intersects[0].object;
+        var intersected = intersects.find(function(element){
+            return currentObject !== element.object;
+        }).object;
         console.log(intersected);
 
-        //if clicking on a block
-        if(intersected.name.includes("Blockos") && intersected.placed === false){
-            //if there is already a selected block, make if visible
-            if(currentObject){
-                currentObject.visible = true;
-            }
+        //place the block in the same position as its original position ghost
+        if(currentObject && currentObject.ghost.visible === true){
+            //reset current object stuff
+            currentObject.position.copy(currentObject.ghost.position);
+            currentObject.ghost.visible = false;
 
-            //select the block and make it invisible
-            currentObject = intersected;
+            currentObject.renderOrder = 0;
+            currentObject.onBeforeRender = function(){};
+
+            currentObject = null;
         }
-        //if placing the piece inside of the box
-        else if(currentObject && intersected === box){
+        //TODO: add the placing pieces and getting angry here
+        //place the block in the same position as its final position ghost
+        else if(currentObject && currentObject.finalGhost.visible === true){
             placeBlock();
+        }
+        //if clicking on a block
+        else if(blocks.includes(intersected) && intersected.placed === false){
+            //select the block
+            currentObject = intersected;
+
+            //make the block be rendered over the other blocks
+            currentObject.renderOrder = 1;
+            currentObject.onBeforeRender = function( renderer ) { renderer.clearDepth(); };
+
+            currentHover = null;
+
+            //make the colors of the ghost match the colors of the current object
+            if(currentObject.material.length){
+                for(let i in currentObject.material){
+                    currentObject.finalGhost.material[i].color = currentObject.material[i].color;
+                }
+            }
+            else{
+                currentObject.finalGhost.material.color = currentObject.material.color;
+            }
         }
     }
 }
 
-//TODO: update the function to work with new blocko names
+//TODO: update function to work with the building of the house
 /**
- * Place the selected block in the building box
+ * Place the selected block on the building, if it is the correct one, otherwise the friend gets angry.
  */
 function placeBlock(){
 
-    //depending on which step it is, calculate the offset to place the piece correctly
-    let offset;
+    let isCorrectColor = true;
+
     switch(buildingStep){
-        case 0: //base
-            offset = {
-                x: 0,
-                y: -0.51,
-                z: 0
-            };
+        case 0: //blue base
+            if(!currentObject.name.includes("Foundation") || !currentObject.name.includes("Blue")){
+                getAngry();
+                return;
+            }
             break;
-        case 1: //second layer of wall
-            offset = {
-                x: 0,
-                y: -0.17,
-                z: 0
-            };
+        case 1: //orange stairs
+            if(!currentObject.name.includes("Stairs") || !currentObject.name.includes("Orange")){
+                getAngry();
+                return;
+            }
             break;
-        case 2: //third layer of wall
-            offset = {
-                x: 0,
-                y: 0.17,
-                z: 0
-            };
+        case 2: //walls
+            if(!currentObject.name.includes("Walls")){
+                getAngry();
+                return;
+            }
             break;
-        case 3: //third layer of wall
-            offset = {
-                x: 0,
-                y: 0.51,
-                z: 0
-            };
+        case 3: //green door
+            if(!currentObject.name.includes("Door") || !currentObject.name.includes("Green")){
+                getAngry();
+                return;
+            }
             break;
-        case 4: //door
-            offset = {
-                x: -0.17,
-                y: 0.08,
-                z: 0.71
-            };
+        case 4: //orange window frames
+        case 5:
+        case 6:
+            if(!currentObject.name.includes("Window") || !currentObject.name.includes("Orange")){
+                getAngry();
+                return;
+            }
             break;
-        case 5: //flat roof piece
-            offset = {
-                x: 0.855,
-                y: 0.765,
-                z: -0.085
-            };
+        case 7: //small purple roof
+            if(!currentObject.name.includes("SmallRoof") || !currentObject.name.includes("Purple")){
+                getAngry();
+                return;
+            }
             break;
-        case 6: //roof
-            offset = {
-                x: -0.17,
-                y: 1.02,
-                z: 0.08
-            };
+        case 8: //red large roof
+            if(currentObject.name.substring(0, 4) !== "Roof" || !currentObject.name.includes("Red")){
+                getAngry();
+                return;
+            }
+            break;
+        case 9: //yellow chimney
+            if(!currentObject.name.includes("Chimney") || !currentObject.name.includes("Yellow")){
+                getAngry();
+                return;
+            }
             break;
     }
 
-    //place the block inside inside of the box
-    currentObject.position.set(box.position.x + offset.x, box.position.y + offset.y, box.position.z + offset.z);
+    //if everything is correct, place the piece
+    currentObject.position.copy(currentObject.finalGhost.position);
+    currentObject.finalGhost.visible = false;
+    currentObject.finalGhost.placed = true;
     currentObject.placed = true;
+
+    //reset the rendering of the selected piece
+    currentObject.renderOrder = 0;
+    currentObject.onBeforeRender = function(){};
+
     currentObject = null;
     buildingStep += 1;
+
+}
+
+
+function getAngry(){
+    playSound("anger " + colorAttempts);
+    colorAttempts += 1;
 }
 
 //TODO: update score for building instead of coloring
@@ -331,19 +378,20 @@ function playSound(name) {
         return element.name.includes(name);
     });
 
+    //TODO: make subtitles for the level
     //add subtitles
-    let subs = subtitles.audio.find(function(element){
-        return element.name.includes(name);
-    });
-
-    if(subs){
-        for(let i in subs.lines){
-            setTimeout(function(){
-                let subtitle = document.getElementById("subs");
-                subtitle.innerText = subs.lines[i].text;
-            }, subs.lines[i].offset);
-        }
-    }
+    // let subs = subtitles.audio.find(function(element){
+    //     return element.name.includes(name);
+    // });
+    //
+    // if(subs){
+    //     for(let i in subs.lines){
+    //         setTimeout(function(){
+    //             let subtitle = document.getElementById("subs");
+    //             subtitle.innerText = subs.lines[i].text;
+    //         }, subs.lines[i].offset);
+    //     }
+    // }
 
     sound.play();
 }
@@ -373,59 +421,235 @@ function init() {
 
     //TODO: find initial camera position
     //initial camera position
-    camera.position.set(-13, 4.5, 11.6);
-
-    //TODO: remove box helper when done
-    box = new THREE.Mesh(new THREE.BoxGeometry(4, 3, 3), new THREE.MeshBasicMaterial({color:0xdddddd, visible:false}));
-    box.name = "buildingBox";
-    box.position.set(-13, 1, 6.5);
-    intersectableObjects.push(box);
-    scene.add(box);
-    scene.add(new THREE.BoxHelper(box));
+    camera.position.set(-13.1, 6.8, 10.3);
 
     //
     // LOADING
     //
 
     //load the bedroom
-    loadWorldFBX('Newest.2.26.18.fbx',
+    loadWorldFBX('Newest.3.19.18.fbx',
         function(object){
             console.log(object);
+
             for(let i in object.children){
                 let child = object.children[i];
 
                 //center the geometries for the blockos in the room
-                if(child.name.includes("BlockosScene") && child.geometry){
+                //TODO ask Isaiah to include "Blockos" or something in the names of the blocks
+                if((child.name.includes("Foundation") ||
+                    child.name.includes("Door_") ||
+                    child.name.includes("Stairs") ||
+                    child.name.includes("Window_") ||
+                    child.name.includes("Chimney") ||
+                    child.name.includes("Roof") ||
+                    child.name.includes("polySurface187")) && child.geometry){
+
+                    //rename the walls piece
+                    if(child.name === "polySurface187"){
+                        child.name = "Walls";
+                    }
 
                     //add the blocks to the array of blocks
                     blocks.push(child);
 
-                    //generate the bounding box for it and find the center point
+                    //TODO: add random rotation to puzzle pieces
+
+                    //generate the bounding box for it and find the center point, using the position as the offset
                     child.geometry.computeBoundingBox();
                     let box = child.geometry.boundingBox;
-                    let boxPos = {
-                        x: 0.5 * (box.max.x + box.min.x),
-                        y: 0.5 * (box.max.y + box.min.y),
-                        z: 0.5 * (box.max.z + box.min.z)
+                    let resetPos = {
+                        x: 0.5 * (box.max.x + box.min.x) + child.position.x,
+                        y: 0.5 * (box.max.y + box.min.y) + child.position.y,
+                        z: 0.5 * (box.max.z + box.min.z) + child.position.z
                     };
 
                     //center the geometry and move it back to its original location
                     child.geometry.center();
-                    child.position.set(boxPos.x, boxPos.y, boxPos.z);
-
-                    //hoverHeight is the offset for the block to hover over an object without intersecting
-                    child.hoverHeight = (box.max.y - box.min.y)/2 + 0.1;
+                    child.position.copy(resetPos);
 
                     //boolean field that tells whther the piece has been placed or not
                     child.placed = false;
 
-                    //TODO: add random rotation to puzzle pieces
+                    //create the ghosts that will be displayed in the original
+                    let ghost = child.clone();
 
+                    //copy the materials and make them transparent
+                    //some blocks have multiple materials
+                    if(ghost.material.length){
+                        //for some reason, this is the only way that works, and not material[i] = material[i].clone()
+                        ghost.material = [];
+                        for(let i in child.material){
+                            ghost.material.push(child.material[i].clone());
+                            ghost.material[i].transparent = true;
+                            ghost.material[i].opacity = 0.3;
+                        }
+                    }
+                    //otherwise there is one material
+                    else{
+                        ghost.material = child.material.clone();
+                        ghost.material.transparent = true;
+                        ghost.material.opacity = 0.3;
+                    }
+                    ghost.visible = false;
+
+                    //give block a reference to its ghost
+                    child.ghost = ghost;
+
+                    scene.add(ghost);
+
+
+
+
+                }
+                //add the parts of the house to the house object for later
+                else if(child.name.includes("polySurface124") || //chimney
+                        child.name.includes("polySurface72") || //roof
+                        child.name.includes("polySurface183")|| //smaller roof
+                        child.name.includes("polySurface87") || //back window
+                        child.name.includes("polySurface116") || //side window
+                        child.name.includes("polySurface122") || //front window
+                        child.name.includes("polySurface83") || //door
+                        child.name.includes("polySurface109") || //walls
+                        child.name.includes("polySurface92") || //step
+                        child.name.includes("polySurface189")){ //base
+
+                    finalBlocks.push(child);
+
+                    //rename these element to be easier to work with
+                    switch(child.name){
+                        case "polySurface124":
+                            child.name = "Chimney_Final";
+                            break;
+                        case "polySurface72":
+                            child.name = "Roof_Final";
+                            break;
+                        case "polySurface183":
+                            child.name = "SmallRoof_Final";
+                            break;
+                        case "polySurface87":
+                            child.name = "Window_Back_Final";
+                            break;
+                        case "polySurface116":
+                            child.name = "Window_Side_Final";
+                            break;
+                        case "polySurface122":
+                            child.name = "Window_Front_Final";
+                            break;
+                        case "polySurface83":
+                            child.name = "Door_Final";
+                            break;
+                        case "polySurface109":
+                            child.name = "Walls_Final";
+                            break;
+                        case "polySurface92":
+                            child.name = "Stairs_Final";
+                            break;
+                        case "polySurface189":
+                            child.name = "Foundation_Final";
+                            break;
+                    }
+
+                    child.geometry.computeBoundingBox();
+                    let box = child.geometry.boundingBox;
+                    let resetPos = {
+                        x: 0.5 * (box.max.x + box.min.x) + child.position.x,
+                        y: 0.5 * (box.max.y + box.min.y) + child.position.y,
+                        z: 0.5 * (box.max.z + box.min.z) + child.position.z
+                    };
+
+                    //center the geometry and move it back to its original location
+                    child.geometry.center();
+                    child.position.copy(resetPos);
+
+                    //move the pieces into the building area
+                    child.position.x += 1;
+                    child.position.y += 1.5;
+                    child.position.z -= 18;
+
+                    //make them opaque and invisible
+                    if(child.material.length){
+                        for(let i in child.material){
+                            child.material[i].transparent = true;
+                            child.material[i].opacity = 0.3;
+                        }
+                    }
+                    //otherwise there is one material
+                    else{
+                        child.material = child.material.clone();
+                        child.material.transparent = true;
+                        child.material.opacity = 0.3;
+                    }
+                    child.placed = false;
+                    child.visible = false;
+                }
+            }
+
+            //add references to the final positions to the blocks that you build with
+            for(let i in blocks){
+                let block = blocks[i];
+
+                //references are all added by name
+                if(block.name.includes("Foundation")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "Foundation_Final";
+                    })
+                }
+                else if(block.name.includes("Door")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "Door_Final";
+                    })
+                }
+                else if(block.name.includes("Stairs")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "Stairs_Final";
+                    })
+                }
+                else if(block.name.includes("Window_Smallest")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "Window_Front_Final";
+                    })
+                }
+                else if(block.name.includes("Window_Medium")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "Window_Side_Final";
+                    })
+                }
+                else if(block.name.includes("Window_Large")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "Window_Back_Final";
+                    })
+                }
+                else if(block.name.includes("Chimney")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "Chimney_Final";
+                    })
+                }
+                else if(block.name.includes("SmallRoof")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "SmallRoof_Final";
+                    })
+                }
+                else if(block.name.includes("Roof")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "Roof_Final";
+                    })
+                }
+                else if(block.name.includes("Walls")){
+                    block.finalGhost = finalBlocks.find(function(element){
+                        return element.name === "Walls_Final";
+                    })
                 }
             }
         });
 
     //load audio
+
+    loadSound('anger 1.m4a');
+    loadSound('anger 2.m4a');
+    loadSound('anger 3.m4a');
+    loadSound('anger 4.m4a');
+    loadSound('anger 5.m4a');
 
     //TODO: create subtitles for dialogue for level 2
     // load subtitles
@@ -498,9 +722,6 @@ function init() {
         else if(String.fromCharCode(event.keyCode) === "o"){
             controls.enabled = !controls.enabled;
         }
-        else if(String.fromCharCode(event.keyCode) === "p"){
-            currentObject.position.y -= .01;
-        }
         else if(String.fromCharCode(event.keyCode) === " "){
             nextPosition();
         }
@@ -532,7 +753,6 @@ function init() {
     window.addEventListener("mousedown", () => {
         if(controlsEnabled) {
             buildBlock();
-            logger.logEvent("mousedown", mouse.x, mouse.y);
         }
     });
 

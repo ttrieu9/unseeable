@@ -173,7 +173,7 @@ function loadWorldFBX(fileName, onLoad){
                 object.children[i].receiveShadow = true;
 
                 //convert the paths in the scene into splines
-                if(object.children[i].name.includes("Path")) {
+                if(object.children[i].name.includes("Path") || object.children[i].name.includes("curve")) {
                     object.children[i].visible = false;
                     paths.push(object.children[i]);
                     let points = object.children[i].geometry.attributes.position.array;
@@ -200,6 +200,24 @@ function loadWorldFBX(fileName, onLoad){
 
             scene.add( object );
 
+            var loadingScreen = document.getElementById("loading");
+            var progressBar = document.getElementById("myProgress")
+            var loadingBar = document.getElementById("myBar");
+            if(loadingBar.innerText === "100%"){
+                loadingScreen.offsetWidth;
+                loadingBar.offsetWidth;
+                progressBar.offsetWidth;
+                loadingScreen.classList.add("fade-out-loading");
+                loadingBar.classList.add("fade-out-loading");
+                progressBar.classList.add("face-out-loading");
+
+                setTimeout(() => {
+                    loadingScreen.style.opacity = 0;
+                    loadingBar.style.opacity = 0;
+                    progressBar.style.opacity = 0;
+                }, 950);
+            }
+
         },
         onProgress, onError
     );
@@ -221,7 +239,7 @@ function loadSound(filename, volume, playImmediately, loop, onEnded){
             scene.add(song);
             sounds.push(song);
             song.setBuffer(audioBuffer);
-            if(volume !== null){
+            if(volume){
                 song.setVolume(volume);
             }
             if(loop === true){

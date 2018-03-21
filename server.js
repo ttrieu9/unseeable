@@ -96,6 +96,11 @@ app.get('/end-screen', (req, res) => {
   res.sendFile(path.join(__dirname+'/client/views/endscreen.html'));
 });
 
+// level 2
+app.get('/level2', (req, res) => {
+    res.sendFile(path.join(__dirname+'/client/views/level2.html'));
+});
+
 var port = process.env.PORT || 8080;
 
 var server = app.listen(port, () => {
