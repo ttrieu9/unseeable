@@ -210,8 +210,12 @@ function buildBlock() {
 
         //if the instructions are open, return them to their original position
         if(currentInstruction){
-            currentInstruction.position.copy(currentInstruction.originalPosition);
-            currentInstruction.rotation.set(0,0,0);
+            // currentInstruction.position.copy(currentInstruction.originalPosition);
+            currentInstruction.rotation.set(0, 0, 0);
+
+            let tween = new TWEEN.Tween(currentInstruction.position).to(currentInstruction.originalPosition, 1000);
+            tween.start();
+
             currentInstruction = null;
         }
         //place the block in the same position as its original position ghost
@@ -262,6 +266,8 @@ function buildBlock() {
         //if clicking on the instructions, make them move in front of the camera
         else if(!currentObject && instructions.includes(intersected)){
             let page = instructions[buildingStep];
+            currentInstruction = page;
+
             //rotate the paper the same as the camera
             page.quaternion.copy(camera.quaternion);
             page.rotation.x += Math.PI/2;
@@ -269,13 +275,14 @@ function buildBlock() {
             //move the paper in front of the camera
             let vec = new THREE.Vector3(0,0,-5);
             vec.applyQuaternion(camera.quaternion);
-            page.position.copy(vec);
-            page.position.set(
-                page.position.x + camera.position.x,
-                page.position.y + camera.position.y,
-                page.position.z + camera.position.z
+            vec.set(
+                vec.x + camera.position.x,
+                vec.y + camera.position.y,
+                vec.z + camera.position.z
             );
-            currentInstruction = page;
+
+            let tween = new TWEEN.Tween(page.position).to(vec, 1000);
+            tween.start();
         }
     }
 }
@@ -353,7 +360,7 @@ function placeBlock(){
 
     currentObject = null;
     buildingStep += 1;
-    
+
     document.body.style.cursor = 'default';
 
 }
