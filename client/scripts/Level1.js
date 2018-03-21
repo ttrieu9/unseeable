@@ -121,15 +121,16 @@ function onMouseMove() {
                             if(currentObject) {
                                 currentObject.ghost.visible = false;
                             }
-                            
-                            if(!currentHover) {
-                                currentHover = intersected;
-                                currentHover.position.set(currentHover.originalPosition.x + 0.015, currentHover.originalPosition.y, currentHover.originalPosition.z - 0.025);
-                            }
-                            else if(currentHover.name !== intersected.name) {
-                                currentHover.position.set(currentHover.originalPosition.x, currentHover.originalPosition.y, currentHover.originalPosition.z);
-                                currentHover = intersected;
-                                currentHover.position.set(currentHover.originalPosition.x + 0.015, currentHover.originalPosition.y, currentHover.originalPosition.z - 0.025);
+                            else {
+                                if(!currentHover) {
+                                    currentHover = intersected;
+                                    currentHover.position.set(currentHover.originalPosition.x + 0.015, currentHover.originalPosition.y, currentHover.originalPosition.z - 0.025);
+                                }
+                                else if(currentHover.name !== intersected.name) {
+                                    currentHover.position.set(currentHover.originalPosition.x, currentHover.originalPosition.y, currentHover.originalPosition.z);
+                                    currentHover = intersected;
+                                    currentHover.position.set(currentHover.originalPosition.x + 0.015, currentHover.originalPosition.y, currentHover.originalPosition.z - 0.025);
+                                }
                             }
                         }
                         else {
