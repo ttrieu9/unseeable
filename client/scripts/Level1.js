@@ -1,6 +1,4 @@
-if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
-
-var container, stats, controls;
+var container, controls;
 var camera, scene, renderer, light;
 var teacher = {};
 var child;
@@ -997,10 +995,6 @@ function init() {
     container = document.createElement( 'div' );
     document.body.appendChild( container );
 
-    // stats
-    stats = new Stats();
-    container.appendChild( stats.dom );
-
     var element = document.body;
 
     //
@@ -1165,7 +1159,6 @@ function animate() {
         }
     }
 
-    stats.update();
     //if controls are enabled
     if(controls.enabled) {
         controls.update();
