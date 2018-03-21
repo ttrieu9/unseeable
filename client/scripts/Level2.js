@@ -219,7 +219,7 @@ function buildBlock() {
             placeBlock();
         }
         //if clicking on a block that hasn't been placed
-        else if(blocks.includes(intersected) && intersected.placed === false){
+        else if(!currentObject && blocks.includes(intersected) && intersected.placed === false){
             //select the block
             currentObject = intersected;
 
