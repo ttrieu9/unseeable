@@ -878,7 +878,7 @@ function init() {
             logger.recordTaskStartTime();
         }, 950);
         var objectiveText = document.getElementById("objs");
-        objectiveText.innerHTML = "Sit at the red table";
+        objectiveText.innerHTML = "Select the red table";
         objectiveText.offsetWidth;
         objectiveText.classList.add("fade-out-objective")
         setTimeout(() => {
