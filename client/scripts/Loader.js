@@ -161,7 +161,7 @@ function loadAnimationFBX2(filename, animations, onLoad){
  * @param fileName String name of the file to be loaded
  * @param onLoad optional function to be executed on all children of the scene
  */
-function loadWorldFBX(fileName, onLoad){
+function loadWorldFBX(fileName, onLoad, startFunc){
 
     fbxloader.load(
         "assets/models/" + fileName,
@@ -200,24 +200,13 @@ function loadWorldFBX(fileName, onLoad){
 
             scene.add( object );
 
-            var loadingScreen = document.getElementById("loading");
-            var progressBar = document.getElementById("myProgress")
             var loadingBar = document.getElementById("myBar");
             if(loadingBar.innerText === "100%"){
-                loadingScreen.offsetWidth;
-                loadingBar.offsetWidth;
-                progressBar.offsetWidth;
-                loadingScreen.classList.add("fade-out-loading");
-                loadingBar.classList.add("fade-out-loading");
-                progressBar.classList.add("face-out-loading");
-
-                setTimeout(() => {
-                    loadingScreen.style.opacity = 0;
-                    loadingBar.style.opacity = 0;
-                    progressBar.style.opacity = 0;
-                }, 950);
+                document.getElementById("Continue").style.opacity = 1;
+                document.getElementById("Continue").addEventListener("mousedown", function(){
+                    startGame(startFunc);
+                });
             }
-
         },
         onProgress, onError
     );
@@ -261,4 +250,40 @@ function loadSound(filename, volume, playImmediately, loop, onEnded){
         },
         null, onError
     );
+}
+
+function startGame(startFunc){
+    var loadingScreen = document.getElementById("loading");
+    var progressBar = document.getElementById("myProgress");
+    var loadingBar = document.getElementById("myBar");
+    var continueButton = document.getElementById("Continue");
+    var lineOne = document.getElementById("LineOne");
+    var lineTwo = document.getElementById("LineTwo");
+    var lineThree = document.getElementById("LineThree");
+
+    loadingScreen.offsetWidth;
+    loadingBar.offsetWidth;
+    progressBar.offsetWidth;
+    continueButton.offsetWidth;
+    lineOne.offsetWidth;
+    lineTwo.offsetWidth;
+    lineThree.offsetWidth;
+    loadingScreen.classList.add("fade-out-loading");
+    loadingBar.classList.add("fade-out-loading");
+    progressBar.classList.add("face-out-loading");
+    continueButton.classList.add("fade-out-loading");
+    lineOne.classList.add("fade-out-loading");
+    lineTwo.classList.add("fade-out-loading");
+    lineThree.classList.add("fade-out-loading");
+
+    setTimeout(() => {
+        loadingScreen.style.opacity = 0;
+        loadingBar.style.opacity = 0;
+        progressBar.style.opacity = 0;
+        continueButton.style.opacity = 0;
+        lineOne.style.opacity = 0;
+        lineTwo.style.opacity = 0;
+        lineThree.style.opacity = 0;
+        startFunc();
+    }, 950);
 }

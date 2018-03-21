@@ -691,7 +691,6 @@ function nextPage() {
 }
 
 function init() {
-    startCutScene();
 
     let cont = document.getElementById('continue')
     cont.addEventListener('click', nextPage)
@@ -773,12 +772,13 @@ function init() {
             
             }
 
-            setTimeout(() => {
-                playSound("TakeSeats");
-            }, 950);
 
-
-        });
+        },
+        function(){
+            playSound("TakeSeats");
+            startCutScene();
+        }
+    );
 
     loadStaticFBX('Colored Papers.fbx', (object) => {
         for(i in object.children) {

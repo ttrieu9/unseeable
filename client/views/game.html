@@ -141,6 +141,7 @@
 				height: 100%;
 				position: absolute;
 				z-index: 1;
+				cursor: default;
 			}
 
 			#myProgress{
@@ -171,6 +172,57 @@
 					-1px 1px 0 #000,
 					1px 1px 0 #000;
 				box-shadow: 1px 2px black;
+			}
+
+			#Continue{
+				opacity: 0;
+				z-index: 30;
+				position: absolute;
+				top: 57.5%;
+				left: 41%;
+				box-shadow: 1px 2px black;
+			}
+
+			#Continue_Text{
+				font-size: 150%;
+				width: 300%;
+				height: 300%;
+				border: ridge;
+				box-shadow: 2px 3px black;
+			}
+
+			#Summary{
+				opacity: 1;
+			}
+
+			#LineOne{
+				opacity: 1;
+			}
+
+			#LineTwo{
+				opacity: 1;
+			}
+
+			#LineThree{
+				opacity: 1;
+			}
+
+
+
+			.summary-text{
+				opacity: 1;
+				color: white;
+				font-size: 30px;
+				z-index: 100;
+				text-align: center;
+				left: 10%;
+				right: 10%;
+				position: absolute;
+				text-shadow:
+					-2px -2px 0 #000,
+					2px -2px 0 #000,
+					-2px 2px 0 #000,
+					2px 2px 0 #000;
 			}
 
 			p {
@@ -264,6 +316,15 @@
 		<div id="myProgress">
 			<div id="myBar">0%</div>
 		</div>
+		<div id="Summary">
+				<div class="summary-text" id="LineOne" style="top: 65%">You take on the role of child named Sam and it's your first day of Kindergarten!</div>
+				<div class="summary-text" id="LineTwo" style="top: 70%">However, you will soon realize that your first day won't be as easy as you first thought.</div>
+				<div class="summary-text" id="LineThree" style="top: 75%">Follow the instructions from your teacher and try to make it through the day!</div>
+		</div>
+		<div id="Continue">
+			<button id="Continue_Text" type="button" onclick="startGame">Continue</button>
+		</div>
+		
 
 		<canvas id="canvas"></canvas>
 
