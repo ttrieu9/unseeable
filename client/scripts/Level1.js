@@ -487,13 +487,32 @@ function postPaper() {
                 });
                 zoomOut.start();
 
-                //mock the player and display their results
-                zoomOut.onComplete(() => {
+                if(colorPaperScore == 14){
+                    //compliment the player and display their results
+                    zoomOut.onComplete(() => {
+                        playSound("AllCorrect");
+                        setTimeout(function(){
+                            showEndScreen();
+                        },5000);
+                    })    
+                } else if(colorPaperScore > 9){
+                    //mock the player slightly and display their results
+                    zoomOut.onComplete(() => {
+                        playSound("Weird");
+                        setTimeout(function(){
+                            showEndScreen();
+                        },3000);
+                        })    
+                }else{
+                    //mock the player and display their results
+                    zoomOut.onComplete(() => {
                     playSound("HackJob");
                     setTimeout(function(){
                         showEndScreen();
-                    },10000);
-                })
+                    },5000);
+                    })
+                }
+                
             }
             posted = true;
             startCutScene();
@@ -916,6 +935,16 @@ function init() {
 
     //kids mocking the bad painting
     loadSound('HackJob.ogg', 0.4, false, false, () => {
+        logger.endLog();
+    });
+
+    //teacher complimenting kids on drawings
+    loadSound('AllCorrect.ogg', 0.4, false, false, () => {
+        logger.endLog();
+    });
+
+    //kid thinks your drawing is a bit off
+    loadSound('Weird.ogg', 0.4, false, false, () => {
         logger.endLog();
     });
 
