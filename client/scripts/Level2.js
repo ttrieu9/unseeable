@@ -87,7 +87,12 @@ function onMouseMove(event) {
                 z: camera.position.z + (rayPoint.z - camera.position.z)*.9
             }
 
-            currentObject.position.set(point.x, point.y, point.z);
+            //place the block, using the grabOffset that was calculated when it was picked up
+            currentObject.position.set(
+                point.x + currentObject.grabOffset.x,
+                point.y + currentObject.grabOffset.y,
+                point.z + currentObject.grabOffset.z
+            );
 
             //make the ghost appear if the block is close to the original position
             if(currentObject.position.distanceTo(currentObject.ghost.position) < 1){
@@ -213,7 +218,7 @@ function buildBlock() {
         else if(currentObject && currentObject.finalGhost.visible === true){
             placeBlock();
         }
-        //if clicking on a block
+        //if clicking on a block that hasn't been placed
         else if(blocks.includes(intersected) && intersected.placed === false){
             //select the block
             currentObject = intersected;
@@ -221,6 +226,14 @@ function buildBlock() {
             //make the block be rendered over the other blocks
             currentObject.renderOrder = 1;
             currentObject.onBeforeRender = function( renderer ) { renderer.clearDepth(); };
+
+            //set the offset for the point of grab
+            let grabPoint = intersects[0].point;
+            currentObject.grabOffset = {
+                x: currentObject.position.x - grabPoint.x,
+                y: currentObject.position.y - grabPoint.y,
+                z: currentObject.position.z - grabPoint.z
+            };
 
             currentHover = null;
 
