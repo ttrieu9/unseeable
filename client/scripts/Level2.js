@@ -250,9 +250,19 @@ function buildBlock() {
         }
         //if clicking on the instructions, make them move in front of the camera
         else if(!currentObject && instructions.includes(intersected)){
+            //rotate the paper
             intersected.quaternion.copy(camera.quaternion);
-            // intersected.rotation.x += Math.PI/2;
-            console.log(intersected.rotation)
+            intersected.rotation.x += Math.PI/2;
+
+            //move the paper
+            let vec = new THREE.Vector3(0,0,-5);
+            vec.applyQuaternion(camera.quaternion);
+            intersected.position.copy(vec);
+            intersected.position.set(
+                intersected.position.x + camera.position.x,
+                intersected.position.y + camera.position.y,
+                intersected.position.z + camera.position.z
+            );
 
         }
     }
