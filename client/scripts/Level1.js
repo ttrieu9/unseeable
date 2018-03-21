@@ -208,25 +208,29 @@ function onMouseMove() {
                     break;
                 case 3:
                     if(posted === false) {
-                        let whiteboard = intersects.find((element) => {
-                            return element.object.name == 'WhiteBoard_WhiteArea'
-                        });
-
-                        if(whiteboard) {
-                            let raypoint = whiteboard.point;
-
-                            let paperPos = {
-                                x: camera.position.x + (raypoint.x - camera.position.x),
-                                y: camera.position.y + (raypoint.y - camera.position.y),
-                                z: camera.position.z + (raypoint.z - camera.position.z)
-                            };
-
-                            paper.position.set((paperPos.x - 7.8), (paperPos.y - 2.125), paperPos.z - 1.4);
-                        }
+                        movePaper(intersects)
                     }
                     break;
             }
         }
+    }
+}
+
+function movePaper(intersects) {
+    let whiteboard = intersects.find((element) => {
+        return element.object.name == 'WhiteBoard_WhiteArea'
+    });
+
+    if(whiteboard) {
+        let raypoint = whiteboard.point;
+
+        let paperPos = {
+            x: camera.position.x + (raypoint.x - camera.position.x),
+            y: camera.position.y + (raypoint.y - camera.position.y),
+            z: camera.position.z + (raypoint.z - camera.position.z)
+        };
+
+        paper.position.set((paperPos.x - 7.8), (paperPos.y - 2.125), paperPos.z - 1.4);
     }
 }
 
@@ -309,15 +313,8 @@ function colorPaper() {
                     }
                     paper.rotateX(Math.PI/2);
                     paper.rotateY(Math.PI/4);
-                    // paper.scale.multiplyScalar(0.8);
                     scene.add(paper);
                 }, 8000);
-
-                // setTimeout(() => {
-                //     for(var i in extraPapers) {
-                //         extraPapers[i].visible = true;
-                //     }
-                // }, 5000)
             }
         }
     }
@@ -665,6 +662,21 @@ function fade() {
     curtain.classList.remove("screen-change");
     curtain.offsetWidth;
     curtain.classList.add("screen-change");
+
+    setTimeout(() => {
+        camera.position.set(0.04086591888159326, 5.158584010827303, -6.5);
+        camera.rotation.set(-0.01600612417375022, -0.006151586325047644, 0);
+
+        setTimeout(() => {
+            raycaster.setFromCamera(mouse, camera);
+            var intersects = raycaster.intersectObjects(intersectableObjects);
+            movePaper(intersects)
+        }, 50)
+        
+        for(var i in extraPapers) {
+            extraPapers[i].visible = true;
+        }
+    }, 450)
 }
 
 /**
@@ -1010,15 +1022,7 @@ function init() {
     loadSound('FinishColoring.ogg', 0.3, false, false, () => {
         // fade to view of whiteboard after audio ends
         fade();
-        setTimeout(() => {
-            // camera.position.set(0.04086591888159326, 5.158584010827303, -0.9422941174966866);
-            camera.position.set(0.04086591888159326, 5.158584010827303, -6.5);
-            camera.rotation.set(-0.01600612417375022, -0.006151586325047644, 0);
-            
-            for(var i in extraPapers) {
-                extraPapers[i].visible = true;
-            }
-        }, 1000)
+        
 
         setTimeout(() => {
             endCutScene();
@@ -1181,6 +1185,8 @@ function nextPosition(){
             cameraPosition = 2;
             break;
         case 2:
+            cameraPosition = 3;
+
             // grab camera rotation on view of teacher
             camera.lookAt(new THREE.Vector3(4, 3.55, -1));
             var teacherView = {
@@ -1198,10 +1204,6 @@ function nextPosition(){
                 document.getElementById("numCorrect").innerText = colorPaperScore;
             }, 2000);
             lookAtTeacher.start();
-
-
-
-            cameraPosition = 3;
             break;
         case 3:
             teacher.position.set(-9, -.05, 8);
