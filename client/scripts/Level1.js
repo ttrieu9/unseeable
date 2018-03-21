@@ -507,12 +507,16 @@ function postPaper() {
                     //mock the player and display their results
                     zoomOut.onComplete(() => {
                     playSound("HackJob");
+                    var colorTween = new TWEEN.Tween().to(null, 1000);
+                    colorTween.onUpdate(function(){
+                        changeColorTwo("normal");
+                    });
+                    colorTween.start();
                     setTimeout(function(){
                         showEndScreen();
                     },5000);
                     })
                 }
-                
             }
             posted = true;
             startCutScene();

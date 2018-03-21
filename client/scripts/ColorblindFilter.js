@@ -59,3 +59,7 @@ function changeColorVision() {
     console.log("Filter executed");
     changeColors("deuteranopia");
 }
+
+function changeColorTwo(thing){
+    changeColors(thing);
+}
