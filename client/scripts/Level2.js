@@ -25,6 +25,7 @@ var controlsEnabled = true;
 var blocks = [];
 var finalBlocks = [];
 var instructions = [];
+var currentInstruction;
 
 var paths = [];
 var splineTargets = [];
@@ -72,8 +73,12 @@ function onMouseMove(event) {
     if(intersects.length > 0) {
         var intersected = intersects[0].object;
 
+        //can't pick up blocks and stuff if instructions are open
+        if(currentInstruction){
+
+        }
         //if there is a selected piece, make it follow the mouse on the rug
-        if(currentObject){
+        else if(currentObject){
             //find the point of intersection that isn't the current object or any other blocks
             let rayPoint = intersects.find(function(element){
                 return currentObject !== element.object &&
@@ -203,8 +208,14 @@ function buildBlock() {
         }).object;
         console.log(intersected);
 
+        //if the instructions are open, return them to their original position
+        if(currentInstruction){
+            currentInstruction.position.copy(currentInstruction.originalPosition);
+            currentInstruction.rotation.set(0,0,0);
+            currentInstruction = null;
+        }
         //place the block in the same position as its original position ghost
-        if(currentObject && currentObject.ghost.visible === true){
+        else if(currentObject && currentObject.ghost.visible === true){
             //reset current object stuff
             currentObject.position.copy(currentObject.ghost.position);
             currentObject.ghost.visible = false;
@@ -250,20 +261,21 @@ function buildBlock() {
         }
         //if clicking on the instructions, make them move in front of the camera
         else if(!currentObject && instructions.includes(intersected)){
-            //rotate the paper
-            intersected.quaternion.copy(camera.quaternion);
-            intersected.rotation.x += Math.PI/2;
+            let page = instructions[buildingStep];
+            //rotate the paper the same as the camera
+            page.quaternion.copy(camera.quaternion);
+            page.rotation.x += Math.PI/2;
 
-            //move the paper
+            //move the paper in front of the camera
             let vec = new THREE.Vector3(0,0,-5);
             vec.applyQuaternion(camera.quaternion);
-            intersected.position.copy(vec);
-            intersected.position.set(
-                intersected.position.x + camera.position.x,
-                intersected.position.y + camera.position.y,
-                intersected.position.z + camera.position.z
+            page.position.copy(vec);
+            page.position.set(
+                page.position.x + camera.position.x,
+                page.position.y + camera.position.y,
+                page.position.z + camera.position.z
             );
-
+            currentInstruction = page;
         }
     }
 }
@@ -341,6 +353,8 @@ function placeBlock(){
 
     currentObject = null;
     buildingStep += 1;
+    
+    document.body.style.cursor = 'default';
 
 }
 
@@ -630,6 +644,8 @@ function init() {
                     //center the geometry and move it back to its original location
                     child.geometry.center();
                     child.position.copy(resetPos);
+
+                    child.originalPosition = child.position.clone();
 
                     //used for easier rotation of the paper to bring it in front of the camera
                     child.rotation.reorder( "YXZ" );
