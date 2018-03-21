@@ -367,7 +367,7 @@ function lookAtTeacher(){
     //-1.0581080584316573, -0.5617291507874522, 0
 
     // Tween camera to view teacher
-    var lookAtTeacher = new TWEEN.Tween(camera.rotation).to(teacherView, 2000);
+    var lookAtTeacher = new TWEEN.Tween(camera.rotation).to(teacherView, 1250);
     lookAtTeacher.start();
 
 }
@@ -377,7 +377,7 @@ function lookAtTeacher(){
  */
 function sitAtTable(){
     setTimeout(function(){
-        new TWEEN.Tween(camera.position).to({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, 1000).onComplete(function(){
+        new TWEEN.Tween(camera.position).to({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, 750).onComplete(function(){
             lookAtTeacher();
             playSound("HowToDraw");
         }).start();
