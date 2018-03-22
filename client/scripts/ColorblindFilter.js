@@ -59,3 +59,19 @@ function changeColorVision() {
     console.log("Filter executed");
     changeColors("deuteranopia");
 }
+
+function changeColorTwo(){
+
+    let img = new Image();
+    renderer.render(scene, camera);
+    img.src = renderer.domElement.toDataURL();
+    document.body.appendChild(img);
+    img.style.top = 0;
+    img.style.left = 0;
+    img.style.zIndex = -1;
+    img.style.position = "fixed";
+    document.getElementById("canvas").classList.add("invisible");
+    setTimeout(function(){
+        document.getElementById("canvas").style.display = "none";
+    }, 5000);
+}

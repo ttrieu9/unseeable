@@ -1,6 +1,4 @@
-if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
-
-var container, stats, controls;
+var container, controls;
 var camera, scene, renderer, light;
 var teacher = {};
 var child;
@@ -541,13 +539,33 @@ function postPaper() {
                 });
                 zoomOut.start();
 
-                //mock the player and display their results
-                zoomOut.onComplete(() => {
+                if(colorPaperScore == 14){
+                    //compliment the player and display their results
+                    zoomOut.onComplete(() => {
+                        playSound("AllCorrect");
+                        setTimeout(function(){
+                            showEndScreen();
+                        },5000);
+                    })    
+                } else if(colorPaperScore > 9){
+                    //mock the player slightly and display their results
+                    zoomOut.onComplete(() => {
+                        playSound("Weird");
+                        setTimeout(function(){
+                            showEndScreen();
+                        },3000);
+                        })    
+                }else{
+                    //mock the player and display their results
+                    zoomOut.onComplete(() => {
                     playSound("HackJob");
+
                     setTimeout(function(){
                         showEndScreen();
-                    },10000);
-                })
+                        changeColorTwo();
+                    },5000);
+                    })
+                }
             }
             posted = true;
             startCutScene();
@@ -574,6 +592,7 @@ function startCutScene() {
 }
 
 function endCutScene () {
+
     var topBar = document.getElementById("top_bar");
     var bottomBar = document.getElementById("bottom_bar");
     topBar.classList.remove("fade-in");
@@ -669,20 +688,8 @@ function fade() {
 function showEndScreen(){
     let canvas = document.getElementById("canvas");
     let endScreen = document.getElementById("endgame");
-    endScreen.style.display = 'block'
-    let blur = {blur: 0};
-
-    //slowly blur the screen
-    let blurTween = new TWEEN.Tween(blur).to({blur: 5}, 2000);
-    blurTween.onUpdate(function(object){
-        canvas.style.filter = "blur(" + blur.blur + "px)";
-        endScreen.style.opacity = ""+blur.blur/5;
-    });
-    //make the mouse visible again
-    blurTween.onComplete(function(){
-        document.body.style.cursor = "default";
-    })
-    blurTween.start();
+    endScreen.style.display = 'block';
+    endScreen.classList.remove("invisible");
     console.log("level over");
 }
 
@@ -739,7 +746,6 @@ function createOutline(object, dx, dy, dz) {
 }
 
 function init() {
-    startCutScene();
 
     // adding event listener to continue button
     let cont = document.getElementById('continue');
@@ -849,12 +855,13 @@ function init() {
             
             }
 
-            setTimeout(() => {
-                playSound("TakeSeats");
-            }, 950);
 
-
-        });
+        },
+        function(){
+            playSound("TakeSeats");
+            startCutScene();
+        }
+    );
 
     loadStaticFBX('Colored Papers.fbx', (object) => {
         for(i in object.children) {
@@ -1014,6 +1021,16 @@ function init() {
         logger.endLog();
     });
 
+    //teacher complimenting kids on drawings
+    loadSound('AllCorrect.ogg', 0.4, false, false, () => {
+        logger.endLog();
+    });
+
+    //kid thinks your drawing is a bit off
+    loadSound('Weird.ogg', 0.4, false, false, () => {
+        logger.endLog();
+    });
+
     //
     // LIGHTS
     //
@@ -1058,10 +1075,6 @@ function init() {
     raycaster = new THREE.Raycaster();
     container = document.createElement( 'div' );
     document.body.appendChild( container );
-
-    // stats
-    stats = new Stats();
-    container.appendChild( stats.dom );
 
     var element = document.body;
 
@@ -1166,7 +1179,7 @@ function init() {
     startCutScene();
 }
 
-window.onload = changeColorVision();
+// window.onload = changeColorVision();
 
 function nextPosition(){
     switch(cameraPosition){
@@ -1227,7 +1240,6 @@ function animate() {
         }
     }
 
-    stats.update();
     //if controls are enabled
     if(controls.enabled) {
         controls.update();

@@ -17,7 +17,7 @@
       "name": "NotSeatOne",
       "lines": [
         {
-          "text": "Oh Sam, that's not your table, sweety.",
+          "text": "Um Sam, that's not your table, sweety.",
           "offset": 0
         }
       ]
@@ -26,7 +26,7 @@
       "name": "NotSeatTwo",
       "lines": [
         {
-          "text": "Um Sam, that's not your table either, sweety.",
+          "text": "Sam, that's not your table either, dear.",
           "offset": 0
         }
       ]
@@ -35,7 +35,7 @@
       "name": "ShowToSeat",
       "lines": [
         {
-          "text": "Come here, Sam. I'll show you to your correct seat.",
+          "text": "Come here, Sam. I'll show you to your table.",
           "offset": 0
         }
       ]
@@ -44,8 +44,12 @@
       "name": "HowToDraw",
       "lines": [
         {
-          "text": "Alright, kids, now that you're all in your seats, I want you to color in the sheets in front of you by following the colors that go with the numbers.",
+          "text": "Okay, kids, now that you're all in your seats,",
           "offset": 0
+        },
+        {
+          "text": "I want you to color in the sheets in front of you by following the colors that go with the numbers.",
+          "offset": 2500
         }
       ]
     },
@@ -62,11 +66,28 @@
       "name": "HackJob",
       "lines": [
         {
-          "text": "Look at that hackjob!",
+          "text": "Sam doesn't know how to color!",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "name": "Weird",
+      "lines": [
+        {
+          "text": "The colors on that one are kind of weird...",
+          "offset": 0
+        }
+      ]
+    },
+    {
+      "name": "AllCorrect",
+      "lines": [
+        {
+          "text": "Nice work kids! Now gather around me for story time.",
           "offset": 0
         }
       ]
     }
-
   ]
 }
