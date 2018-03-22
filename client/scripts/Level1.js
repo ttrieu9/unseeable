@@ -541,6 +541,16 @@ function startCutScene() {
 }
 
 function endCutScene () {
+
+    let img = new Image();
+    renderer.render(scene, camera);
+    img.src = renderer.domElement.toDataURL();
+    document.body.appendChild(img);
+    img.style.top = 0;
+    img.style.left = 0;
+    img.style.position = "fixed";
+    document.getElementById("canvas").style.opacity = 0;
+    
     var topBar = document.getElementById("top_bar");
     var bottomBar = document.getElementById("bottom_bar");
     topBar.classList.remove("fade-in");
