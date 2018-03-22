@@ -903,12 +903,14 @@ function init() {
     })
 
     //load and place the teacher
-    loadAnimationFBX('Idle.fbx',
+    loadAnimationFBX2('T-Pose (5).fbx',
+        ['Idle.fbx'],
         function(object){
             teacher = object;
             teacher.position.set(6, -.05, -3);
             let scale = 2.2;
             teacher.scale.set(scale, scale, scale);
+            playAnimation(object, "Idle");
         });
 
     //load and place the children GREEN TABLE
