@@ -1108,7 +1108,7 @@ function init() {
     startCutScene();
 }
 
-window.onload = changeColorVision();
+// window.onload = changeColorVision();
 
 function nextPosition(){
     switch(cameraPosition){
