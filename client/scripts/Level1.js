@@ -107,7 +107,6 @@ function onMouseMove() {
                     if(intersected.name.includes('Crayon')) {
                         if(currentObject) {
                             document.body.style.cursor = 'none';
-                            currentObject.ghost.visible = true;
                         }
                         else {
                             document.body.style.cursor = 'pointer';
@@ -119,19 +118,30 @@ function onMouseMove() {
                         }
 
                         if(!intersected.name.includes('Box')) {
-                            if(!currentHover) {
-                                currentHover = intersected;
-                                currentHover.position.set(currentHover.originalPosition.x + 0.015, currentHover.originalPosition.y, currentHover.originalPosition.z - 0.025);
+                            if(currentObject) {
+                                currentObject.ghost.visible = false;
                             }
-                            else if(currentHover.name !== intersected.name) {
-                                currentHover.position.set(currentHover.originalPosition.x, currentHover.originalPosition.y, currentHover.originalPosition.z);
-                                currentHover = intersected;
-                                currentHover.position.set(currentHover.originalPosition.x + 0.015, currentHover.originalPosition.y, currentHover.originalPosition.z - 0.025);
+                            else {
+                                if(!currentHover) {
+                                    currentHover = intersected;
+                                    currentHover.position.set(currentHover.originalPosition.x + 0.015, currentHover.originalPosition.y, currentHover.originalPosition.z - 0.025);
+                                }
+                                else if(currentHover.name !== intersected.name) {
+                                    currentHover.position.set(currentHover.originalPosition.x, currentHover.originalPosition.y, currentHover.originalPosition.z);
+                                    currentHover = intersected;
+                                    currentHover.position.set(currentHover.originalPosition.x + 0.015, currentHover.originalPosition.y, currentHover.originalPosition.z - 0.025);
+                                }
                             }
                         }
-                        else if(currentHover) {
-                            currentHover.position.set(currentHover.originalPosition.x, currentHover.originalPosition.y, currentHover.originalPosition.z);
-                            currentHover = null
+                        else {
+                            if(currentObject) {
+                                currentObject.ghost.visible = true;
+                            }
+
+                            if(currentHover) {
+                                currentHover.position.set(currentHover.originalPosition.x, currentHover.originalPosition.y, currentHover.originalPosition.z);
+                                currentHover = null
+                            }
                         }
                     }
                     else if(intersected.name.includes('Paper')) {
@@ -208,18 +218,29 @@ function onMouseMove() {
                     break;
                 case 3:
                     if(posted === false) {
-                        document.body.style.cursor = 'pointer'
-                        var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
-                        vector.unproject(camera);
-                        var dir = vector.sub( camera.position ).normalize();
-                        var distance = - camera.position.z / dir.z;
-                        var pos = camera.position.clone().add( dir.multiplyScalar( distance ) );
-                        pos.set(-2.15*(pos.x + 2.75), -2.25*(pos.y - 1.4), pos.z - 7.65);
-                        paper.position.copy(pos);
+                        movePaper(intersects)
                     }
                     break;
             }
         }
+    }
+}
+
+function movePaper(intersects) {
+    let whiteboard = intersects.find((element) => {
+        return element.object.name == 'WhiteBoard_WhiteArea'
+    });
+
+    if(whiteboard) {
+        let raypoint = whiteboard.point;
+
+        let paperPos = {
+            x: camera.position.x + (raypoint.x - camera.position.x),
+            y: camera.position.y + (raypoint.y - camera.position.y),
+            z: camera.position.z + (raypoint.z - camera.position.z)
+        };
+
+        paper.position.set((paperPos.x - 7.8), (paperPos.y - 2.125), paperPos.z - 1.4);
     }
 }
 
@@ -265,15 +286,17 @@ function colorPaper() {
             //else pick up the crayon
             else {
                 //reset the current crayon if there is one
-                if(currentObject) {
-                    currentObject.rotation.set(0, 0, 0);
-                    currentObject.position.set(currentObject.originalPosition.x, currentObject.originalPosition.y, currentObject.originalPosition.z);
-                }
+                // if(currentObject) {
+                //     currentObject.rotation.set(0, 0, 0);
+                //     currentObject.position.set(currentObject.originalPosition.x, currentObject.originalPosition.y, currentObject.originalPosition.z);
+                // }
 
                 //pick up the crayon
-                currentObject = intersected;
-                currentObject.rotation.set(0, Math.PI*5/6, Math.PI*11/6);
-                moveCrayon(intersects)
+                if(!currentObject) {
+                    currentObject = intersected;
+                    currentObject.rotation.set(0, Math.PI*5/6, Math.PI*11/6);
+                    moveCrayon(intersects)
+                }
             }
 
             playSound("Click");
@@ -302,15 +325,8 @@ function colorPaper() {
                     }
                     paper.rotateX(Math.PI/2);
                     paper.rotateY(Math.PI/4);
-                    paper.scale.multiplyScalar(0.8)
                     scene.add(paper);
                 }, 8000);
-
-                // setTimeout(() => {
-                //     for(var i in extraPapers) {
-                //         extraPapers[i].visible = true;
-                //     }
-                // }, 5000)
             }
         }
     }
@@ -363,7 +379,7 @@ function lookAtTeacher(){
     //-1.0581080584316573, -0.5617291507874522, 0
 
     // Tween camera to view teacher
-    var lookAtTeacher = new TWEEN.Tween(camera.rotation).to(teacherView, 2000);
+    var lookAtTeacher = new TWEEN.Tween(camera.rotation).to(teacherView, 1250);
     lookAtTeacher.start();
 
 }
@@ -373,7 +389,7 @@ function lookAtTeacher(){
  */
 function sitAtTable(){
     setTimeout(function(){
-        new TWEEN.Tween(camera.position).to({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, 1000).onComplete(function(){
+        new TWEEN.Tween(camera.position).to({x: 6.962359430337607, y: 2.121043760351845, z: 4.453431362994369}, 750).onComplete(function(){
             lookAtTeacher();
             playSound("HowToDraw");
         }).start();
@@ -527,18 +543,15 @@ function postPaper() {
 
         if(whiteBoardIndex >= 0) {
             if(!posted) {
-                var currentZoom = {
-                    value: camera.zoom
-                };
+                var currentZoom = camera.position
 
                 var nextZoom = {
-                    value: camera.zoom * 0.65
+                    x: camera.position.x,
+                    y: camera.position.y,
+                    z: camera.position.z + 5
                 };
 
-                var zoomOut = new TWEEN.Tween(currentZoom).to(nextZoom, 750);
-                zoomOut.onUpdate(() => {
-                    camera.zoom = currentZoom.value
-                });
+                var zoomOut = new TWEEN.Tween(camera.position).to(nextZoom, 2000);
                 zoomOut.start();
 
                 //mock the player and display their results
@@ -661,6 +674,21 @@ function fade() {
     curtain.classList.remove("screen-change");
     curtain.offsetWidth;
     curtain.classList.add("screen-change");
+
+    setTimeout(() => {
+        camera.position.set(0.04086591888159326, 5.158584010827303, -4.5);
+        camera.rotation.set(-0.01600612417375022, -0.006151586325047644, 0);
+
+        setTimeout(() => {
+            raycaster.setFromCamera(mouse, camera);
+            var intersects = raycaster.intersectObjects(intersectableObjects);
+            movePaper(intersects)
+    
+            for(var i in extraPapers) {
+                extraPapers[i].visible = true;
+            }
+        }, 50)
+    }, 400)
 }
 
 /**
@@ -996,15 +1024,6 @@ function init() {
         // fade to view of whiteboard after audio ends
         fade();
         setTimeout(() => {
-            camera.position.set(0.11333127647429019, 1.5369136371003131, -2.028078509213737);
-            camera.rotation.set(0.490486809597034, 0.0016298261023861107, 0);
-            
-            for(var i in extraPapers) {
-                extraPapers[i].visible = true;
-            }
-        }, 1000)
-
-        setTimeout(() => {
             endCutScene();
         }, 2000);
     });
@@ -1024,7 +1043,6 @@ function init() {
     light.shadow.mapSize.width = 512;
     light.shadow.mapSize.height = 512;
     scene.add(light);
-    scene.add(new THREE.PointLightHelper(light));
 
     light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
     light.position.set(4, 9, -1);
@@ -1032,7 +1050,6 @@ function init() {
     light.shadow.mapSize.width = 512;
     light.shadow.mapSize.height = 512;
     scene.add(light);
-    scene.add(new THREE.PointLightHelper(light));
 
     light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
     light.position.set(-4, 9, 10);
@@ -1040,7 +1057,6 @@ function init() {
     light.shadow.mapSize.width = 512;
     light.shadow.mapSize.height = 512;
     scene.add(light);
-    scene.add(new THREE.PointLightHelper(light));
 
     light = new THREE.PointLight(0xfff1e0, 0.3, 50, 1);
     light.position.set(4, 9, 10);
@@ -1048,7 +1064,6 @@ function init() {
     light.shadow.mapSize.width = 512;
     light.shadow.mapSize.height = 512;
     scene.add(light);
-    scene.add(new THREE.PointLightHelper(light));
 
     //ambient light to make the shadows not as dark
     light = new THREE.AmbientLight(0xfff1e0, 0.6);
@@ -1103,26 +1118,17 @@ function init() {
         hideCameraControls("right");
     });
 
-    // element.addEventListener("keypress", function(event){
-    //     if(String.fromCharCode(event.keyCode) === "c"){
-    //         console.log(camera);
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === "f"){
-    //         logger.printLog();
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === "t"){
-    //         console.log(coloredObjects)
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === "o"){
-    //         controls.enabled = !controls.enabled;
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === "m"){
-    //         showEndScreen();
-    //     }
-    //     else if(String.fromCharCode(event.keyCode) === " "){
-    //         nextPosition();
-    //     }
-    // }, false);
+    element.addEventListener("keypress", function(event){
+        if(String.fromCharCode(event.keyCode) === "c"){
+            console.log(camera);
+        }
+        else if(String.fromCharCode(event.keyCode) === "o"){
+            controls.enabled = !controls.enabled;
+        }
+        else if(String.fromCharCode(event.keyCode) === " "){
+            nextPosition();
+        }
+    }, false);
 
     // window.addEventListener("dblclick", () => {
     //     if(colormode === 1) {
@@ -1174,6 +1180,8 @@ function nextPosition(){
             cameraPosition = 2;
             break;
         case 2:
+            cameraPosition = 3;
+
             // grab camera rotation on view of teacher
             camera.lookAt(new THREE.Vector3(4, 3.55, -1));
             var teacherView = {
@@ -1191,10 +1199,6 @@ function nextPosition(){
                 document.getElementById("numCorrect").innerText = colorPaperScore;
             }, 2000);
             lookAtTeacher.start();
-
-
-
-            cameraPosition = 3;
             break;
         case 3:
             teacher.position.set(-9, -.05, 8);
