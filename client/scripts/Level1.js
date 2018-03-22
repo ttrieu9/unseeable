@@ -676,7 +676,7 @@ function fade() {
     curtain.classList.add("screen-change");
 
     setTimeout(() => {
-        camera.position.set(0.04086591888159326, 5.158584010827303, -6.5);
+        camera.position.set(0.04086591888159326, 5.158584010827303, -4.5);
         camera.rotation.set(-0.01600612417375022, -0.006151586325047644, 0);
 
         setTimeout(() => {
