@@ -15,6 +15,19 @@
 
 			canvas {
 				filter: url(#deuteranopia);
+				-webkit-transition: all 5s;
+				-moz-transition: all 5s;
+				-ms-transition: all 5s;
+				-o-transition: all 5s;
+				transition: all 5s;
+			}
+
+			.opaque {
+				opacity: 1;
+			}
+
+			.invisible {
+				opacity: 0;
 			}
 
 			#info {
@@ -32,7 +45,7 @@
 				width: 100%;
 				height: 100%;
 				position: absolute;
-				z-index: 0;
+				z-index: 1;
 				opacity: 0;
 			}
 
@@ -62,7 +75,7 @@
 				width: 7.5%;
 				height: 100%;
 				position: absolute;
-				z-index: 0;
+				z-index: 1;
 				opacity: 0;
 				display: table;
 			}
@@ -73,7 +86,7 @@
 				width: 7.5%;
 				height: 100%;
 				position: absolute;
-				z-index: 0;
+				z-index: 1;
 				opacity: 0;
 				display: table;
 			}
@@ -84,7 +97,7 @@
 				width: 85%;
 				height: 10%;
 				position: absolute;
-				z-index: 0;
+				z-index: 1;
 				display: table;
 			}
 
@@ -94,13 +107,16 @@
 			}
 
 			#endgame {
-				display: none;
 				color: black;
 				position: absolute;
 				height: 100%;
 				width: 100%;
 				z-index: 1;
-				opacity: 0;
+				-webkit-transition: all 5s;
+				-moz-transition: all 5s;
+				-ms-transition: all 5s;
+				-o-transition: all 5s;
+				transition: all 5s;
 			}
 
 			#endCorrect{
@@ -307,7 +323,7 @@
 		<div id="left_bar"><p>🢀</p></div>
 		<div id="right_bar"><p>🢂</p></div>
 
-		<div id="endgame">
+		<div id="endgame" class="invisible">
 			<div id="endCorrect">
 				<p>Correctly Colored Sections: <span id="numCorrect"></span>/14 </p>
 			</div>

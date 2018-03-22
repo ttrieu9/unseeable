@@ -505,13 +505,10 @@ function postPaper() {
                     //mock the player and display their results
                     zoomOut.onComplete(() => {
                     playSound("HackJob");
-                    var colorTween = new TWEEN.Tween().to(null, 1000);
-                    colorTween.onUpdate(function(){
-                        changeColorTwo("normal");
-                    });
-                    colorTween.start();
+
                     setTimeout(function(){
                         showEndScreen();
+                        changeColorTwo();
                     },5000);
                     })
                 }
@@ -542,15 +539,6 @@ function startCutScene() {
 
 function endCutScene () {
 
-    let img = new Image();
-    renderer.render(scene, camera);
-    img.src = renderer.domElement.toDataURL();
-    document.body.appendChild(img);
-    img.style.top = 0;
-    img.style.left = 0;
-    img.style.position = "fixed";
-    document.getElementById("canvas").style.opacity = 0;
-    
     var topBar = document.getElementById("top_bar");
     var bottomBar = document.getElementById("bottom_bar");
     topBar.classList.remove("fade-in");
@@ -646,20 +634,8 @@ function fade() {
 function showEndScreen(){
     let canvas = document.getElementById("canvas");
     let endScreen = document.getElementById("endgame");
-    endScreen.style.display = 'block'
-    let blur = {blur: 0};
-
-    //slowly blur the screen
-    let blurTween = new TWEEN.Tween(blur).to({blur: 5}, 2000);
-    blurTween.onUpdate(function(object){
-        canvas.style.filter = "blur(" + blur.blur + "px)";
-        endScreen.style.opacity = ""+blur.blur/5;
-    });
-    //make the mouse visible again
-    blurTween.onComplete(function(){
-        document.body.style.cursor = "default";
-    })
-    blurTween.start();
+    endScreen.style.display = 'block';
+    endScreen.classList.remove("invisible");
     console.log("level over");
 }
 
