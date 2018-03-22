@@ -66,6 +66,8 @@ function changeColorTwo(){
     renderer.render(scene, camera);
     img.src = renderer.domElement.toDataURL();
     document.body.appendChild(img);
+    img.style.width = '100%'
+    img.style.height = '100%'
     img.style.top = 0;
     img.style.left = 0;
     img.style.zIndex = -1;
