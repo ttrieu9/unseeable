@@ -257,33 +257,25 @@ function startGame(startFunc){
     var progressBar = document.getElementById("myProgress");
     var loadingBar = document.getElementById("myBar");
     var continueButton = document.getElementById("ContinueButton");
-    var lineOne = document.getElementById("LineOne");
-    var lineTwo = document.getElementById("LineTwo");
-    var lineThree = document.getElementById("LineThree");
+    var loadText = document.getElementById("loadText");
 
     loadingScreen.offsetWidth;
     loadingBar.offsetWidth;
     progressBar.offsetWidth;
     continueButton.offsetWidth;
-    lineOne.offsetWidth;
-    lineTwo.offsetWidth;
-    lineThree.offsetWidth;
+    loadText.offsetWidth;
     loadingScreen.classList.add("fade-out-loading");
     loadingBar.classList.add("fade-out-loading");
     progressBar.classList.add("face-out-loading");
     continueButton.classList.add("fade-out-loading");
-    lineOne.classList.add("fade-out-loading");
-    lineTwo.classList.add("fade-out-loading");
-    lineThree.classList.add("fade-out-loading");
+    loadText.classList.add("fade-out-loading");
 
     setTimeout(() => {
         loadingScreen.style.opacity = 0;
         loadingBar.style.opacity = 0;
         progressBar.style.opacity = 0;
         continueButton.style.opacity = 0;
-        lineOne.style.opacity = 0;
-        lineTwo.style.opacity = 0;
-        lineThree.style.opacity = 0;
+        loadText.style.opacity = 0;
         startFunc();
     }, 950);
 }
