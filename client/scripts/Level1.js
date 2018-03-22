@@ -1159,17 +1159,17 @@ function init() {
         hideCameraControls("right");
     });
 
-    element.addEventListener("keypress", function(event){
-        if(String.fromCharCode(event.keyCode) === "c"){
-            console.log(camera);
-        }
-        else if(String.fromCharCode(event.keyCode) === "o"){
-            controls.enabled = !controls.enabled;
-        }
-        else if(String.fromCharCode(event.keyCode) === " "){
-            nextPosition();
-        }
-    }, false);
+    // element.addEventListener("keypress", function(event){
+    //     if(String.fromCharCode(event.keyCode) === "c"){
+    //         console.log(camera);
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === "o"){
+    //         controls.enabled = !controls.enabled;
+    //     }
+    //     else if(String.fromCharCode(event.keyCode) === " "){
+    //         nextPosition();
+    //     }
+    // }, false);
 
     // window.addEventListener("dblclick", () => {
     //     if(colormode === 1) {
