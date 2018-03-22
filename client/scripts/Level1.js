@@ -810,7 +810,7 @@ function init() {
     //
 
     //load the classroom
-    loadWorldFBX('Preschool_New3.9.18.fbx',
+    loadWorldFBX('Preschool_New3.20.18.fbx',
         function(object){
         console.log(object);
             for(let i in object.children) {
@@ -912,7 +912,7 @@ function init() {
         });
 
     //load and place the children GREEN TABLE
-    loadAnimationFBX2("T-Pose (1).fbx",
+    loadAnimationFBX2("T-Pose.fbx",
         ["Sitting (1).fbx"],
         function(object){
             child = object;
@@ -924,7 +924,7 @@ function init() {
         });
 
     //load and place the children RED TABLE
-    loadAnimationFBX2("T-Pose.fbx",
+    loadAnimationFBX2("T-Pose (1).fbx",
         ["Sitting Idle (1).fbx"],
         function(object){
             child = object;
@@ -936,7 +936,7 @@ function init() {
         });
 
     //load and place the children YELLOW TABLE
-    loadAnimationFBX2("T-Pose.fbx",
+    loadAnimationFBX2("T-Pose (2).fbx",
         ["Sitting Talking.fbx"],
         function(object){
             child = object;
@@ -948,7 +948,7 @@ function init() {
         });
 
     //load and place the children BLUE TABLE
-    loadAnimationFBX2("T-Pose (1).fbx",
+    loadAnimationFBX2("T-Pose (3).fbx",
         ["Sitting2.fbx"],
         function(object){
             child = object;
