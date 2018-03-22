@@ -888,7 +888,7 @@ function init() {
         });
 
     //load and place the children RED TABLE
-    loadAnimationFBX2("T-Pose (1).fbx",
+    loadAnimationFBX2("T-Pose.fbx",
         ["Sitting Idle (1).fbx"],
         function(object){
             child = object;
@@ -900,7 +900,7 @@ function init() {
         });
 
     //load and place the children YELLOW TABLE
-    loadAnimationFBX2("T-Pose (1).fbx",
+    loadAnimationFBX2("T-Pose.fbx",
         ["Sitting Talking.fbx"],
         function(object){
             child = object;
