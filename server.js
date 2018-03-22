@@ -57,7 +57,7 @@ app.get('/unseeable/nextPage', (req, res) => {
   })
 
   req.on('end', (data) => {
-    res.json({redirect: '/panas2'})
+    res.json({redirect: '/end-screen'})
   })
 })
 

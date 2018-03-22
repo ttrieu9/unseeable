@@ -6,6 +6,6 @@ exports.generate_user_id = (req, res) => {
   });
 
   req.on('end', (data) => {
-    res.json({userId: uuidv4(), redirect: 'informed-consent'}).end();
+    res.json({userId: uuidv4(), redirect: 'unseeable'}).end();
   });
 };
